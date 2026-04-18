@@ -136,10 +136,18 @@ const sock = makeWASocket({
         }
 
         if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.timedOut, DisconnectReason.connectionReplaced].includes(reason)) {
-          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando por timeout (${reason})...`))
-          setTimeout(() => {
-            startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
-          }, 3000)
+          if (intentos < 3) {
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando por timeout (${reason}) intento ${intentos}/3...`))
+            setTimeout(() => {
+              startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
+            }, 3000)
+          } else {
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos de reconexión por timeout. Esperando 60 segundos...`))
+            delete reintentos[botId]
+            setTimeout(() => {
+              startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
+            }, 60000)
+          }
           return
         }
         console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando (razón: ${reason})...`))
