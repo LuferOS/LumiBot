@@ -808,7 +808,7 @@ export default {
 };
 
 handler.before = async function (m, { conn, client }) {
-    if (!m.message) return false;
+    if (!m || !m.message) return false;
 
     if (m.isGroup) {
         const chat = global.db?.data?.chats?.[m.chat] || {};
@@ -832,25 +832,29 @@ handler.before = async function (m, { conn, client }) {
 
     let buttonId = m.body || m.text || null;
 
-    if (m.message?.templateButtonReplyMessage) {
-        buttonId = m.message.templateButtonReplyMessage.selectedId;
-    }
-    if (m.message?.buttonsResponseMessage) {
-        buttonId = m.message.buttonsResponseMessage.selectedButtonId;
-    }
-    if (m.message?.listResponseMessage) {
-        buttonId = m.message.listResponseMessage.singleSelectReply?.selectedRowId;
-    }
-    if (m.message?.interactiveResponseMessage) {
-        try {
-            const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson;
-            if (paramsJson) {
-                const params = JSON.parse(paramsJson);
-                if (params && params.id) {
-                    buttonId = params.id;
+    try {
+        if (m.message?.templateButtonReplyMessage?.selectedId) {
+            buttonId = m.message.templateButtonReplyMessage.selectedId;
+        }
+        if (m.message?.buttonsResponseMessage?.selectedButtonId) {
+            buttonId = m.message.buttonsResponseMessage.selectedButtonId;
+        }
+        if (m.message?.listResponseMessage?.singleSelectReply?.selectedRowId) {
+            buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId;
+        }
+        if (m.message?.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson) {
+            try {
+                const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson;
+                if (paramsJson) {
+                    const params = JSON.parse(paramsJson);
+                    if (params && params.id) {
+                        buttonId = params.id;
+                    }
                 }
-            }
-        } catch (e) {}
+            } catch (e) {}
+        }
+    } catch (e) {
+        return false;
     }
 
     if (!buttonId || (!buttonId.startsWith('waifu_claim_') && !buttonId.startsWith('waifu_sell_'))) {

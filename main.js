@@ -14,17 +14,16 @@ seeCommands();
 
 export default async (client, m) => {
   const sender = m.sender;
-  let body = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId || m.message.templateButtonReplyMessage?.selectedId || m.message.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson || '';
-  
- 
+  let body = m.message?.conversation || m.message?.extendedTextMessage?.text || m.message?.imageMessage?.caption || m.message?.videoMessage?.caption || m.message?.buttonsResponseMessage?.selectedButtonId || m.message?.listResponseMessage?.singleSelectReply?.selectedRowId || m.message?.templateButtonReplyMessage?.selectedId || m.message?.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson || '';
+
   let buttonId = m.body || m.text || null
-  if (m.message?.buttonsResponseMessage) {
+  if (m.message?.buttonsResponseMessage?.selectedButtonId) {
     buttonId = m.message.buttonsResponseMessage.selectedButtonId
   }
-  if (m.message?.templateButtonReplyMessage) {
+  if (m.message?.templateButtonReplyMessage?.selectedId) {
     buttonId = m.message.templateButtonReplyMessage.selectedId
   }
-  if (m.message?.listResponseMessage) {
+  if (m.message?.listResponseMessage?.singleSelectReply?.selectedRowId) {
     buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId
   }
   if (m.message?.interactiveResponseMessage) {
@@ -32,7 +31,9 @@ export default async (client, m) => {
       const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
       if (paramsJson) {
         const params = JSON.parse(paramsJson)
-        buttonId = params.id
+        if (params?.id) {
+          buttonId = params.id
+        }
       }
     } catch (e) {}
   }
@@ -46,7 +47,7 @@ export default async (client, m) => {
       const chat = global.db?.data?.chats?.[m.chat] || {};
       const primaryBot = chat?.primaryBot;
       if (primaryBot) {
-        const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net'
+        const botJid = client.user?.id?.split(':')[0] + '@s.whatsapp.net' || ''
         const normalizeJid = (jid) => {
           if (!jid) return ''
           const clean = String(jid).split(':')[0].replace(/\D/g, '')
@@ -88,7 +89,7 @@ export default async (client, m) => {
       const chat = global.db?.data?.chats?.[m.chat] || {};
       const primaryBot = chat?.primaryBot;
       if (primaryBot) {
-        const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net'
+        const botJid = client.user?.id?.split(':')[0] + '@s.whatsapp.net' || ''
         const normalizeJid = (jid) => {
           if (!jid) return ''
           const clean = String(jid).split(':')[0].replace(/\D/g, '')
@@ -155,7 +156,7 @@ export default async (client, m) => {
   antilink(client, m);
 
   const from = m.key.remoteJid;
-  const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net' || client.user.lid;
+  const botJid = client.user?.id?.split(':')[0] + '@s.whatsapp.net' || client.user?.lid || '';
   const chat = global.db.data.chats[m.chat] || {}
   const settings = global.db.data.settings[botJid] || {}
   const user = global.db.data.users[sender] ||= {}
@@ -265,8 +266,8 @@ export default async (client, m) => {
     try {
       const ownerCreds = path.resolve('./Sessions/Owner/creds.json')
       if (fs.existsSync(ownerCreds)) {
-        const ownerId = global.client.user.id.split(':')[0] + '@s.whatsapp.net'
-        bots.push(ownerId)
+        const ownerId = global.client?.user?.id?.split(':')[0] + '@s.whatsapp.net' || ''
+        if (ownerId) bots.push(ownerId)
       }
     } catch {}
     return bots;
