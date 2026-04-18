@@ -6,6 +6,6 @@ export default {
     const input = args.join(' ')
     if (!input) return m.reply(`💙 Debes especificar una descripción válida para tu perfil.\n\n> 🌱 Ejemplo » *${usedPrefix + command} Hola, uso WhatsApp!*`)
     user.description = input
-    return m.reply(`✎ Se ha establecido tu descripcion, puedes revisarla con ${usedPrefix}profile ฅ^•ﻌ•^ฅ`)
+    return m.reply(`💙 Se ha establecido tu descripcion, puedes revisarla con ${usedPrefix}profile ฅ^•ﻌ•^ฅ`)
   },
 };

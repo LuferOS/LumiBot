@@ -15,7 +15,7 @@ export default {
     if (!birth)
       return m.reply(`💙 Fecha inválida. Usa › *${usedPrefix + command} 01/01/2000*`)
     user.birth = birth
-    return m.reply(`✎ Se ha establecido tu fecha de nacimiento como: *${user.birth}*`)
+    return m.reply(`💙 Se ha establecido tu fecha de nacimiento como: *${user.birth}*`)
   },
 }
 
