@@ -68,6 +68,7 @@ async function loadBots() {
       const sessionPath = path.join(folder, userId);
       const credsPath = path.join(sessionPath, 'creds.json');
       if (!fs.existsSync(credsPath)) continue;
+      if (!fs.existsSync(sessionPath)) continue;
       if (global.conns.some((conn) => conn.userId === userId)) continue;
       if (reconnecting.has(userId)) continue;
       try {
@@ -297,7 +298,7 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason) => {
   const msg = String(reason?.message || reason || '');
   const lowerMsg = msg.toLowerCase();
-  if (lowerMsg.includes('rate-overlimit') || lowerMsg.includes('timed out') || lowerMsg.includes('timeout') || lowerMsg.includes('connection closed') || lowerMsg.includes('connection lost') || lowerMsg.includes('etimeout')) {
+  if (lowerMsg.includes('rate-overlimit') || lowerMsg.includes('timed out') || lowerMsg.includes('timeout') || lowerMsg.includes('connection closed') || lowerMsg.includes('connection lost') || lowerMsg.includes('etimeout') || lowerMsg.includes('enoent') || lowerMsg.includes('no such file or directory')) {
     console.log(chalk.gray(`[unhandledRejection] Ignorado: ${msg.slice(0, 100)}`));
     return;
   }

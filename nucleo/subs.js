@@ -50,8 +50,8 @@ const sock = makeWASocket({
   userDevicesCache,
   cachedGroupMetadata: async (jid) => groupCache.get(jid),
   version,
-  keepAliveIntervalMs: 45000,
-  maxIdleTimeMs: 60000,
+  keepAliveIntervalMs: 30000,
+  maxIdleTimeMs: 120000,
 })
 
   sock.isInit = false
