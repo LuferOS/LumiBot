@@ -85,16 +85,6 @@ export default {
     message += `🤖 *SUB-BOTS* (${totalCounts.Sub})\n`
     if (categorizedBots.Sub.length) {
       message += categorizedBots.Sub.join('\n') + '\n'
-      if (connectedSubs.length > 0) {
-        message += `\n✅ *Conectados (${connectedSubs.length}):*\n`
-        connectedSubs.forEach(num => {
-          const jid = num + '@s.whatsapp.net'
-          const data = global.db.data.settings[jid]
-          const name = data?.namebot || 'Bot'
-          message += `   💙 ${name} (${num})\n`
-        })
-        message += '\n'
-      }
     } else {
       message += `  ∅ Ninguno registrado\n\n`
     }
