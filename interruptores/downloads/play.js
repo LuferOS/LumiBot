@@ -594,11 +594,11 @@ export default {
         await conn.sendMessage(m.chat, {
           image: thumbBuf,
           caption: infoText,
-          templateButtons: [
-            { index: 1, quickReplyButton: { displayText: '🎵 Audio MP3', id: `youtube_audio_${videoId}` } },
-            { index: 2, quickReplyButton: { displayText: '🎬 Video 360p', id: `youtube_video_360_${videoId}` } },
-            { index: 3, quickReplyButton: { displayText: '📁 Doc MP4', id: `youtube_video_doc_${videoId}` } },
-            { index: 4, quickReplyButton: { displayText: '📄 Doc MP3', id: `youtube_audio_doc_${videoId}` } },
+          buttons: [
+            { buttonId: `youtube_audio_${videoId}`, buttonText: { displayText: '🎵 Audio MP3' }, type: 1 },
+            { buttonId: `youtube_video_360_${videoId}`, buttonText: { displayText: '🎬 Video 360p' }, type: 1 },
+            { buttonId: `youtube_video_doc_${videoId}`, buttonText: { displayText: '📁 Doc MP4' }, type: 1 },
+            { buttonId: `youtube_audio_doc_${videoId}`, buttonText: { displayText: '📄 Doc MP3' }, type: 1 },
           ],
           headerType: 4,
         }, { quoted: m })
