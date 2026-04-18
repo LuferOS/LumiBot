@@ -15,6 +15,8 @@ seeCommands();
 export default async (client, m) => {
   const sender = m.sender;
   let body = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId || m.message.templateButtonReplyMessage?.selectedId || m.message.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson || '';
+  console.log('[MAIN] Message keys:', Object.keys(m.message || {}))
+  console.log('[MAIN] body:', body)
   if ((m.id.startsWith("3EB0") || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("B24E") && m.id.length === 20)) && !m.message?.interactiveResponseMessage) return
   initDB(m, client)
   antilink(client, m);

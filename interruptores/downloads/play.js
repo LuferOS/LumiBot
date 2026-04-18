@@ -455,36 +455,25 @@ export default {
   category: 'downloader',
   register: true,
   before: async (conn, m) => {
-    console.log('[PLAY before] Handler ejecutado')
     let buttonId = m.body || m.text || null
-    console.log('[PLAY before] Message keys:', Object.keys(m.message || {}))
-    console.log('[PLAY before] buttonId inicial:', buttonId)
     if (m.message?.buttonsResponseMessage) {
       buttonId = m.message.buttonsResponseMessage.selectedButtonId
-      console.log('[PLAY before] buttonsResponseMessage:', buttonId)
     }
     if (m.message?.templateButtonReplyMessage) {
       buttonId = m.message.templateButtonReplyMessage.selectedId
-      console.log('[PLAY before] templateButtonReplyMessage:', buttonId)
     }
     if (m.message?.listResponseMessage) {
       buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId
-      console.log('[PLAY before] listResponseMessage:', buttonId)
     }
     if (m.message?.interactiveResponseMessage) {
       try {
         const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
-        console.log('[PLAY before] interactiveResponseMessage paramsJson:', paramsJson)
         if (paramsJson) {
           const params = JSON.parse(paramsJson)
           buttonId = params.id
-          console.log('[PLAY before] parsed buttonId:', buttonId)
         }
-      } catch (e) {
-        console.log('[PLAY before] error parsing interactiveResponseMessage:', e)
-      }
+      } catch (e) {}
     }
-    console.log('[PLAY before] final buttonId:', buttonId)
     if (buttonId && (
       buttonId.includes('youtube_audio_') ||
       buttonId.includes('youtube_video_360_') ||
@@ -496,7 +485,6 @@ export default {
       else if (buttonId.includes('youtube_video_360_'))                        option = 2
       else if (buttonId.includes('youtube_video_doc_'))                        option = 3
       else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
-      console.log('[PLAY before] option:', option)
       if (option) {
         const user = global.db?.data?.users?.[m.sender]
         if (!user?.lastYTSearch) {
@@ -518,37 +506,26 @@ export default {
     return false
   },
   run: async (conn, m, args, usedPrefix, command) => {
-    console.log('[PLAY run] Handler ejecutado')
     try {
       let buttonId = m.body || m.text || null
-      console.log('[PLAY run] Message keys:', Object.keys(m.message || {}))
-      console.log('[PLAY run] buttonId inicial:', buttonId)
       if (m.message?.buttonsResponseMessage) {
         buttonId = m.message.buttonsResponseMessage.selectedButtonId
-        console.log('[PLAY run] buttonsResponseMessage:', buttonId)
       }
       if (m.message?.templateButtonReplyMessage) {
         buttonId = m.message.templateButtonReplyMessage.selectedId
-        console.log('[PLAY run] templateButtonReplyMessage:', buttonId)
       }
       if (m.message?.listResponseMessage) {
         buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId
-        console.log('[PLAY run] listResponseMessage:', buttonId)
       }
       if (m.message?.interactiveResponseMessage) {
         try {
           const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
-          console.log('[PLAY run] interactiveResponseMessage paramsJson:', paramsJson)
           if (paramsJson) {
             const params = JSON.parse(paramsJson)
             buttonId = params.id
-            console.log('[PLAY run] parsed buttonId:', buttonId)
           }
-        } catch (e) {
-          console.log('[PLAY run] error parsing interactiveResponseMessage:', e)
-        }
+        } catch (e) {}
       }
-      console.log('[PLAY run] final buttonId:', buttonId)
       if (buttonId && (
         buttonId.includes('youtube_audio_') ||
         buttonId.includes('youtube_video_360_') ||
@@ -560,7 +537,6 @@ export default {
         else if (buttonId.includes('youtube_video_360_'))                        option = 2
         else if (buttonId.includes('youtube_video_doc_'))                        option = 3
         else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
-        console.log('[PLAY run] option:', option)
         if (option) {
           const user = global.db?.data?.users?.[m.sender]
           if (!user?.lastYTSearch) {
@@ -621,7 +597,6 @@ export default {
       try {
         const thumbBuf = await fetchThumbnailBuffer(videoThumbnail)
         if (!thumbBuf) throw new Error('sin thumbnail')
-        console.log('[PLAY run] Enviando menú con botones, videoId:', videoId)
         await conn.sendMessage(m.chat, {
           image: thumbBuf,
           caption: infoText,
@@ -635,9 +610,7 @@ export default {
           headerType: 4,
           viewOnce: true,
         }, { quoted: m })
-        console.log('[PLAY run] Menú enviado exitosamente')
       } catch (e) {
-        console.log('[PLAY run] Error enviando menú:', e)
         await conn.reply(m.chat, infoText, m)
       }
     } catch (error) {
