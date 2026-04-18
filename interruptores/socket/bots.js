@@ -38,14 +38,14 @@ export default {
       const data = global.db.data.settings[jid]
       const name = data?.namebot || 'Bot'
       const inGroup = groupParticipants.includes(jid) ? '✅' : '❌'
-      return `🌱 *${name}* › wa.me/${number} ${inGroup}`
+      return `   ${emoji} *${name}*\n   📱 wa.me/${number}\n   ${inGroup}\n`
     }
     if (global.db.data.settings[mainBotJid]) {
       const name = global.db.data.settings[mainBotJid].namebot || 'Bot'
       const handle = `@${mainBotJid.split('@')[0]}`
       if (isMainBotInGroup) {
         mentionedJid.push(mainBotJid)
-        categorizedBots.Owner.push(`💙 *${name}* › wa.me/${mainBotJid.split('@')[0]} ✅`)
+        categorizedBots.Owner.push(`   💙 *${name}*\n   📱 wa.me/${mainBotJid.split('@')[0]}\n   ✅\n`)
       }
     }
     subs.forEach((num) => {

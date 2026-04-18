@@ -15,6 +15,7 @@ const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 const groupCache = new NodeCache({ stdTTL: 3600, checkperiod: 300 });
 let reintentos = {}
 let sesionesEliminadas = new Set()
+let reconectando = new Set()
 const cleanJid = (jid = '') => jid.replace(/:\d+/, '').split('@')[0]
 
 export async function startSubBot(m, client, caption = '', isCode = false, phone = '', chatId = '', commandFlags = {}, isCommand = false) {
@@ -124,17 +125,25 @@ const sock = makeWASocket({
           return
         }
 
+        if (reconectando.has(botId)) {
+          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Ya está reconectando, omitiendo reconexión duplicada`))
+          return
+        }
+
         const intentos = reintentos[botId] || 0
         reintentos[botId] = intentos + 1
 
         if ([401, 403].includes(reason)) {
           if (intentos < 3) {
             console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Conexión cerrada (código ${reason}) intento ${intentos}/3 → Reintentando...`))
+            reconectando.add(botId)
             setTimeout(() => {
+              reconectando.delete(botId)
               startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
             }, 3000)
           } else {
             console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos. Eliminando sesión. Requiere nueva autenticación.`))
+            reconectando.delete(botId)
             try {
               fs.rmSync(sessionFolder, { recursive: true, force: true })
               sesionesEliminadas.add(botId)
@@ -154,11 +163,14 @@ const sock = makeWASocket({
         if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.timedOut, DisconnectReason.connectionReplaced].includes(reason)) {
           if (intentos < 3) {
             console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando por timeout (${reason}) intento ${intentos}/3...`))
+            reconectando.add(botId)
             setTimeout(() => {
+              reconectando.delete(botId)
               startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
             }, 3000)
           } else {
             console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos de reconexión por timeout. Eliminando sesión.`))
+            reconectando.delete(botId)
             try {
               fs.rmSync(sessionFolder, { recursive: true, force: true })
               sesionesEliminadas.add(botId)
@@ -175,7 +187,9 @@ const sock = makeWASocket({
           return
         }
         console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando (razón: ${reason})...`))
+        reconectando.add(botId)
         setTimeout(() => {
+          reconectando.delete(botId)
           startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
         }, 3000)
       }
