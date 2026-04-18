@@ -25,15 +25,18 @@ export default {
       if (isNaN(page) || page < 1 || page > totalPages) return m.reply(`💙 La página *${page}* no existe. Hay *${totalPages}* páginas.`)
       const start = (page - 1) * pageSize
       const end = start + pageSize
-      let text = `*💙 EconomyBoard *\n\n`
+      let text = `*💙 EconomyBoard*\n\n`
       text += sorted.slice(start, end).map(({ name, coins, bank }, i) => {
           const total = (coins || 0) + (bank || 0)
-          return `✩ ${start + i + 1} › *${name}*\n     Total → *🌱${total.toLocaleString()} ${monedas}*`
+          return `👑 ${start + i + 1} › *${name}*\n     Total → *🌱${total.toLocaleString()} ${monedas}*`
         }).join('\n')
-      text += `\n\n> ⌦ Página *${page}* de *${totalPages}*`
+      text += `\n\n> 🌱 Página *${page}* de *${totalPages}*`
       if (page < totalPages)
         text += `\n> Para ver la siguiente página › *${usedPrefix + command} ${page + 1}*`
-      await client.sendMessage(chatId, { text }, { quoted: m })
+      await client.sendMessage(chatId, {
+        image: { url: 'https://i.ibb.co/1Jq1LCPD/miku2.jpg' },
+        caption: text
+      }, { quoted: m })
     } catch (e) {
       await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
