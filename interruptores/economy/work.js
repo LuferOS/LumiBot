@@ -12,7 +12,7 @@ export default {
     user.lastwork = user.lastwork || 0
     if (Date.now() < user.lastwork) {
       const tiempoRestante = formatTime(user.lastwork - Date.now())
-      return client.reply(m.chat, `💙 Debes esperar *${tiempoRestante}* para usar *${usedPrefix + command}* de nuevo.`, m)
+      return client.reply(m.chat, `💙 Debes esperar *${tiempoRestante}* para usar *${usedPrefix + command}* de nuevo.`, m, global.miku)
     }
     user.lastwork = Date.now() + cooldown
     const rsl = Math.floor(Math.random() * (4000 - 2000 + 1)) + 2000

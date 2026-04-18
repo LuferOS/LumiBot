@@ -23,13 +23,13 @@ export default {
     if (user.lastApuesta && ahora - user.lastApuesta < tiempoEspera) {
       const restante = user.lastApuesta + tiempoEspera - ahora
       const tiempoRestante = formatTime(restante)
-      return client.reply(m.chat, `💙 Debes esperar *${tiempoRestante}* para usar *${usedPrefix + command}* nuevamente.`, m)
+      return client.reply(m.chat, `💙 Debes esperar *${tiempoRestante}* para usar *${usedPrefix + command}* nuevamente.`, m, global.miku)
     }
     user.lastApuesta = ahora
     count = count ? /all/i.test(count) ? Math.floor(db.users[m.sender].limit / buatall) : parseInt(count) : args[0] ? parseInt(args[0]) : 1
     count = Math.max(1, count)
     if (args.length < 1) {
-      return client.reply(m.chat, `❀ Ingresa la cantidad de *${currency}* que deseas aportar contra *${botname}*\n> Ejemplo: *${usedPrefix + command} 100*`, m)
+      return client.reply(m.chat, `❀ Ingresa la cantidad de *${currency}* que deseas aportar contra *${botname}*\n> Ejemplo: *${usedPrefix + command} 100*`, m, global.miku)
     }
     if (user.coins >= count) {
       user.coins -= count
@@ -53,7 +53,7 @@ export default {
       const replyMsg = `💙 \`Veamos qué números tienen!\`\n\n➠ *${botname}* : ${Aku}\n➠ *${userName}* : ${Kamu}\n\n${resultado}`
       await client.sendMessage(m.chat, { text: replyMsg.trim(), edit: key }, { quoted: m })
     } else {
-      client.reply(m.chat, `💙 No tienes *🌱${formatNumber(count)} ${currency}* para apostar!`, m)
+      client.reply(m.chat, `💙 No tienes *🌱${formatNumber(count)} ${currency}* para apostar!`, m, global.miku)
     }
   }
 }

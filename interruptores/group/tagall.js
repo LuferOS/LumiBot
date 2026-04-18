@@ -6,12 +6,12 @@ export default {
     const groupInfo = await client.groupMetadata(m.chat)
     const participants = groupInfo.participants
     const pesan = args.join(' ')
-    let teks = `﹒⌗﹒🌱 .ৎ˚₊‧  ${pesan || 'Revivan 🪴'}\n\n𐚁 ֹ ִ \`GROUP TAG\` ! ୧ ֹ ִ🍃\n\n🍄 \`Miembros :\` ${participants.length}\n🌿 \`Solicitado por :\` @${m.sender.split('@')[0]}\n\n` +
-      `╭┄ ꒰ \`Lista de usuarios:ׄ\` ꒱ ┄\n`
+    let teks = `💙 *HATSUNE MIKU CALL* 💙\n\n${pesan || '¡Mencionando a todos!'}\n\n💙 \`Miembros:\` ${participants.length}\n💙 \`Solicitado por:\` @${m.sender.split('@')[0]}\n\n` +
+      `╭───『 *LISTA* 』───╮\n`
     for (const mem of participants) {
-      teks += `┊ꕥ @${mem.id.split('@')[0]}\n`
+      teks += `│ 💙 @${mem.id.split('@')[0]}\n`
     }
-    teks += `╰⸼ ┄ ┄ ꒰ \`${version}\` ꒱ ┄ ┄⸼`
-    return client.reply(m.chat, teks, m, { mentions: [m.sender, ...participants.map(p => p.id)] })
+    teks += `╰────────────────╯`
+    return client.reply(m.chat, teks, m, global.miku, { mentions: [m.sender, ...participants.map(p => p.id)] })
   }
 }

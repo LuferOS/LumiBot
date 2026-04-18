@@ -11,7 +11,7 @@ export default {
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : m.sender)
     const who = await resolveLidToRealJid(who2, client, m.chat)
     if (!chatData.users?.[who])
-      return m.reply(`「✎」 El usuario mencionado no está registrado en el bot.`)
+      return m.reply(`💙 El usuario mencionado no está registrado en el bot.`)
     const userStats = chatData.users[who].stats || {}
     const now = new Date()
     const daysArg = parseInt(args[0]) || 30

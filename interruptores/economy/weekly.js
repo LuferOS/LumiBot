@@ -18,7 +18,7 @@ export default {
     user.lastweekly = user.lastweekly || 0
     if (now < user.lastweekly) {
       const wait = formatTime(Math.floor((user.lastweekly - now) / 1000))
-      return client.reply(m.chat, `💙 Ya has reclamado tu recompensa semanal.\n> Puedes reclamarlo de nuevo en *${wait}*`, m)
+      return client.reply(m.chat, `💙 Ya has reclamado tu recompensa semanal.\n> Puedes reclamarlo de nuevo en *${wait}*`, m, global.miku)
     }
     const lost = users.weeklyStreak >= 1 && now - users.lastWeeklyGlobal > gap * 1.5
     if (lost) users.weeklyStreak = 0
@@ -33,7 +33,7 @@ export default {
     let nextReward = Math.min(40000 + users.weeklyStreak * 5000, 185000).toLocaleString()
     let msg = `> Semana *${users.weeklyStreak + 1}* » *+🌱${nextReward}*`
     if (lost) msg += `\n> ☆ ¡Has perdido tu racha de semanas!`
-    client.reply(m.chat, `「❁」 Has reclamado tu recompensa semanal de *🌱${coins.toLocaleString()} ${currency}* (Semana *${users.weeklyStreak}*)\n${msg}`, m)
+    client.reply(m.chat, `「❁」 Has reclamado tu recompensa semanal de *🌱${coins.toLocaleString()} ${currency}* (Semana *${users.weeklyStreak}*)\n${msg}`, m, global.miku)
   }
 }
 

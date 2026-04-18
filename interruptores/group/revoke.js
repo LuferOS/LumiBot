@@ -7,9 +7,9 @@ export default {
       await client.groupRevokeInvite(m.chat)
       const code = await client.groupInviteCode(m.chat)
       const link = `https://chat.whatsapp.com/${code}`
-      const teks = `﹒⌗﹒🌿 .ৎ˚₊‧  El enlace del grupo ha sido restablecido:\n\n𐚁 ֹ ִ \`NEW GROUP LINK\` ! ୧ ֹ ִ🔗\n☘️ \`Solicitado por :\` @${m.sender.split('@')[0]}\n\n🌱 \`Enlace :\` ${link}`
+      const teks = `💙 El enlace del grupo ha sido restablecido:\n\n𐚁 ֹ ִ \`NEW GROUP LINK\` ! ୧ ֹ ִ🔗\n☘️ \`Solicitado por :\` @${m.sender.split('@')[0]}\n\n🌱 \`Enlace :\` ${link}`
       await m.react('🕒')
-      await client.reply(m.chat, teks, m, { mentions: [m.sender] })
+      await client.reply(m.chat, teks, m, global.miku, { mentions: [m.sender] })
       await m.react('✔️')
     } catch (e) {
       await m.react('✖️')

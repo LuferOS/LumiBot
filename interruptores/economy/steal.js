@@ -15,21 +15,21 @@ export default {
     user.laststeal ||= 0
     if (Date.now() < user.laststeal) {
       const restante = user.laststeal - Date.now()
-      return client.reply(m.chat, `💙 Debes esperar *${formatTime(restante)}* para usar *${usedPrefix + command}* de nuevo.`, m)
+      return client.reply(m.chat, `💙 Debes esperar *${formatTime(restante)}* para usar *${usedPrefix + command}* de nuevo.`, m, global.miku)
     }
     const mentioned = m.mentionedJid || []
     const who2 = mentioned[0] || (m.quoted ? m.quoted.sender : null)
     const who = await resolveLidToRealJid(who2, client, m.chat)
-    if (!who) return client.reply(m.chat, `🌱 Debes mencionar a alguien para intentar robarle.`, m)
+    if (!who) return client.reply(m.chat, `🌱 Debes mencionar a alguien para intentar robarle.`, m, global.miku)
     if (!(who in db.chats[m.chat].users)) {
-      return client.reply(m.chat, `💙 El usuario no se encuentra en mi base de datos.`, m)
+      return client.reply(m.chat, `💙 El usuario no se encuentra en mi base de datos.`, m, global.miku)
     }
     const name = db.users[who]?.name || who.split('@')[0]
     const target = db.chats[m.chat].users[who]
     const lastCmd = db.chats[m.chat].users[who]?.lastCmd || 0
     const tiempoInactivo = Date.now() - lastCmd
     if (tiempoInactivo < 3600000) {
-      return client.reply(m.chat, `💙 Solo puedes robarle *${currency}* a un usuario si estuvo más de 1 hora inactivo.`, m)
+      return client.reply(m.chat, `💙 Solo puedes robarle *${currency}* a un usuario si estuvo más de 1 hora inactivo.`, m, global.miku)
     }
     const chance = Math.random()
     if (chance < 0.3) {
@@ -49,16 +49,16 @@ export default {
         user.bank = 0
       }
       user.laststeal = Date.now() + 3600000
-      return client.reply(m.chat, `💙 El robo salió mal y perdiste *🌱${loss.toLocaleString()} ${currency}*.`, m)
+      return client.reply(m.chat, `💙 El robo salió mal y perdiste *🌱${loss.toLocaleString()} ${currency}*.`, m, global.miku)
     }
     const rob = Math.floor(Math.random() * (8000 - 4000 + 1)) + 4000
     if (target.coins < rob) {
-      return client.reply(m.chat, `💙 *${name}* no tiene suficientes *${currency}* fuera del banco como para que valga la pena intentar robar.`, m, { mentions: [who] })
+      return client.reply(m.chat, `💙 *${name}* no tiene suficientes *${currency}* fuera del banco como para que valga la pena intentar robar.`, m, global.miku, { mentions: [who] })
     }
     user.coins += rob
     target.coins -= rob
     user.laststeal = Date.now() + 3600000
-    client.reply(m.chat, `🌱 Le robaste *🌱${rob.toLocaleString()} ${currency}* a *${name}*`, m, { mentions: [who] })
+    client.reply(m.chat, `🌱 Le robaste *🌱${rob.toLocaleString()} ${currency}* a *${name}*`, m, global.miku, { mentions: [who] })
   }
 }
 

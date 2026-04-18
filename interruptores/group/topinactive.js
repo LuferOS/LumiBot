@@ -22,12 +22,12 @@ export default {
       })
       .sort((a,b) => a.totalMsgs - b.totalMsgs)
 
-    if (ranking.length === 0) return m.reply(`「✎」 No hay actividad registrada en los últimos ${daysArg} días.`)
+    if (ranking.length === 0) return m.reply(`💙 No hay actividad registrada en los últimos ${daysArg} días.`)
 
     const page = parseInt(args[1]) || 1
     const perPage = 10
     const totalPages = Math.ceil(ranking.length / perPage)
-    if (page < 1 || page > totalPages) return m.reply(`「✎」 Página inválida. Solo hay ${totalPages} páginas disponibles.`)
+    if (page < 1 || page > totalPages) return m.reply(`💙 Página inválida. Solo hay ${totalPages} páginas disponibles.`)
 
     const start = (page - 1) * perPage
     const end = start + perPage

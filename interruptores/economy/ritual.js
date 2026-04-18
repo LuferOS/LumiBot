@@ -33,7 +33,7 @@ export default {
     user.coins += reward
     let msg = `「✿」 ${narration}\nGanaste *${reward.toLocaleString()} ${monedas}*`
     if (bonusMsg) msg += `\n${bonusMsg}`
-    await client.reply(m.chat, msg, m)
+    await client.reply(m.chat, msg, m, global.miku)
   },
 };
 

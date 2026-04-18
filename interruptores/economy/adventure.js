@@ -6,14 +6,14 @@ export default {
     const user = chat.users[m.sender]
     const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
     const currency = global.db.data.settings[botId].currency
-    if (chat.adminonly || !chat.economy) return client.reply(m.chat, `💙 Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`, m)    
+    if (chat.adminonly || !chat.economy) return client.reply(m.chat, `💙 Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`, m, global.miku)    
     user.lastadventure ||= 0
     if (user.coins == null) user.coins = 0
     if (user.health == null) user.health = 100
     if (user.health < 5) return m.reply(`💙 No tienes suficiente salud para volver a *aventurarte*.\n> Usa *"${usedPrefix}heal"* para curarte.`)
     const remainingTime = user.lastadventure - Date.now()
     if (remainingTime > 0) {
-      return client.reply(m.chat, `💙 Debes esperar *${msToTime(remainingTime)}* antes de volver a aventurarte.`, m)
+      return client.reply(m.chat, `💙 Debes esperar *${msToTime(remainingTime)}* antes de volver a aventurarte.`, m, global.miku)
     }
     const rand = Math.random()
     let cantidad = 0
