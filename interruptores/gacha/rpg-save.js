@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { ensureWaifuPvp } from '../../lib/gacha/waifuPvp.js'
+import { ensureWaifuPvp } from '../../nucleo/gacha/waifuPvp.js'
 
 const dbPath = path.join(process.cwd(), 'src', 'database')
 const databaseFilePath = path.join(dbPath, 'waifudatabase.json')

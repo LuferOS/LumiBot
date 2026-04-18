@@ -1,7 +1,7 @@
 ﻿import { promises as fs } from 'fs';
 import fs_sync from 'fs';
 import path from 'path';
-import { instantiateWaifu, formatPvpLine } from '../../lib/gacha/waifuPvp.js'
+import { instantiateWaifu, formatPvpLine } from '../../nucleo/gacha/waifuPvp.js'
 
 const dbPath = path.join(process.cwd(), 'src', 'database');
 const databaseFilePath = path.join(dbPath, 'waifudatabase.json');

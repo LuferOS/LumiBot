@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import fs from 'fs';
-import { resolveLidToRealJid } from "../../lib/utils.js";
+import { resolveLidToRealJid } from "../../nucleo/utils.js";
 
 const captions = {      
   anal: (from, to) => from === to ? 'se la metió en el ano.' : 'se la metió en el ano a',

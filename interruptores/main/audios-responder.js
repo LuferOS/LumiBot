@@ -4,7 +4,7 @@ import os from 'os'
 import { spawn } from 'child_process'
 import crypto from 'crypto'
 import { fileURLToPath } from 'url'
-import { getBotJid } from '../../lib/bot-helper.js'
+import { getBotJid } from '../../nucleo/bot-helper.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
