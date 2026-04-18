@@ -109,6 +109,14 @@ const sock = makeWASocket({
         const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.reason || 0
         const intentos = reintentos[botId] || 0
         reintentos[botId] = intentos + 1
+
+        
+        if (global.conns.find((c) => c.userId === botId) && intentos > 1) {
+          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Ya está conectado, omitiendo reconexión`))
+          delete reintentos[botId]
+          return
+        }
+
         if ([401, 403].includes(reason)) {
           if (intentos < 5) {
             console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Conexión cerrada (código ${reason}) intento ${intentos}/5 → Reintentando...`))
@@ -162,8 +170,7 @@ const sock = makeWASocket({
   } catch (err) {
    console.log(chalk.gray(`[ 💙 ]  → ${err}`))
   }
-  process.on('uncaughtException', console.error)
-   return sock
+  return sock
 }
 
 async function joinChannels(client) {
