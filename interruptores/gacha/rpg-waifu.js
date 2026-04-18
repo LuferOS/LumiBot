@@ -690,6 +690,7 @@ const _rwInFlight = new Set()
 
 let handler = async (client, m) => {
     const userId = m.sender;
+    if (!userId) return m.reply('❌ Error: No se pudo identificar tu usuario.')
     if (_rwInFlight.has(userId)) return
     _rwInFlight.add(userId)
     const currentTime = Date.now();
@@ -814,6 +815,7 @@ handler.before = async function (m, { conn, client }) {
         const primaryBot = chat?.primaryBot;
         if (primaryBot) {
             const currentClient = client || conn;
+            if (!currentClient?.user) return false;
             const candidates = [
                 currentClient?.user?.id,
                 currentClient?.user?.jid,
@@ -844,7 +846,9 @@ handler.before = async function (m, { conn, client }) {
             const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson;
             if (paramsJson) {
                 const params = JSON.parse(paramsJson);
-                buttonId = params.id;
+                if (params && params.id) {
+                    buttonId = params.id;
+                }
             }
         } catch (e) {}
     }

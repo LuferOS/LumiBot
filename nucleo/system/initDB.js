@@ -1,7 +1,7 @@
 let isNumber = (x) => typeof x === 'number' && !isNaN(x)
 
 function initDB(m, client) {
-  const jid = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  const jid = client.user?.id?.split(':')[0] + '@s.whatsapp.net'
 
   const settings = global.db.data.settings[jid] ||= {}
   settings.self ??= false

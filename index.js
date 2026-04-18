@@ -84,43 +84,6 @@ async function loadBots() {
   setTimeout(loadBots, 60 * 1000);
 }
 
-async function checkSubBotsHealth() {
-  try {
-    const subBotsFolder = './Sessions/Subs';
-    if (!fs.existsSync(subBotsFolder)) {
-      setTimeout(checkSubBotsHealth, 5 * 60 * 1000);
-      return;
-    }
-
-    const botIds = fs.readdirSync(subBotsFolder);
-    for (const userId of botIds) {
-      const sessionPath = path.join(subBotsFolder, userId);
-      const credsPath = path.join(sessionPath, 'creds.json');
-      if (!fs.existsSync(credsPath)) continue;
-
-      const conn = global.conns.find((c) => c.userId === userId);
-      
-      if (!conn || !conn.user) {
-        if (!reconnecting.has(userId)) {
-          console.log(chalk.gray(`[ 💙 ] SUB-BOT ${userId} no conectado, reconectando...`));
-          try {
-            reconnecting.add(userId);
-            await startSubBot(null, null, 'Auto reconexión', false, userId, sessionPath);
-          } catch (e) {
-            console.log(chalk.gray(`[ checkSubBotsHealth ] Error reconectando ${userId}: ${e?.message || e}`));
-          } finally {
-            reconnecting.delete(userId);
-          }
-        }
-        await new Promise((res) => setTimeout(res, 3000));
-      }
-    }
-  } catch (error) {
-    console.error(chalk.red('[ checkSubBotsHealth ] Error:', error.message));
-  }
-  setTimeout(checkSubBotsHealth, 5 * 60 * 1000);
-}
-
 function cleanCache() {
   try {
     const tmpFolder = './tmp';
@@ -317,7 +280,6 @@ cleanCache();
 
 (async () => {
 await loadBots();
-checkSubBotsHealth();
 })();
 
 (async () => {

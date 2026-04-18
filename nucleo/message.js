@@ -189,7 +189,7 @@ export function getGroupAdmins(participants) {
 }
 
 export async function fixLid(client, m) {
-  const decodedJid = client.decodeJid((m.fromMe && client.user.id) || m.key.participant || m.chat || '')
+  const decodedJid = client.decodeJid((m.fromMe && client.user?.id) || m.key.participant || m.chat || '')
   const realJid = await resolveLidToRealJid(decodedJid, client, m.chat)
   return realJid
 }
@@ -213,8 +213,8 @@ export async function smsg(client, m, store) {
     return buffer
   }
 
-  const botLid = client.decodeJid(client.user.lid)
-  const botNumber = client.decodeJid(client.user.id)
+  const botLid = client.decodeJid(client.user?.lid)
+  const botNumber = client.decodeJid(client.user?.id)
   let fix = ''
   if (!m) return m
   if (m.key) {
@@ -237,7 +237,7 @@ export async function smsg(client, m, store) {
     m.body = m.message?.conversation || m.msg?.text || m.msg?.conversation || m.msg?.caption || m.msg?.selectedButtonId || m.msg?.singleSelectReply?.selectedRowId || m.msg?.selectedId || m.msg?.contentText || m.msg?.selectedDisplayText || m.msg?.title || m.msg?.name || ''
     m.mentionedJid = m.msg?.contextInfo?.mentionedJid || []
     m.text = m.msg?.text || m.msg?.caption || m.message?.conversation || m.msg?.contentText || m.msg?.selectedDisplayText || m.msg?.title || ''
-    const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const idBot = client.user?.id?.split(':')[0] + '@s.whatsapp.net'
     const config = global.db.data.settings[idBot] ||= {}
     const splitter = new GraphemeSplitter()
     let activePrefixes = []
@@ -285,7 +285,7 @@ export async function smsg(client, m, store) {
       if (m.msg?.contextInfo?.participant?.endsWith('@lid'))
         m.msg.contextInfo.participant = m?.metadata?.participants?.find((a) => a.lid === m.msg.contextInfo.participant)?.id || m.msg.contextInfo.participant
       m.quoted.sender = await fixLid2(client, m)
-      m.quoted.fromMe = m.quoted.sender === client.decodeJid(client.user.id)
+      m.quoted.fromMe = m.quoted.sender === client.decodeJid(client.user?.id)
       m.quoted.text = m.quoted.caption || m.quoted.conversation || m.quoted.contentText || m.quoted.selectedDisplayText || m.quoted.title || ''
       m.quoted.msg = extractMessageContent(m.quoted.message[m.quoted.type]) || m.quoted.message[m.quoted.type]
       m.quoted.mentionedJid = m.quoted?.msg?.contextInfo?.mentionedJid || []
@@ -395,8 +395,8 @@ export async function smsg(client, m, store) {
   }
 
   client.appenTextMessage = async (text, chatUpdate) => {
-    let messages = await generateWAMessage(m.chat, { text: text, mentions: m.mentionedJid }, { userJid: client.user.id, quoted: m.quoted && m.quoted.fakeObj })
-    messages.key.fromMe = areJidsSameUser(m.sender, conn.user.id)
+    let messages = await generateWAMessage(m.chat, { text: text, mentions: m.mentionedJid }, { userJid: client.user?.id, quoted: m.quoted && m.quoted.fakeObj })
+    messages.key.fromMe = areJidsSameUser(m.sender, conn?.user?.id)
     messages.key.id = m.key.id
     messages.pushName = m.pushName
     if (m.isGroup) messages.participant = m.sender
@@ -537,7 +537,7 @@ export async function smsg(client, m, store) {
     if (copy && (typeof copy === 'string' || typeof copy === 'number')) { dynamicButtons.push({ name: 'cta_copy', buttonParamsJson: JSON.stringify({ display_text: 'Copy', copy_code: copy, })}) }
     if (urls && Array.isArray(urls)) { urls.forEach((url) => { dynamicButtons.push({ name: 'cta_url', buttonParamsJson: JSON.stringify({ display_text: url[0], url: url[1], merchant_url: url[1] })}) })}
     const interactiveMessage = { body: { text: text }, footer: { text: footer }, header: { hasMediaAttachment: false, imageMessage: img ? img.imageMessage : null, videoMessage: video ? video.videoMessage : null, }, nativeFlowMessage: { buttons: dynamicButtons, messageParamsJson: '' }}
-    let msgL = generateWAMessageFromContent(jid, { viewOnceMessage: { message: { interactiveMessage }}}, { userJid: client.user.jid, quoted })
+    let msgL = generateWAMessageFromContent(jid, { viewOnceMessage: { message: { interactiveMessage }}}, { userJid: client.user?.jid, quoted })
     client.relayMessage(jid, msgL.message, { messageId: msgL.key.id, ...options })
   }
 
@@ -585,7 +585,7 @@ export async function smsg(client, m, store) {
   }
 
   client.sendContextInfoIndex = async (jid, text = '', options = {}, quoted = null, useQuoted = true, mentionedJid = null, config = {}) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = client.user?.id?.split(':')[0] + '@s.whatsapp.net'
     const settings = global.db.data.settings[botId] ||= {}
     const banner = config.banner || settings.icon || ''
     const botnam = config.title || settings.botname || ''
