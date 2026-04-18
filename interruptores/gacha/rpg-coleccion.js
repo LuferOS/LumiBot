@@ -156,9 +156,10 @@ let handler = async (client, m) => {
                 
                 const displayList = list.slice(0, 15);
                 displayList.forEach((waifu, index) => {
-                    const date = new Date(waifu.obtainedAt).toLocaleDateString('es-ES', { 
-                        day: '2-digit', 
-                        month: '2-digit' 
+                    const dateObj = new Date(waifu.obtainedAt);
+                    const date = isNaN(dateObj.getTime()) ? '??' : dateObj.toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit'
                     });
                     const globalIndex = indexMap.get(keyOf(waifu)) || (index + 1)
                     message += `#${String(globalIndex).padStart(2, '0')} ${waifu.name} 📅${date}\n`;
@@ -179,12 +180,7 @@ let handler = async (client, m) => {
         message += `• *.waifupvp 01 @user 02* - Batalla PVP\n`;
         message += `━━━━━━━━━━━━━━━━━━`;
 
-        const catalogo = path.join(process.cwd(), 'src', 'catalogo.jpg')
-        if (fs.existsSync(catalogo)) {
-            return await client.sendFile(m.chat, catalogo, 'coleccion.jpg', message, m, false, { mentions: [userId] })
-        }
-
-        return client.reply(m.chat, message, m, { mentions: [userId] });
+        return await client.sendFile(m.chat, 'https://files.catbox.moe/y980w8.png', 'coleccion.jpg', message, m, false, { mentions: [userId] });
     } catch (e) {
         console.error(e);
         return m.reply('💙 Error al mostrar la colección. Intenta de nuevo.');
