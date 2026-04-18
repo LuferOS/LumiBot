@@ -40,8 +40,8 @@ const sock = makeWASocket({
   logger: pino({ level: 'silent' }),
   printQRInTerminal: false,
   browser: Browsers.macOS('Chrome'),
-  auth: state,
-  markOnlineOnConnect: true,
+  auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' })) },
+  markOnlineOnConnect: false,
   generateHighQualityLinkPreview: true,
   syncFullHistory: false,
   getMessage: async () => '',
@@ -49,9 +49,9 @@ const sock = makeWASocket({
   userDevicesCache,
   cachedGroupMetadata: async (jid) => groupCache.get(jid),
   version,
-  keepAliveIntervalMs: 60_000,
-  maxIdleTimeMs: 120_000,
-  })
+  keepAliveIntervalMs: 45000,
+  maxIdleTimeMs: 60000,
+})
 
   sock.isInit = false
   sock.ev.on('creds.update', saveCreds)
