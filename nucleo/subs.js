@@ -118,24 +118,23 @@ const sock = makeWASocket({
       if (connection === 'close') {
         const botId = sock.userId || id
         const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.reason || 0
-        const intentos = reintentos[botId] || 0
-        reintentos[botId] = intentos + 1
 
-        
-        if (global.conns.find((c) => c.userId === botId) && intentos > 1) {
-          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Ya está conectado, omitiendo reconexión`))
-          delete reintentos[botId]
+        if (global.conns.find((c) => c.userId === botId)) {
+          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Ya está conectado en global.conns, omitiendo reconexión`))
           return
         }
 
+        const intentos = reintentos[botId] || 0
+        reintentos[botId] = intentos + 1
+
         if ([401, 403].includes(reason)) {
-          if (intentos < 5) {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Conexión cerrada (código ${reason}) intento ${intentos}/5 → Reintentando...`))
+          if (intentos < 3) {
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Conexión cerrada (código ${reason}) intento ${intentos}/3 → Reintentando...`))
             setTimeout(() => {
               startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
             }, 3000)
           } else {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 5 intentos. Eliminando sesión. Requiere nueva autenticación.`))
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos. Eliminando sesión. Requiere nueva autenticación.`))
             try {
               fs.rmSync(sessionFolder, { recursive: true, force: true })
               sesionesEliminadas.add(botId)
@@ -159,11 +158,19 @@ const sock = makeWASocket({
               startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
             }, 3000)
           } else {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos de reconexión por timeout. Esperando 60 segundos...`))
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos de reconexión por timeout. Eliminando sesión.`))
+            try {
+              fs.rmSync(sessionFolder, { recursive: true, force: true })
+              sesionesEliminadas.add(botId)
+            } catch (e) {
+              console.error(`[ 💙 ] No se pudo eliminar la carpeta ${sessionFolder}:`, e)
+            }
             delete reintentos[botId]
-            setTimeout(() => {
-              startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
-            }, 60000)
+            const connIndex = global.conns.findIndex((c) => c.userId === botId)
+            if (connIndex !== -1) {
+              global.conns.splice(connIndex, 1)
+            }
+            return
           }
           return
         }
