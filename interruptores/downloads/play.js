@@ -313,33 +313,81 @@ export async function processDownload(conn, m, videoInfo, option) {
       thumbnailBuffer = await fetchThumbnailBuffer(thumbUrl)
     }
     if (asDocument) {
-      await conn.sendMessage(m.chat, {
-        document: { url: data.downloadUrl },
-        mimetype,
-        fileName: `${fileName}.${ext}`,
-        caption: `📄 ${videoInfo.title}`,
-      }, { quoted: m })
+      let retries = 3
+      let delay = 2000
+      while (retries > 0) {
+        try {
+          await conn.sendMessage(m.chat, {
+            document: { url: data.downloadUrl },
+            mimetype,
+            fileName: `${fileName}.${ext}`,
+            caption: `📄 ${videoInfo.title}`,
+          }, { quoted: m })
+          break
+        } catch (e) {
+          retries--
+          if (retries === 0) throw e
+          if (e.message?.includes('rate-overlimit') || e.message?.includes('timed out')) {
+            await new Promise(resolve => setTimeout(resolve, delay))
+            delay *= 2
+          } else {
+            throw e
+          }
+        }
+      }
     } else if (isAudio) {
       tempFilePath = await downloadFile(data.downloadUrl, `${Date.now()}_${fileName}.${ext}`, data.isGoogleVideo ?? false)
       const fileBuffer = fs.readFileSync(tempFilePath)
       const audioBuffer = thumbnailBuffer
         ? embedCoverArt(fileBuffer, thumbnailBuffer, videoInfo.title)
         : fileBuffer
-      await conn.sendMessage(m.chat, {
-        audio: audioBuffer,
-        mimetype: 'audio/mpeg',
-        ptt: false,
-        fileName: `${fileName}.mp3`,
-      }, { quoted: m })
+      let retries = 3
+      let delay = 2000
+      while (retries > 0) {
+        try {
+          await conn.sendMessage(m.chat, {
+            audio: audioBuffer,
+            mimetype: 'audio/mpeg',
+            ptt: false,
+            fileName: `${fileName}.mp3`,
+          }, { quoted: m })
+          break
+        } catch (e) {
+          retries--
+          if (retries === 0) throw e
+          if (e.message?.includes('rate-overlimit') || e.message?.includes('timed out')) {
+            await new Promise(resolve => setTimeout(resolve, delay))
+            delay *= 2
+          } else {
+            throw e
+          }
+        }
+      }
       deleteFile(tempFilePath)
       tempFilePath = null
     } else {
-      await conn.sendMessage(m.chat, {
-        video: { url: data.downloadUrl },
-        mimetype: 'video/mp4',
-        fileName: `${fileName}.mp4`,
-        caption: `🎬 ${videoInfo.title}`,
-      }, { quoted: m })
+      let retries = 3
+      let delay = 2000
+      while (retries > 0) {
+        try {
+          await conn.sendMessage(m.chat, {
+            video: { url: data.downloadUrl },
+            mimetype: 'video/mp4',
+            fileName: `${fileName}.mp4`,
+            caption: `🎬 ${videoInfo.title}`,
+          }, { quoted: m })
+          break
+        } catch (e) {
+          retries--
+          if (retries === 0) throw e
+          if (e.message?.includes('rate-overlimit') || e.message?.includes('timed out')) {
+            await new Promise(resolve => setTimeout(resolve, delay))
+            delay *= 2
+          } else {
+            throw e
+          }
+        }
+      }
     }
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
     const user = global.db?.data?.users?.[m.sender]

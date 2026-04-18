@@ -213,14 +213,12 @@ export async function all(m, { client }) {
   const botJid = getBotJid(client) || ((client.user?.id?.split(':')[0] || client.user?.lid) + '@s.whatsapp.net')
   const botSettings = (global.db.data.settings && global.db.data.settings[botJid]) || {}
   const primaryBotId = chat?.primaryBot
-  const normDigits = (jid = '') => {
-    const raw = String(jid || '')
-    const base = raw.split('@')[0].split(':')[0]
-    return base.replace(/\D/g, '')
+  const normalizeJid = (jid) => {
+    if (!jid) return ''
+    const clean = String(jid).split(':')[0].replace(/\D/g, '')
+    return clean + '@s.whatsapp.net'
   }
-  const botDigits = normDigits(client.user?.id || client.user?.jid || client.user?.lid || botJid)
-  const primaryDigits = normDigits(primaryBotId || '')
-  const isPrimary = !primaryBotId || (primaryDigits && primaryDigits === botDigits)
+  const isPrimary = !primaryBotId || normalizeJid(primaryBotId) === normalizeJid(botJid)
   if (!isPrimary) return
   const activePrefixes =
     botSettings.prefix === true

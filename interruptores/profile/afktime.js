@@ -1,9 +1,14 @@
 import { resolveLidToRealJid } from "../../nucleo/utils.js"
 
 export async function before(m, { client }) {
-const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net'
+const normalizeJid = (jid) => {
+  if (!jid) return ''
+  const clean = String(jid).split(':')[0].replace(/\D/g, '')
+  return clean + '@s.whatsapp.net'
+}
+const botJid = normalizeJid(client.user.id)
 const primaryBot = global.db.data.chats[m.chat].primaryBot
-if (primaryBot && botJid !== primaryBot) return 
+if (primaryBot && botJid !== normalizeJid(primaryBot)) return 
 const currency = global.db.data.settings[botJid]?.currency || 'coins'
 const user = global.db.data.chats[m.chat].users[m.sender] ||= {}
 user.coins = user.coins || 0

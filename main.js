@@ -138,10 +138,20 @@ export default async (client, m) => {
   }
   const botprimaryId = chat?.primaryBot
   if (botprimaryId && botprimaryId !== botJid && hasPrefix && m.isGroup) {
+    const normalizeJid = (jid) => {
+      if (!jid) return ''
+      const clean = String(jid).split(':')[0].replace(/\D/g, '')
+      return clean + '@s.whatsapp.net'
+    }
+    const normalizedPrimary = normalizeJid(botprimaryId)
+    const normalizedCurrent = normalizeJid(botJid)
     const participants = (await client.groupMetadata(m.chat).catch(() => ({ participants: [] }))).participants
-    const primaryInGroup = participants.some(p => (p.phoneNumber || p.id) === botprimaryId)
-    const primaryInSessions = getAllSessionBots().includes(botprimaryId)
-    if (primaryInGroup && primaryInSessions) {
+    const primaryInGroup = participants.some(p => {
+      const pJid = normalizeJid(p.phoneNumber || p.id || p.jid)
+      return pJid === normalizedPrimary
+    })
+    const primaryInSessions = getAllSessionBots().some(b => normalizeJid(b) === normalizedPrimary)
+    if (primaryInGroup && primaryInSessions && normalizedPrimary !== normalizedCurrent) {
       return
     }
   }
