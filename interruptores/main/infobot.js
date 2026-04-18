@@ -51,10 +51,10 @@ export default {
     const isOficialBot = botId === global.client.user.id.split(':')[0] + "@s.whatsapp.net"
     const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot'
     try {
-    const message = `✐ Información del bot *${botname}!*
+    const message = `💮 Información del bot *${botname}!*
 
-✿ *Nombre Corto ›* ${namebot}
-✿ *Nombre Largo ›* ${botname}
+💙 *Nombre Corto ›* ${namebot}
+💙 *Nombre Largo ›* ${botname}
 💙 *Moneda ›* ${monedas}
 💙 *Prefijo${Array.isArray(prefijo) && prefijo.length > 1 ? 's' : ''} ›* ${prefijo === true ? '`sin prefijos`' : (Array.isArray(prefijo) ? prefijo : [prefijo || '/']).map(p => `\`${p}\``).join(', ')}
 
@@ -91,7 +91,7 @@ await client.sendMessage(m.chat, banner.includes('.mp4') || banner.includes('.we
               },
               externalAdReply: {
                 title: botname,
-                body: `${namebot}, mᥲძᥱ ᥕі𝗍һ ᑲᥡ ⁱᵃᵐ|𝔇ĕ𝐬†𝓻⊙γ𒆜`,
+                body: `${namebot},© 🄿🄾🅆🄴🅁🄴🄳 (ㅎㅊDEPOOLㅊㅎ)`,
                 showAdAttribution: false,
                 thumbnailUrl: banner,
                 mediaType: 1,

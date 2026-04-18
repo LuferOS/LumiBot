@@ -360,13 +360,19 @@ export async function processDownload(conn, m, videoInfo, option) {
 }
 
 export async function processYouTubeButton(conn, m) {
-  const body = m.body || m.text || ''
-  if (!body) return false
+  let buttonId = m.body || m.text || null
+  if (m.message?.buttonsResponseMessage) {
+    buttonId = m.message.buttonsResponseMessage.selectedButtonId
+  }
+  if (m.message?.templateButtonReplyMessage) {
+    buttonId = m.message.templateButtonReplyMessage.selectedId
+  }
+  if (!buttonId) return false
   let option = null
-  if      (body.includes('youtube_audio_') && !body.includes('_doc')) option = 1
-  else if (body.includes('youtube_video_360_'))                        option = 2
-  else if (body.includes('youtube_video_doc_'))                        option = 3
-  else if (body.includes('youtube_audio_doc_'))                        option = 4
+  if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
+  else if (buttonId.includes('youtube_video_360_'))                        option = 2
+  else if (buttonId.includes('youtube_video_doc_'))                        option = 3
+  else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
   if (!option) return false
   const user = global.db?.data?.users?.[m.sender]
   if (!user?.lastYTSearch) {
@@ -393,18 +399,24 @@ export default {
   register: true,
   run: async (conn, m, args, usedPrefix, command) => {
     try {
-      const body = m.body || m.text || ''
-      if (body && (
-        body.includes('youtube_audio_') ||
-        body.includes('youtube_video_360_') ||
-        body.includes('youtube_video_doc_') ||
-        body.includes('youtube_audio_doc_')
+      let buttonId = m.body || m.text || null
+      if (m.message?.buttonsResponseMessage) {
+        buttonId = m.message.buttonsResponseMessage.selectedButtonId
+      }
+      if (m.message?.templateButtonReplyMessage) {
+        buttonId = m.message.templateButtonReplyMessage.selectedId
+      }
+      if (buttonId && (
+        buttonId.includes('youtube_audio_') ||
+        buttonId.includes('youtube_video_360_') ||
+        buttonId.includes('youtube_video_doc_') ||
+        buttonId.includes('youtube_audio_doc_')
       )) {
         let option = null
-        if      (body.includes('youtube_audio_') && !body.includes('_doc')) option = 1
-        else if (body.includes('youtube_video_360_'))                        option = 2
-        else if (body.includes('youtube_video_doc_'))                        option = 3
-        else if (body.includes('youtube_audio_doc_'))                        option = 4
+        if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
+        else if (buttonId.includes('youtube_video_360_'))                        option = 2
+        else if (buttonId.includes('youtube_video_doc_'))                        option = 3
+        else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
         if (option) {
           const user = global.db?.data?.users?.[m.sender]
           if (!user?.lastYTSearch) {
