@@ -54,88 +54,95 @@ const sock = makeWASocket({
   }
 
   sock.ev.on('connection.update', async ({ connection, lastDisconnect, isNewLogin, qr }) => {
-    if (isNewLogin) sock.isInit = false
-    if (connection === 'open') {
-      sock.uptime = Date.now();
-      sock.isInit = true
-      sock.userId = cleanJid(sock.user?.id?.split('@')[0])
-      const botDir = sock.userId + '@s.whatsapp.net'
-      if (!global.db.data.settings[botDir]) {
-        global.db.data.settings[botDir] = {}
+    try {
+      if (isNewLogin) sock.isInit = false
+      if (qr && isCode && phone && client && chatId && commandFlags[senderId]) {
+        try {
+          let codeGen = await sock.requestPairingCode(phone, 'ABCD1234');
+          codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
+          const msg = await m.reply(caption)
+          const msgCode = await m.reply(codeGen);
+          delete commandFlags[senderId];
+          setTimeout(async () => {
+            try {
+              await client.sendMessage(chatId, { delete: msg.key });
+              await client.sendMessage(chatId, { delete: msgCode.key });
+            } catch {}
+          }, 60000);
+        } catch (err) {
+          console.error("[Código Error]", err);
+        }
       }
-      global.db.data.settings[botDir].type = 'Sub'
-      if (!global.conns.find((c) => c.userId === sock.userId)) {
-        global.conns.push(sock)
+      if (qr && !isCode && client && chatId && commandFlags[senderId]) {
+        try {
+          const msgQR = await client.sendMessage(m.chat, { image: await qrcode.toBuffer(qr, { scale: 8 }), caption }, { quoted: m})
+          delete commandFlags[senderId]
+          setTimeout(async () => {
+            try {
+              await client.sendMessage(chatId, { delete: msgQR.key })
+            } catch {}
+          }, 60000)
+        } catch (err) {
+          console.error("[QR Error]", err)
+        }
+      }
+      if (connection === 'open') {
+        sock.uptime = Date.now();
+        sock.isInit = true
+        sock.userId = cleanJid(sock.user?.id?.split('@')[0])
+        const botDir = sock.userId + '@s.whatsapp.net'
+        if (!global.db.data.settings[botDir]) {
+          global.db.data.settings[botDir] = {}
+        }
+        global.db.data.settings[botDir].type = 'Sub'
+        if (!global.conns.find((c) => c.userId === sock.userId)) {
+          global.conns.push(sock)
+        }
+
+        delete reintentos[sock.userId || id]
+        await joinChannels(sock)
+        console.log(chalk.gray(`[ 💙 ]  SUB-BOT conectado: ${sock.userId}`))
       }
 
-      delete reintentos[sock.userId || id]
-      await joinChannels(sock)
-      console.log(chalk.gray(`[ 💙 ]  SUB-BOT conectado: ${sock.userId}`))
-    }
+      if (connection === 'close') {
+        const botId = sock.userId || id
+        const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.reason || 0
+        const intentos = reintentos[botId] || 0
+        reintentos[botId] = intentos + 1
+        if ([401, 403].includes(reason)) {
+          if (intentos < 5) {
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Conexión cerrada (código ${reason}) intento ${intentos}/5 → Reintentando...`))
+            setTimeout(() => {
+              startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
+            }, 3000)
+          } else {
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 5 intentos. Eliminando sesión.`))
+            try {
+              fs.rmSync(sessionFolder, { recursive: true, force: true })
+            } catch (e) {
+              console.error(`[ 💙 ] No se pudo eliminar la carpeta ${sessionFolder}:`, e)
+            }
+            delete reintentos[botId]
+          }
+          return
+        }
 
-    if (connection === 'close') {
-      const botId = sock.userId || id
-      const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.reason || 0
-      const intentos = reintentos[botId] || 0
-      reintentos[botId] = intentos + 1
-      if ([401, 403].includes(reason)) {
-        if (intentos < 5) {
-          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Conexión cerrada (código ${reason}) intento ${intentos}/5 → Reintentando...`))
+        if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.timedOut, DisconnectReason.connectionReplaced].includes(reason)) {
+          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando por timeout (${reason})...`))
           setTimeout(() => {
             startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
           }, 3000)
-        } else {
-          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 5 intentos. Eliminando sesión.`))
-          try {
-            fs.rmSync(sessionFolder, { recursive: true, force: true })
-          } catch (e) {
-            console.error(`[ 💙 ] No se pudo eliminar la carpeta ${sessionFolder}:`, e)
-          }
-          delete reintentos[botId]
+          return
         }
-        return
-      }
-
-      if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.timedOut, DisconnectReason.connectionReplaced].includes(reason)) {
+        console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando (razón: ${reason})...`))
         setTimeout(() => {
           startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
         }, 3000)
-        return
       }
-      setTimeout(() => {
-        startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
-      }, 3000)
+    } catch (error) {
+      console.error(chalk.red(`[ 💙 ] Error en connection.update: ${error.message}`))
     }
-    
-    if (qr && isCode && phone && client && chatId && commandFlags[senderId]) {
-    try {
-    let codeGen = await sock.requestPairingCode(phone, 'ABCD1234');
-    codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
-    const msg = await m.reply(caption)
-    const msgCode = await m.reply(codeGen);
-    delete commandFlags[senderId];
-    setTimeout(async () => {
-    try {
-    await client.sendMessage(chatId, { delete: msg.key });
-    await client.sendMessage(chatId, { delete: msgCode.key });
-    } catch {}
-    }, 60000);
-    } catch (err) {
-    console.error("[Código Error]", err);
-    }}
-    if (qr && !isCode && client && chatId && commandFlags[senderId]) {
-    try {
-    const msgQR = await client.sendMessage(m.chat, { image: await qrcode.toBuffer(qr, { scale: 8 }), caption }, { quoted: m})
-    delete commandFlags[senderId]
-    setTimeout(async () => {
-    try {
-    await client.sendMessage(chatId, { delete: msgQR.key })
-    } catch {}
-    }, 60000)
-    } catch (err) {
-    console.error("[QR Error]", err)
-    }}
-  });
+  })
 
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
     if (type !== 'notify') return

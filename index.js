@@ -84,6 +84,43 @@ async function loadBots() {
   setTimeout(loadBots, 60 * 1000);
 }
 
+async function checkSubBotsHealth() {
+  try {
+    const subBotsFolder = './Sessions/Subs';
+    if (!fs.existsSync(subBotsFolder)) {
+      setTimeout(checkSubBotsHealth, 5 * 60 * 1000);
+      return;
+    }
+
+    const botIds = fs.readdirSync(subBotsFolder);
+    for (const userId of botIds) {
+      const sessionPath = path.join(subBotsFolder, userId);
+      const credsPath = path.join(sessionPath, 'creds.json');
+      if (!fs.existsSync(credsPath)) continue;
+
+      const conn = global.conns.find((c) => c.userId === userId);
+      
+      if (!conn || !conn.user) {
+        if (!reconnecting.has(userId)) {
+          console.log(chalk.gray(`[ 💙 ] SUB-BOT ${userId} no conectado, reconectando...`));
+          try {
+            reconnecting.add(userId);
+            await startSubBot(null, null, 'Auto reconexión', false, userId, sessionPath);
+          } catch (e) {
+            console.log(chalk.gray(`[ checkSubBotsHealth ] Error reconectando ${userId}: ${e?.message || e}`));
+          } finally {
+            reconnecting.delete(userId);
+          }
+        }
+        await new Promise((res) => setTimeout(res, 3000));
+      }
+    }
+  } catch (error) {
+    console.error(chalk.red('[ checkSubBotsHealth ] Error:', error.message));
+  }
+  setTimeout(checkSubBotsHealth, 5 * 60 * 1000);
+}
+
 function cleanCache() {
   try {
     const tmpFolder = './tmp';
@@ -279,7 +316,8 @@ setInterval(cleanCache, 3 * 60 * 60 * 1000);
 cleanCache();
 
 (async () => {
-await loadBots(); 
+await loadBots();
+checkSubBotsHealth();
 })();
 
 (async () => {
@@ -296,6 +334,10 @@ process.on('uncaughtException', (err) => {
 
 process.on('unhandledRejection', (reason) => {
   const msg = String(reason?.message || reason || '');
-  if (msg.includes('rate-overlimit') || msg.includes('timed out') || msg.includes('Connection Closed')) return;
+  const lowerMsg = msg.toLowerCase();
+  if (lowerMsg.includes('rate-overlimit') || lowerMsg.includes('timed out') || lowerMsg.includes('timeout') || lowerMsg.includes('connection closed') || lowerMsg.includes('connection lost') || lowerMsg.includes('etimeout')) {
+    console.log(chalk.gray(`[unhandledRejection] Ignorado: ${msg.slice(0, 100)}`));
+    return;
+  }
   console.error(chalk.red('[unhandledRejection]'), msg.slice(0, 120));
 });
