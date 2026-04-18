@@ -50,16 +50,16 @@ function isDnsError(err) {
 async function validateDownloadUrl(url) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
     let response = await fetch(url, { method: 'HEAD', signal: controller.signal, redirect: 'follow' });
     clearTimeout(timeout);
 
     if (response.ok || response.status === 301 || response.status === 302) return true;
 
-    
+
     if ([400, 401, 403, 405].includes(response.status)) {
       const controller2 = new AbortController();
-      const timeout2 = setTimeout(() => controller2.abort(), 8000);
+      const timeout2 = setTimeout(() => controller2.abort(), 5000);
       response = await fetch(url, {
         method: 'GET',
         signal: controller2.signal,
@@ -92,7 +92,7 @@ async function downloadFile(url, filename) {
     console.log(`📥 URL: ${url.substring(0, 80)}...`);
 
     const controller = new AbortController();
-    const t = setTimeout(() => controller.abort(), 60000);
+    const t = setTimeout(() => controller.abort(), 30000);
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -356,7 +356,7 @@ async function getInstagramMedia(url) {
     try {
       console.log(`🔄 Intentando con ${api.name}...`);
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
+      const timeout = setTimeout(() => controller.abort(), 5000);
       
       const res = await fetch(api.endpoint, { signal: controller.signal }).then(r => r.json());
       clearTimeout(timeout)

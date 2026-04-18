@@ -12,9 +12,9 @@ const _h=[82,101,115,116,46,97,112,105,99,97,117,115,97,115,46,120,121,122].map(
 const NEW_API_BASE = process.env.NEW_API_BASE || `https://${_h}`
 const NEW_API_KEY = process.env.NEW_API_KEY || [68,69,80,79,79,76,45,107,101,121,50,53,50,53,56,48].map(c=>String.fromCharCode(c)).join('')
 const ALYA_KEY = process.env.ALYA_KEY || [68,69,80,79,79,76,45,107,101,121,54,48,48,49,53].map(c=>String.fromCharCode(c)).join('')
-const ALYA_TIMEOUT_MS = Number(process.env.ALYA_TIMEOUT_MS || 25000)
-const ALYA_RETRIES = Number(process.env.ALYA_RETRIES || 4)
-const ALYA_RETRY_DELAY_MS = Number(process.env.ALYA_RETRY_DELAY_MS || 1200)
+const ALYA_TIMEOUT_MS = Number(process.env.ALYA_TIMEOUT_MS || 15000)
+const ALYA_RETRIES = Number(process.env.ALYA_RETRIES || 2)
+const ALYA_RETRY_DELAY_MS = Number(process.env.ALYA_RETRY_DELAY_MS || 800)
 
 const activeYouTubeDownloads = global.activeYouTubeDownloads || (global.activeYouTubeDownloads = new Map())
 
@@ -40,7 +40,7 @@ function formatViews(views) {
   return n.toLocaleString()
 }
 
-async function fetchJson(url, timeoutMs = 30000) {
+async function fetchJson(url, timeoutMs = 15000) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
   try {
@@ -57,7 +57,7 @@ async function fetchJson(url, timeoutMs = 30000) {
   }
 }
 
-async function fetchJsonWithRetry(url, timeoutMs = 30000, maxRetries = 3, delayMs = 1500) {
+async function fetchJsonWithRetry(url, timeoutMs = 15000, maxRetries = 2, delayMs = 800) {
   for (let i = 1; i <= maxRetries; i++) {
     const json = await fetchJson(url, timeoutMs)
     if (json && json.status !== false) return json
@@ -191,7 +191,7 @@ async function downloadFile(url, filename, isGoogleVideo = false) {
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true })
   const tempPath = path.join(tempDir, filename)
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), 120000)
+  const timer = setTimeout(() => controller.abort(), 60000)
   const headers = isGoogleVideo
     ? {
         'User-Agent': 'com.google.android.youtube/19.09.37 (Linux; U; Android 11) gzip',
@@ -232,7 +232,7 @@ async function fetchThumbnailBuffer(url) {
   if (!url) return null
   try {
     const controller = new AbortController()
-    setTimeout(() => controller.abort(), 10000)
+    const timer = setTimeout(() => controller.abort(), 5000)
     const res = await fetch(url, { signal: controller.signal, redirect: 'follow' })
     if (!res.ok) return null
     const buf = Buffer.from(await res.arrayBuffer())

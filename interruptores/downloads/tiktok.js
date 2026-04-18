@@ -12,12 +12,11 @@ const SEARCH_COMMANDS = new Set(['tiktoksearch', 'ttsearch', 'tts'])
 const IMAGE_COMMANDS = new Set(['tiktokimg', 'ttimg'])
 const MP3_COMMANDS = new Set(['tiktokmp3', 'ttmp3'])
 
-
 const MIN_VIDEO_SIZE = 51200 
 const MAX_VIDEO_SIZE = 100 * 1024 * 1024 
-const VIDEO_DOWNLOAD_TIMEOUT = 120000 
-const PROBE_TIMEOUT = 15000
-const FETCH_TIMEOUT = 30000
+const VIDEO_DOWNLOAD_TIMEOUT = 60000 
+const PROBE_TIMEOUT = 8000
+const FETCH_TIMEOUT = 15000
 
 function isValidUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url)
