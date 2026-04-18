@@ -42,6 +42,24 @@ export default async (client, m) => {
     buttonId.includes('youtube_video_doc_') ||
     buttonId.includes('youtube_audio_doc_')
   )) {
+    if (m.isGroup) {
+      const chat = global.db?.data?.chats?.[m.chat] || {};
+      const primaryBot = chat?.primaryBot;
+      if (primaryBot) {
+        const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net'
+        const normalizeJid = (jid) => {
+          if (!jid) return ''
+          const clean = String(jid).split(':')[0].replace(/\D/g, '')
+          return clean
+        }
+        const primaryDigits = normalizeJid(primaryBot)
+        const currentDigits = normalizeJid(botJid)
+        if (primaryDigits && primaryDigits !== currentDigits) {
+          return
+        }
+      }
+    }
+    
     const { processDownload } = await import('./interruptores/downloads/play.js')
     let option = null
     if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
@@ -64,7 +82,74 @@ export default async (client, m) => {
       return
     }
   }
-  
+
+  if (buttonId && (buttonId.startsWith('waifu_claim_') || buttonId.startsWith('waifu_sell_'))) {
+    if (m.isGroup) {
+      const chat = global.db?.data?.chats?.[m.chat] || {};
+      const primaryBot = chat?.primaryBot;
+      if (primaryBot) {
+        const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net'
+        const normalizeJid = (jid) => {
+          if (!jid) return ''
+          const clean = String(jid).split(':')[0].replace(/\D/g, '')
+          return clean
+        }
+        const primaryDigits = normalizeJid(primaryBot)
+        const currentDigits = normalizeJid(botJid)
+        if (primaryDigits && primaryDigits !== currentDigits) {
+          return
+        }
+      }
+    }
+    
+    let userId;
+    try {
+      const parts = buttonId.split('_');
+      if (parts.length >= 3) {
+        const userPart = parts.slice(2).join('_');
+        userId = userPart + '@s.whatsapp.net';
+      } else {
+        return;
+      }
+    } catch (e) {
+      return;
+    }
+
+    if (m.sender !== userId) {
+      await client.reply(m.chat, '❌ Este personaje no es tuyo. No puedes reclamarlo.', m);
+      return;
+    }
+
+    let userName = global.db.data.users?.[userId]?.name || userId.split('@')[0]
+
+    if (!global.db.data) global.db.data = {}
+    if (!global.db.data.users) global.db.data.users = {}
+    if (!global.db.data.users[userId]) global.db.data.users[userId] = {}
+    const user = global.db.data.users[userId]
+    if (!user.waifu) user.waifu = { characters: [], pending: null, cooldown: 0 }
+    if (!Array.isArray(user.waifu.characters)) user.waifu.characters = []
+
+    if (!user.waifu.pending) {
+      await client.reply(m.chat, '❌ No tienes ningún personaje disponible para reclamar.\n\n💡 Usa *.rw* para obtener un nuevo personaje.', m);
+      return;
+    }
+
+    if (buttonId.startsWith('waifu_claim_')) {
+      user.waifu.characters.push(user.waifu.pending);
+      user.waifu.pending = null;
+      await client.reply(m.chat, `✅ Has reclamado a ${userName} en tu colección.`, m);
+      return;
+    }
+
+    if (buttonId.startsWith('waifu_sell_')) {
+      const sellPrice = Math.floor(user.waifu.pending.rarity * 50);
+      user.coins = (user.coins || 0) + sellPrice;
+      user.waifu.pending = null;
+      await client.reply(m.chat, `💰 Has vendido el personaje por ${sellPrice} cebollines.`, m);
+      return;
+    }
+  }
+
   if ((m.id.startsWith("3EB0") || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("B24E") && m.id.length === 20)) && !m.message?.interactiveResponseMessage) return
   initDB(m, client)
   antilink(client, m);

@@ -11,20 +11,20 @@ export default {
     if (!isOwner2) return m.reply(mess.socket)
     const value = args.join(' ').trim()
     if (!value && !m.quoted && !m.message.imageMessage)
-      return m.reply('✎ Debes enviar o citar una imagen para cambiar el icon del bot.')
+      return m.reply('💙 Debes enviar o citar una imagen para cambiar el icon del bot.')
     if (value.startsWith('http')) {
       config.icon = value
-      return m.reply(`✿ Se ha actualizado el icon de *${config.namebot}*!`)
+      return m.reply(`💙 Se ha actualizado el icon de *${config.namebot}*!`)
     }
     const q = m.quoted ? m.quoted : m.message.imageMessage ? m : m
     const mime = (q.msg || q).mimetype || q.mediaType || ''
     if (!/image\/(png|jpe?g)/.test(mime))
-      return m.reply('✎ Responde a una imagen válida.')
+      return m.reply('💙 Responde a una imagen válida.')
     const buffer = await q.download()
-    if (!buffer) return m.reply('✎ No se pudo descargar la imagen.')
+    if (!buffer) return m.reply('💙 No se pudo descargar la imagen.')
     const url = await uploadImage(buffer, mime)
     config.icon = url
-    return m.reply(`✿ Se ha actualizado el icon de *${config.namebot}*!`)
+    return m.reply(`💙 Se ha actualizado el icon de *${config.namebot}*!`)
   },
 };
 

@@ -7,8 +7,8 @@ export default {
     const isOwner2 = [idBot, ...(config.owner ? [config.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(m.sender)
     if (!isOwner2) return m.reply(mess.socket)
     const value = args.join(' ').trim()
-    if (!value) return m.reply(`✐ Debes escribir un nombre de moneda valido.\n> Ejemplo: *${usedPrefix + command} Coins*`)
+    if (!value) return m.reply(`💙 Debes escribir un nombre de moneda valido.\n> Ejemplo: *${usedPrefix + command} Coins*`)
     config.currency = value
-    return m.reply(`✿ Se ha cambiado la moneda del bot a *${value}*`)
+    return m.reply(`💙 Se ha cambiado la moneda del bot a *${value}*`)
   },
 };

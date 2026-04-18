@@ -8,12 +8,12 @@ export default {
     if (!isOwner2) return m.reply(mess.socket)
     const value = args.join(' ').trim()
     if (!value) {
-      return m.reply(`✿ Ingresa un enlace válido que comience con http:// o https://`)
+      return m.reply(`💙 Ingresa un enlace válido que comience con http:// o https://`)
     }
     if (!/^https?:\/\//i.test(value)) {
-      return m.reply('✿ El enlace debe comenzar con http:// o https://')
+      return m.reply('💙 El enlace debe comenzar con http:// o https://')
     }
     config.link = value
-    return m.reply(`✎ Se cambió el enlace del Socket correctamente.`)
+    return m.reply(`💙 Se cambió el enlace del Socket correctamente.`)
   },
 };
