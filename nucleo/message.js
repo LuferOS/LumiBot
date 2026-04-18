@@ -522,6 +522,8 @@ export async function smsg(client, m, store) {
     const botname = botSettings.botname || ''
     const botname2 = botSettings.namebot || ''
     const icon = botSettings.banner || ''
+    const redes = botSettings.link || 'https://bvh3-industries.vercel.app'
+    const dev = global.dev || '© POWERED (ㅎㅊDEPOOLㅊㅎ)'
     const canales = Object.entries(global.miku)
   .reduce((acc, [key, value]) => {
     if (key.startsWith('ch')) {
