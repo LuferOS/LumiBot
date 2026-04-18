@@ -865,6 +865,10 @@ handler.before = async function (m, { conn, client }) {
         return false;
     }
 
+    if (!userId) {
+        return false;
+    }
+
     if (m.sender !== userId) {
         await m.reply('❌ Este personaje no es tuyo. No puedes reclamarlo.');
         return true;

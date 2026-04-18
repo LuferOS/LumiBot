@@ -36,7 +36,7 @@ export function simulateWaifuPvpBattle(waifuA, waifuB, options = {}) {
   let b = { ...waifuB.pvp, currentHp: waifuB.pvp.hp }
   
   for (let turn = 1; turn <= maxTurns; turn++) {
-    // A attacks B
+
     const aDamage = Math.max(1, a.atk - Math.floor(b.def * 0.5))
     const aCrit = Math.random() < a.crit
     const aFinalDamage = aCrit ? aDamage * 2 : aDamage
@@ -51,7 +51,7 @@ export function simulateWaifuPvpBattle(waifuA, waifuB, options = {}) {
       return { winner: 'A', log, turns: turn }
     }
     
-    // B attacks A
+
     const bDamage = Math.max(1, b.atk - Math.floor(a.def * 0.5))
     const bCrit = Math.random() < b.crit
     const bFinalDamage = bCrit ? bDamage * 2 : bDamage
@@ -67,7 +67,7 @@ export function simulateWaifuPvpBattle(waifuA, waifuB, options = {}) {
     }
   }
   
-  // Draw if both survive
+  
   return { winner: 'draw', log, turns: maxTurns }
 }
 
