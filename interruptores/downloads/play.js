@@ -467,6 +467,10 @@ export default {
       buttonId = m.message.templateButtonReplyMessage.selectedId
       console.log('[PLAY before] templateButtonReplyMessage:', buttonId)
     }
+    if (m.message?.listResponseMessage) {
+      buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId
+      console.log('[PLAY before] listResponseMessage:', buttonId)
+    }
     if (m.message?.interactiveResponseMessage) {
       try {
         const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
@@ -526,6 +530,10 @@ export default {
       if (m.message?.templateButtonReplyMessage) {
         buttonId = m.message.templateButtonReplyMessage.selectedId
         console.log('[PLAY run] templateButtonReplyMessage:', buttonId)
+      }
+      if (m.message?.listResponseMessage) {
+        buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId
+        console.log('[PLAY run] listResponseMessage:', buttonId)
       }
       if (m.message?.interactiveResponseMessage) {
         try {
@@ -617,6 +625,7 @@ export default {
         await conn.sendMessage(m.chat, {
           image: thumbBuf,
           caption: infoText,
+          footer: '💙 Hatsune Miku Bot',
           buttons: [
             { buttonId: `youtube_audio_${videoId}`, buttonText: { displayText: '🎵 Audio MP3' }, type: 1 },
             { buttonId: `youtube_video_360_${videoId}`, buttonText: { displayText: '🎬 Video 360p' }, type: 1 },
@@ -624,6 +633,7 @@ export default {
             { buttonId: `youtube_audio_doc_${videoId}`, buttonText: { displayText: '📄 Doc MP3' }, type: 1 },
           ],
           headerType: 4,
+          viewOnce: true,
         }, { quoted: m })
         console.log('[PLAY run] Menú enviado exitosamente')
       } catch (e) {
