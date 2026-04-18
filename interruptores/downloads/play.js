@@ -455,6 +455,7 @@ export default {
   category: 'downloader',
   register: true,
   all: async (conn, m) => {
+    console.log('[PLAY all] Handler ejecutado, body:', m.body || m.text)
     let buttonId = m.body || m.text || null
     if (m.message?.buttonsResponseMessage) {
       buttonId = m.message.buttonsResponseMessage.selectedButtonId
@@ -480,6 +481,7 @@ export default {
       buttonId.includes('youtube_video_doc_') ||
       buttonId.includes('youtube_audio_doc_')
     )) {
+      console.log('[PLAY all] Botón detectado:', buttonId)
       let option = null
       if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
       else if (buttonId.includes('youtube_video_360_'))                        option = 2
