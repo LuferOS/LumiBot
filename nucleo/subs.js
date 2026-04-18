@@ -28,6 +28,11 @@ export async function startSubBot(m, client, caption = '', isCode = false, phone
     return null
   }
 
+  if (!fs.existsSync(sessionFolder)) {
+    console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${id} Carpeta de sesión no existe. Omitiendo.`))
+    return null
+  }
+
   if (isCommand) {
     sesionesEliminadas.delete(id)
     delete reintentos[id]

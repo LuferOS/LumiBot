@@ -67,8 +67,8 @@ async function loadBots() {
     for (const userId of botIds) {
       const sessionPath = path.join(folder, userId);
       const credsPath = path.join(sessionPath, 'creds.json');
-      if (!fs.existsSync(credsPath)) continue;
       if (!fs.existsSync(sessionPath)) continue;
+      if (!fs.existsSync(credsPath)) continue;
       if (global.conns.some((conn) => conn.userId === userId)) continue;
       if (reconnecting.has(userId)) continue;
       try {
@@ -76,6 +76,9 @@ async function loadBots() {
         await starter(null, null, 'Auto reconexión', false, userId, sessionPath);
       } catch (e) {
         console.log(chalk.gray(`[ loadBots ] Error iniciando ${name} ${userId}: ${e?.message || e}`));
+        if (e?.message?.includes('ENOENT') || e?.message?.includes('no such file or directory')) {
+          console.log(chalk.gray(`[ loadBots ] Eliminando referencia a sesión eliminada ${userId}`));
+        }
       } finally {
         reconnecting.delete(userId);
       }
