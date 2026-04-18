@@ -35,6 +35,6 @@ export default {
 📊 Progreso › *${progresoActual} => ${xp}* _(${porcentaje}%)_
 👑 Puesto › *#${rank}*
 🎮 Comandos ejecutados › *${user.usedcommands?.toLocaleString() || 0}*`
-    await client.sendFile(chatId, 'https://files.catbox.moe/07u62u.png', 'level.jpg', txt, m)
+    await client.sendMessage(chatId, { image: { url: 'https://files.catbox.moe/07u62u.png' }, caption: txt, mentions: [name] }, { quoted: m })
   }
 }
