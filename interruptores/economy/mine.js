@@ -6,12 +6,12 @@ export default {
     const botSettings = global.db.data.settings[botId]
     const monedas = botSettings?.currency || 'Coins'
     const chat = global.db.data.chats[m.chat]
-    if (chat.adminonly || !chat.economy) return m.reply(`ꕥ Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
+    if (chat.adminonly || !chat.economy) return m.reply(`💙 Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
     const user = chat.users[m.sender]
-    if (user.health < 5) return m.reply(`ꕥ No tienes suficiente salud para volver a *cazar*.\n> Usa *"${usedPrefix}heal"* para curarte.`)
+    if (user.health < 5) return m.reply(`💙 No tienes suficiente salud para volver a *cazar*.\n> Usa *"${usedPrefix}heal"* para curarte.`)
     const remaining = user.lastmine - Date.now()
     if (remaining > 0) {
-      return m.reply(`ꕥ Debes esperar *${msToTime(remaining)}* para minar de nuevo.`)
+      return m.reply(`💙 Debes esperar *${msToTime(remaining)}* para minar de nuevo.`)
     }
     user.lastmine = Date.now() + 10 * 60 * 1000
     let isLegendary = Math.random() < 0.02
@@ -19,7 +19,7 @@ export default {
     if (isLegendary) {
       reward = Math.floor(Math.random() * (13000 - 11000 + 1)) + 11000
       narration = '¡DESCUBRISTE UN TESORO LEGENDARIO!\n\n'
-      bonusMsg = '\nꕥ Recompensa ÉPICA obtenida!'
+      bonusMsg = '\n💙 Recompensa ÉPICA obtenida!'
     } else {
       reward = Math.floor(Math.random() * (9500 - 7000 + 1)) + 7000
       const scenario = pickRandom(escenarios)
@@ -27,14 +27,14 @@ export default {
       if (Math.random() < 0.1) {
         const bonus = Math.floor(Math.random() * (4500 - 2500 + 1)) + 2500
         reward += bonus
-        bonusMsg = `\n「✿」 ¡Bonus de minería! Ganaste *${bonus.toLocaleString()}* ${monedas} extra`
+        bonusMsg = `\n💙 ¡Bonus de minería! Ganaste *${bonus.toLocaleString()}* ${monedas} extra`
       }
     }
     user.coins += reward
     const salud = Math.floor(Math.random() * (15 - 5 + 1)) + 5
     user.health = (user.health || 100) - salud
     if (user.health < 0) user.health = 0
-    let msg = `「✿」 ${narration} *${reward.toLocaleString()} ${monedas}*`
+    let msg = `💙 ${narration} *${reward.toLocaleString()} ${monedas}*`
     if (bonusMsg) msg += `\n${bonusMsg}`
     await client.reply(m.chat, msg, m, global.miku)
   },

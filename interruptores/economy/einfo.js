@@ -36,7 +36,7 @@ export default {
     }
     const coins = user.coins || 0
     const name = db.users[m.sender]?.name || m.sender.split('@')[0]
-    const mensaje = `✿ Usuario \`<${name}>\`
+    const mensaje = `💙 Usuario \`<${name}>\`
 
 ⴵ Work » *${formatTime(cooldowns.work)}*
 ⴵ Slut » *${formatTime(cooldowns.slut)}*

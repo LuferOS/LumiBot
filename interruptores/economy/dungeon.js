@@ -7,15 +7,15 @@ export default {
     const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
     const currency = global.db.data.settings[botId].currency
     if (chat.adminonly || !chat.economy) 
-      return m.reply(`ꕥ Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)   
+      return m.reply(`💙 Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)   
     user.lastdungeon ||= 0
     if (user.coins == null) user.coins = 0
     if (user.health == null) user.health = 100
     if (user.health < 5) 
-      return m.reply(`ꕥ No tienes suficiente salud para volver a la *mazmorra*.\n> Usa *"${usedPrefix}heal"* para curarte.`)
+      return m.reply(`💙 No tienes suficiente salud para volver a la *mazmorra*.\n> Usa *"${usedPrefix}heal"* para curarte.`)
       if (Date.now() < user.lastdungeon) {
       const restante = user.lastdungeon - Date.now()
-      return m.reply(`ꕥ Debes esperar *${msToTime(restante)}* antes de volver a la mazmorra.`)
+      return m.reply(`💙 Debes esperar *${msToTime(restante)}* antes de volver a la mazmorra.`)
       }
     const rand = Math.random()
     let cantidad = 0

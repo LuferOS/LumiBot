@@ -29,7 +29,7 @@ export default {
     count = count ? /all/i.test(count) ? Math.floor(db.users[m.sender].limit / buatall) : parseInt(count) : args[0] ? parseInt(args[0]) : 1
     count = Math.max(1, count)
     if (args.length < 1) {
-      return client.reply(m.chat, `❀ Ingresa la cantidad de *${currency}* que deseas aportar contra *${botname}*\n> Ejemplo: *${usedPrefix + command} 100*`, m, global.miku)
+      return client.reply(m.chat, `💙 Ingresa la cantidad de *${currency}* que deseas aportar contra *${botname}*\n> Ejemplo: *${usedPrefix + command} 100*`, m, global.miku)
     }
     if (user.coins >= count) {
       user.coins -= count

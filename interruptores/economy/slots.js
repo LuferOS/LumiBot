@@ -22,7 +22,7 @@ export default {
     }
     if (apuesta < 100) return m.reply(`💙 El mínimo para apostar es de 100 *${currency}*.`)
     if (user.coins < apuesta) return m.reply(`💙 Tus *${currency}* no son suficientes para apostar esa cantidad.`)
-    const emojis = ['✾', '❃', '❁']
+    const emojis = ['🌱', '🌸', '💮']
     const getRandomEmojis = () => {
       const x = Array.from({ length: 3 }, () => emojis[Math.floor(Math.random() * emojis.length)])
       const y = Array.from({ length: 3 }, () => emojis[Math.floor(Math.random() * emojis.length)])

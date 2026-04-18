@@ -6,11 +6,11 @@ export default {
     const botSettings = global.db.data.settings[botId]
     const monedas = botSettings?.currency || 'Coins'
     const chat = global.db.data.chats[m.chat]
-    if (chat.adminonly || !chat.economy) return m.reply(`ꕥ Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
+    if (chat.adminonly || !chat.economy) return m.reply(`💙 Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
     const user = chat.users[m.sender]
     const remaining = user.lastinvoke - Date.now()
     if (remaining > 0) {
-      return m.reply(`ꕥ Debes esperar *${msToTime(remaining)}* para invocar otro ritual.`)
+      return m.reply(`💙 Debes esperar *${msToTime(remaining)}* para invocar otro ritual.`)
     }
     user.lastinvoke = Date.now() + 12 * 60 * 1000
     const roll = Math.random()
@@ -20,18 +20,18 @@ export default {
     if (roll < 0.05) {
       reward = Math.floor(Math.random() * (13000 - 11000 + 1)) + 11000
       narration = pickRandom(legendaryInvocations)
-      bonusMsg = '\nꕥ Recompensa LEGENDARIA obtenida!'
+      bonusMsg = '\n💙 Recompensa LEGENDARIA obtenida!'
     } else {
       reward = Math.floor(Math.random() * (11000 - 8000 + 1)) + 8000
       narration = pickRandom(normalInvocations)
       if (Math.random() < 0.15) {
         const bonus = Math.floor(Math.random() * (4500 - 2500 + 1)) + 2500
         reward += bonus
-        bonusMsg = `\n「✿」 ¡Energía extra! Ganaste *${bonus.toLocaleString()}* ${monedas} adicionales`
+        bonusMsg = `\n💙 ¡Energía extra! Ganaste *${bonus.toLocaleString()}* ${monedas} adicionales`
       }
     }
     user.coins += reward
-    let msg = `「✿」 ${narration}\nGanaste *${reward.toLocaleString()} ${monedas}*`
+    let msg = `💙 ${narration}\nGanaste *${reward.toLocaleString()} ${monedas}*`
     if (bonusMsg) msg += `\n${bonusMsg}`
     await client.reply(m.chat, msg, m, global.miku)
   },

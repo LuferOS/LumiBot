@@ -3,7 +3,7 @@ export default {
   category: 'rpg',
   run: async (client, m, args, usedPrefix) => {
     const chat = global.db.data.chats[m.chat]
-    if (chat.adminonly || !chat.economy) return m.reply(`ꕥ Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
+    if (chat.adminonly || !chat.economy) return m.reply(`💙 Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
     const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
     const bot = global.db.data.settings[botId]
     const currency = bot.currency
@@ -17,7 +17,7 @@ export default {
     user.lastmonthly = user.lastmonthly || 0
     if (now < user.lastmonthly) {
       const wait = formatTime(Math.floor((user.lastmonthly - now) / 1000))
-      return client.sendMessage(m.chat, { text: `ꕥ Ya has reclamado tu recompensa mensual.\n> Puedes reclamarlo de nuevo en *${wait}*` }, { quoted: m })
+      return client.sendMessage(m.chat, { text: `💙 Ya has reclamado tu recompensa mensual.\n> Puedes reclamarlo de nuevo en *${wait}*` }, { quoted: m })
     }
     const lost = users.monthlyStreak >= 1 && now - users.lastMonthlyGlobal > gap * 1.5
     if (lost) users.monthlyStreak = 0
@@ -31,8 +31,8 @@ export default {
     user.lastmonthly = now + gap
     let next = Math.min(60000 + users.monthlyStreak * 5000, 95000).toLocaleString()
     let msg = `> Mes *${users.monthlyStreak + 1}* » *+${next}*`
-    if (lost) msg += `\n> ☆ ¡Has perdido tu racha de meses!`
-    await client.sendMessage(m.chat, { text: `「❁」 Has reclamado tu recompensa mensual de *+${coins.toLocaleString()} ${currency}* (Mes *${users.monthlyStreak}*)\n${msg}` }, { quoted: m })
+    if (lost) msg += `\n> 💔 ¡Has perdido tu racha de meses!`
+    await client.sendMessage(m.chat, { text: `💙 Has reclamado tu recompensa mensual de *+${coins.toLocaleString()} ${currency}* (Mes *${users.monthlyStreak}*)\n${msg}` }, { quoted: m })
   }
 }
 

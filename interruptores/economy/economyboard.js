@@ -25,7 +25,7 @@ export default {
       if (isNaN(page) || page < 1 || page > totalPages) return m.reply(`💙 La página *${page}* no existe. Hay *${totalPages}* páginas.`)
       const start = (page - 1) * pageSize
       const end = start + pageSize
-      let text = `*✩ EconomyBoard (✿◡‿◡)*\n\n`
+      let text = `*💙 EconomyBoard *\n\n`
       text += sorted.slice(start, end).map(({ name, coins, bank }, i) => {
           const total = (coins || 0) + (bank || 0)
           return `✩ ${start + i + 1} › *${name}*\n     Total → *🌱${total.toLocaleString()} ${monedas}*`

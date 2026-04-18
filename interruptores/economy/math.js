@@ -24,13 +24,13 @@ export default {
     const db = global.db.data.chats[chatId]
     const user = global.db.data.users[m.sender]
     const juego = global.math[chatId]
-    if (db.adminonly || !db.economy) return m.reply(`ꕥ Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
+    if (db.adminonly || !db.economy) return m.reply(`💙 Los comandos de *Economía* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *${usedPrefix}economy on*`)
     if (command === 'resp') {
       if (!juego?.juegoActivo) return
       const quotedId = m.quoted?.key?.id || m.quoted?.id || m.quoted?.stanzaId
       if (quotedId !== juego.problemMessageId) return
       const respuestaUsuario = parseFloat(args[0])
-      if (isNaN(respuestaUsuario)) return client.reply(chatId, `「✎」Debes escribir tu respuesta numérica. Ejemplo: *${usedPrefix}resp 42*`, m)
+      if (isNaN(respuestaUsuario)) return client.reply(chatId, `💙 Debes escribir tu respuesta numérica. Ejemplo: *${usedPrefix}resp 42*`, m)
       const respuestaCorrecta = parseFloat(juego.respuesta)
       const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
       const primaryBotId = db.primaryBot
@@ -41,27 +41,27 @@ export default {
           user.coins += coinsAleatorio
           clearTimeout(juego.tiempoLimite)
           delete global.math[chatId]
-          return client.reply(chatId, `「❀」Respuesta correcta.\n> *Ganaste ›* 🌱${coinsAleatorio.toLocaleString()}`, m)
+          return client.reply(chatId, `💙 Respuesta correcta.\n> *Ganaste ›* 🌱${coinsAleatorio.toLocaleString()}`, m)
         } else {
           juego.intentos += 1
           if (juego.intentos >= 3) {
             clearTimeout(juego.tiempoLimite)
             delete global.math[chatId]
-            return client.reply(chatId, '「✎」Te quedaste sin intentos. Suerte a la próxima.', m)
+            return client.reply(chatId, '💙 Te quedaste sin intentos. Suerte a la próxima.', m)
           } else {
             const intentosRestantes = 3 - juego.intentos
-            return client.reply(chatId, `「✎」Respuesta incorrecta, te quedan ${intentosRestantes} intentos.`, m)
+            return client.reply(chatId, `💙 Respuesta incorrecta, te quedan ${intentosRestantes} intentos.`, m)
           }
         }
       }
       return
     }
     if (["math", "mates"].includes(command)) {
-      if (juego?.juegoActivo) return client.reply(chatId, 'ꕥ Ya hay un juego activo. Espera a que termine.', m)
+      if (juego?.juegoActivo) return client.reply(chatId, '💙 Ya hay un juego activo. Espera a que termine.', m)
       const dificultad = args[0]?.toLowerCase()
-      if (!limits[dificultad]) return client.reply(chatId, '「✎」Especifica una dificultad válida: *facil, medio, dificil, imposible, imposible2*', m)
+      if (!limits[dificultad]) return client.reply(chatId, '💙 Especifica una dificultad válida: *facil, medio, dificil, imposible, imposible2*', m)
       const { problema, resultado } = generarProblema(dificultad)
-      const problemMessage = await client.reply(chatId, `「✩」Tienes 1 minuto para resolver:\n\n> ✩ *${problema}*\n\n_✐ Usa » *${usedPrefix}resp* para responder!_`, m)
+      const problemMessage = await client.reply(chatId, `💙 Tienes 1 minuto para resolver:\n\n> ✩ *${problema}*\n\n_✐ Usa » *${usedPrefix}resp* para responder!_`, m)
       global.math[chatId] = {
         juegoActivo: true,
         problema,
@@ -73,7 +73,7 @@ export default {
         tiempoLimite: setTimeout(() => {
           if (global.math[chatId]?.juegoActivo) {
             delete global.math[chatId]
-            client.reply(chatId, '「✿」Tiempo agotado. El juego ha terminado.', m)
+            client.reply(chatId, '💙 Tiempo agotado. El juego ha terminado.', m)
           }
         }, 60000)
       }

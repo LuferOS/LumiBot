@@ -312,18 +312,16 @@ export async function processDownload(conn, m, videoInfo, option) {
         `https://i.ytimg.com/vi/${extractYouTubeId(videoInfo.url) || ''}/hqdefault.jpg`
       thumbnailBuffer = await fetchThumbnailBuffer(thumbUrl)
     }
-    tempFilePath = await downloadFile(data.downloadUrl, `${Date.now()}_${fileName}.${ext}`, data.isGoogleVideo ?? false)
-    const fileBuffer = fs.readFileSync(tempFilePath)
-    deleteFile(tempFilePath)
-    tempFilePath = null
     if (asDocument) {
       await conn.sendMessage(m.chat, {
-        document: fileBuffer,
+        document: { url: data.downloadUrl },
         mimetype,
         fileName: `${fileName}.${ext}`,
         caption: `📄 ${videoInfo.title}`,
       }, { quoted: m })
     } else if (isAudio) {
+      tempFilePath = await downloadFile(data.downloadUrl, `${Date.now()}_${fileName}.${ext}`, data.isGoogleVideo ?? false)
+      const fileBuffer = fs.readFileSync(tempFilePath)
       const audioBuffer = thumbnailBuffer
         ? embedCoverArt(fileBuffer, thumbnailBuffer, videoInfo.title)
         : fileBuffer
@@ -333,9 +331,11 @@ export async function processDownload(conn, m, videoInfo, option) {
         ptt: false,
         fileName: `${fileName}.mp3`,
       }, { quoted: m })
+      deleteFile(tempFilePath)
+      tempFilePath = null
     } else {
       await conn.sendMessage(m.chat, {
-        video: fileBuffer,
+        video: { url: data.downloadUrl },
         mimetype: 'video/mp4',
         fileName: `${fileName}.mp4`,
         caption: `🎬 ${videoInfo.title}`,
@@ -366,6 +366,15 @@ export async function processYouTubeButton(conn, m) {
   }
   if (m.message?.templateButtonReplyMessage) {
     buttonId = m.message.templateButtonReplyMessage.selectedId
+  }
+  if (m.message?.interactiveResponseMessage) {
+    try {
+      const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
+      if (paramsJson) {
+        const params = JSON.parse(paramsJson)
+        buttonId = params.id
+      }
+    } catch (e) {}
   }
   if (!buttonId) return false
   let option = null
@@ -404,6 +413,15 @@ export default {
     }
     if (m.message?.templateButtonReplyMessage) {
       buttonId = m.message.templateButtonReplyMessage.selectedId
+    }
+    if (m.message?.interactiveResponseMessage) {
+      try {
+        const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
+        if (paramsJson) {
+          const params = JSON.parse(paramsJson)
+          buttonId = params.id
+        }
+      } catch (e) {}
     }
     if (buttonId && (
       buttonId.includes('youtube_audio_') ||
@@ -444,6 +462,15 @@ export default {
       }
       if (m.message?.templateButtonReplyMessage) {
         buttonId = m.message.templateButtonReplyMessage.selectedId
+      }
+      if (m.message?.interactiveResponseMessage) {
+        try {
+          const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
+          if (paramsJson) {
+            const params = JSON.parse(paramsJson)
+            buttonId = params.id
+          }
+        } catch (e) {}
       }
       if (buttonId && (
         buttonId.includes('youtube_audio_') ||
@@ -519,11 +546,11 @@ export default {
         await conn.sendMessage(m.chat, {
           image: thumbBuf,
           caption: infoText,
-          buttons: [
-            { buttonId: `youtube_audio_${videoId}`,     buttonText: { displayText: '🎵 Audio MP3'  }, type: 1 },
-            { buttonId: `youtube_video_360_${videoId}`, buttonText: { displayText: '🎬 Video 360p' }, type: 1 },
-            { buttonId: `youtube_video_doc_${videoId}`, buttonText: { displayText: '📁 Doc MP4'    }, type: 1 },
-            { buttonId: `youtube_audio_doc_${videoId}`, buttonText: { displayText: '📄 Doc MP3'    }, type: 1 },
+          templateButtons: [
+            { index: 1, quickReplyButton: { displayText: '🎵 Audio MP3', id: `youtube_audio_${videoId}` } },
+            { index: 2, quickReplyButton: { displayText: '🎬 Video 360p', id: `youtube_video_360_${videoId}` } },
+            { index: 3, quickReplyButton: { displayText: '📁 Doc MP4', id: `youtube_video_doc_${videoId}` } },
+            { index: 4, quickReplyButton: { displayText: '📄 Doc MP3', id: `youtube_audio_doc_${videoId}` } },
           ],
           headerType: 4,
         }, { quoted: m })
