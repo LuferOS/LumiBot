@@ -53,11 +53,6 @@ async function _carousel(conn, m, q, list) {
 
   for (const it of list) {
     try {
-      const { imageMessage } = await generateWAMessageContent(
-        { image: { url: it.hd } },
-        { upload: conn.waUploadToServer },
-      )
-
       cards.push({
         body: proto.Message.InteractiveMessage.Body.fromObject({
           text: `💙 *${it.title}*\n🌱 Fuente: ${it.source}`,
@@ -66,7 +61,11 @@ async function _carousel(conn, m, q, list) {
         header: proto.Message.InteractiveMessage.Header.fromObject({
           title: '',
           hasMediaAttachment: true,
-          imageMessage,
+          imageMessage: proto.Message.ImageMessage.fromObject({
+            url: it.hd,
+            mimetype: 'image/jpeg',
+            caption: '',
+          }),
         }),
         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] }),
       })
