@@ -897,7 +897,7 @@ handler.before = async function (m, { conn, client }) {
         return true;
     }
 
-    
+
     if (m.quoted && user.waifu.pending?.messageId && user.waifu.pending?.chat) {
         const quotedId = m.quoted?.id
         const sameChat = user.waifu.pending.chat === m.chat
