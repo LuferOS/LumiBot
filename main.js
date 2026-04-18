@@ -14,8 +14,8 @@ seeCommands();
 
 export default async (client, m) => {
   const sender = m.sender;
-  let body = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId || m.message.templateButtonReplyMessage?.selectedId || '';
-  if ((m.id.startsWith("3EB0") || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("B24E") && m.id.length === 20))) return
+  let body = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId || m.message.templateButtonReplyMessage?.selectedId || m.message.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson || '';
+  if ((m.id.startsWith("3EB0") || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("B24E") && m.id.length === 20)) && !m.message?.interactiveResponseMessage) return
   initDB(m, client)
   antilink(client, m);
 
@@ -73,10 +73,11 @@ export default async (client, m) => {
   }
   const strRegex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
   let pluginPrefix = client.prefix ? client.prefix : prefix;
-  let matchs = pluginPrefix instanceof RegExp ? [[pluginPrefix.exec(m.text), pluginPrefix]] : Array.isArray(pluginPrefix) ? pluginPrefix.map(p => {
+  const textToMatch = m.text || body || '';
+  let matchs = pluginPrefix instanceof RegExp ? [[pluginPrefix.exec(textToMatch), pluginPrefix]] : Array.isArray(pluginPrefix) ? pluginPrefix.map(p => {
     let regex = p instanceof RegExp ? p : new RegExp(strRegex(p));
-    return [regex.exec(m.text), regex];
-  }) : typeof pluginPrefix === 'string' ? [[new RegExp(strRegex(pluginPrefix)).exec(m.text), new RegExp(strRegex(pluginPrefix))]] : [[null, null]];
+    return [regex.exec(textToMatch), regex];
+  }) : typeof pluginPrefix === 'string' ? [[new RegExp(strRegex(pluginPrefix)).exec(textToMatch), new RegExp(strRegex(pluginPrefix))]] : [[null, null]];
   let match = matchs.find(p => p[0]);
 
   for (const name in global.plugins) {
@@ -96,7 +97,7 @@ export default async (client, m) => {
 
   if (!match) return;
   let usedPrefix = (match[0] || [])[0] || '';
-  let args = m.text.slice(usedPrefix.length).trim().split(" ");
+  let args = textToMatch.slice(usedPrefix.length).trim().split(" ");
   let command = (args.shift() || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   let text = args.join(' ');
   if (!command) return;
@@ -111,7 +112,7 @@ export default async (client, m) => {
     console.log(`\n${h}\n${chalk.bold.yellow(`${v} Fecha: ${chalk.whiteBright(moment().format('DD/MM/YY HH:mm:ss'))} p. m.`)}\n${chalk.bold.blueBright(`${v} Usuario: ${chalk.whiteBright(`(${pushname})`)}`)}\n${chalk.bold.magentaBright(`${v} Remitente: ${gradient('deepskyblue', 'darkorchid')(sender)}`)}\n${m.isGroup ? chalk.bold.cyanBright(`${v} Grupo: ${chalk.greenBright(groupName)}\n${v} Mensaje: ${bodyPreview}`) : chalk.bold.greenBright(`${v} Mensaje: ${bodyPreview}`)}\n${t}`);
   }
   
-  const hasPrefix = settings.prefix === true ? true : (Array.isArray(settings.prefix) ? settings.prefix : typeof settings.prefix === 'string' ? [settings.prefix] : []).some(p => m.text?.startsWith(p));
+  const hasPrefix = settings.prefix === true ? true : (Array.isArray(settings.prefix) ? settings.prefix : typeof settings.prefix === 'string' ? [settings.prefix] : []).some(p => textToMatch?.startsWith(p));
   function getAllSessionBots() {
     const sessionDirs = ['./Sessions/Subs']
     let bots = []
@@ -136,18 +137,12 @@ export default async (client, m) => {
     return bots;
   }
   const botprimaryId = chat?.primaryBot
-  if (botprimaryId && botprimaryId !== botJid) {
-    if (hasPrefix) {
-      const participants = m.isGroup ? (await client.groupMetadata(m.chat).catch(() => ({ participants: [] }))).participants : []
-      const primaryInGroup = participants.some(p => (p.phoneNumber || p.id) === botprimaryId)
-      const isPrimarySelf = botprimaryId === botJid
-      const primaryInSessions = getAllSessionBots().includes(botprimaryId)
-      if (!primaryInSessions || !primaryInGroup) {
-        return
-      }
-      if ((primaryInSessions && primaryInGroup) || isPrimarySelf) {
-        return;
-      }
+  if (botprimaryId && botprimaryId !== botJid && hasPrefix && m.isGroup) {
+    const participants = (await client.groupMetadata(m.chat).catch(() => ({ participants: [] }))).participants
+    const primaryInGroup = participants.some(p => (p.phoneNumber || p.id) === botprimaryId)
+    const primaryInSessions = getAllSessionBots().includes(botprimaryId)
+    if (primaryInGroup && primaryInSessions) {
+      return
     }
   }
   
