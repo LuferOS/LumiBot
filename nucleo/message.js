@@ -8,7 +8,8 @@ import { sizeFormatter } from 'human-readable';
 import util from 'util';
 import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
-import { fileTypeFromBuffer } from 'file-type';
+import pkg from 'file-type';
+const { fileTypeFromBuffer } = pkg;
 import path from 'path';
 import exif from './exif.js';
 import { fileURLToPath } from 'url'
