@@ -14,12 +14,23 @@ const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 const groupCache = new NodeCache({ stdTTL: 3600, checkperiod: 300 });
 let reintentos = {}
+let sesionesEliminadas = new Set()
 const cleanJid = (jid = '') => jid.replace(/:\d+/, '').split('@')[0]
 
 export async function startSubBot(m, client, caption = '', isCode = false, phone = '', chatId = '', commandFlags = {}, isCommand = false) {
   const id = phone || (m?.sender || '').split('@')[0]
   const sessionFolder = `./Sessions/Subs/${id}`
   const senderId = m?.sender
+
+  if (sesionesEliminadas.has(id) && !isCommand) {
+    console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${id} Sesión eliminada. Requiere nueva autenticación manual.`))
+    return null
+  }
+
+  if (isCommand) {
+    sesionesEliminadas.delete(id)
+    delete reintentos[id]
+  }
 
   const { state, saveCreds } = await useMultiFileAuthState(sessionFolder)
   const { version } = await fetchLatestBaileysVersion()
@@ -124,13 +135,19 @@ const sock = makeWASocket({
               startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
             }, 3000)
           } else {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 5 intentos. Eliminando sesión.`))
+            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 5 intentos. Eliminando sesión. Requiere nueva autenticación.`))
             try {
               fs.rmSync(sessionFolder, { recursive: true, force: true })
+              sesionesEliminadas.add(botId)
             } catch (e) {
               console.error(`[ 💙 ] No se pudo eliminar la carpeta ${sessionFolder}:`, e)
             }
             delete reintentos[botId]
+            const connIndex = global.conns.findIndex((c) => c.userId === botId)
+            if (connIndex !== -1) {
+              global.conns.splice(connIndex, 1)
+            }
+            return
           }
           return
         }
