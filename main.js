@@ -15,6 +15,56 @@ seeCommands();
 export default async (client, m) => {
   const sender = m.sender;
   let body = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId || m.message.templateButtonReplyMessage?.selectedId || m.message.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson || '';
+  
+ 
+  let buttonId = m.body || m.text || null
+  if (m.message?.buttonsResponseMessage) {
+    buttonId = m.message.buttonsResponseMessage.selectedButtonId
+  }
+  if (m.message?.templateButtonReplyMessage) {
+    buttonId = m.message.templateButtonReplyMessage.selectedId
+  }
+  if (m.message?.listResponseMessage) {
+    buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId
+  }
+  if (m.message?.interactiveResponseMessage) {
+    try {
+      const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
+      if (paramsJson) {
+        const params = JSON.parse(paramsJson)
+        buttonId = params.id
+      }
+    } catch (e) {}
+  }
+  if (buttonId && (
+    buttonId.includes('youtube_audio_') ||
+    buttonId.includes('youtube_video_360_') ||
+    buttonId.includes('youtube_video_doc_') ||
+    buttonId.includes('youtube_audio_doc_')
+  )) {
+    const { processDownload } = await import('./interruptores/downloads/play.js')
+    let option = null
+    if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
+    else if (buttonId.includes('youtube_video_360_'))                        option = 2
+    else if (buttonId.includes('youtube_video_doc_'))                        option = 3
+    else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
+    if (option) {
+      const user = global.db?.data?.users?.[m.sender]
+      if (!user?.lastYTSearch) {
+        return client.reply(m.chat, '⏰ No hay búsqueda activa. Realiza una nueva búsqueda.', m)
+      }
+      if (Date.now() - (user.lastYTSearch.timestamp || 0) > 10 * 60 * 1000) {
+        return client.reply(m.chat, '⏰ La búsqueda expiró. Realiza una nueva búsqueda.', m)
+      }
+      user.monedaDeducted = false
+      try {
+        await processDownload(client, m, user.lastYTSearch.videoInfo, option)
+        user.lastYTSearch = null
+      } catch {}
+      return
+    }
+  }
+  
   if ((m.id.startsWith("3EB0") || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("B24E") && m.id.length === 20)) && !m.message?.interactiveResponseMessage) return
   initDB(m, client)
   antilink(client, m);

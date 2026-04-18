@@ -454,58 +454,6 @@ export default {
   command: ['play', 'ytdlv2'],
   category: 'downloader',
   register: true,
-  all: async (conn, m) => {
-    console.log('[PLAY all] Handler ejecutado, body:', m.body || m.text)
-    let buttonId = m.body || m.text || null
-    if (m.message?.buttonsResponseMessage) {
-      buttonId = m.message.buttonsResponseMessage.selectedButtonId
-    }
-    if (m.message?.templateButtonReplyMessage) {
-      buttonId = m.message.templateButtonReplyMessage.selectedId
-    }
-    if (m.message?.listResponseMessage) {
-      buttonId = m.message.listResponseMessage.singleSelectReply.selectedRowId
-    }
-    if (m.message?.interactiveResponseMessage) {
-      try {
-        const paramsJson = m.message.interactiveResponseMessage.nativeFlowResponseMessage?.paramsJson
-        if (paramsJson) {
-          const params = JSON.parse(paramsJson)
-          buttonId = params.id
-        }
-      } catch (e) {}
-    }
-    if (buttonId && (
-      buttonId.includes('youtube_audio_') ||
-      buttonId.includes('youtube_video_360_') ||
-      buttonId.includes('youtube_video_doc_') ||
-      buttonId.includes('youtube_audio_doc_')
-    )) {
-      console.log('[PLAY all] Botón detectado:', buttonId)
-      let option = null
-      if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
-      else if (buttonId.includes('youtube_video_360_'))                        option = 2
-      else if (buttonId.includes('youtube_video_doc_'))                        option = 3
-      else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
-      if (option) {
-        const user = global.db?.data?.users?.[m.sender]
-        if (!user?.lastYTSearch) {
-          await conn.reply(m.chat, '⏰ No hay búsqueda activa. Realiza una nueva búsqueda.', m)
-          return
-        }
-        if (Date.now() - (user.lastYTSearch.timestamp || 0) > 10 * 60 * 1000) {
-          await conn.reply(m.chat, '⏰ La búsqueda expiró. Realiza una nueva búsqueda.', m)
-          return
-        }
-        user.monedaDeducted = false
-        try {
-          await processDownload(conn, m, user.lastYTSearch.videoInfo, option)
-          user.lastYTSearch = null
-        } catch {}
-        return
-      }
-    }
-  },
   run: async (conn, m, args, usedPrefix, command) => {
     try {
       if (!args.length) {
