@@ -8,8 +8,9 @@ import { sizeFormatter } from 'human-readable';
 import util from 'util';
 import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
-import pkg from 'file-type';
-const { fileTypeFromBuffer } = pkg;
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const fileType = require('file-type');
 import path from 'path';
 import exif from './exif.js';
 import { fileURLToPath } from 'url'
@@ -347,7 +348,7 @@ export async function smsg(client, m, store) {
       try {
         if (/^https?:\/\//.test(content)) {
           const data = await axios.get(content, { responseType: 'arraybuffer' })
-          const mime = data.headers['content-type'] || (await fileTypeFromBuffer(data.data))?.mime
+          const mime = data.headers['content-type'] || (await fileType.fromBuffer(data.data))?.mime
           if (/gif|image|video|audio|pdf|stream/i.test(mime)) {
             return client.sendMedia(chat, data.data, '', caption, quoted, content)
           } else {
@@ -381,7 +382,7 @@ export async function smsg(client, m, store) {
     let res, filename
     const data = Buffer.isBuffer(PATH) ? PATH : PATH instanceof ArrayBuffer ? PATH.toBuffer() : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await fetch(PATH)).buffer() : fs.existsSync(PATH) ? ((filename = PATH), fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
     if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer')
-    const type = (await fileTypeFromBuffer(data)) || { mime: "application/octet-stream", ext: '.bin' }
+    const type = (await fileType.fromBuffer(data)) || { mime: "application/octet-stream", ext: '.bin' }
     if (data && saveToFile && !filename)
       ((filename = path.join(__dirname, '../tmp/' + new Date() * 1 + '.' + type.ext)),
         await fs.promises.writeFile(filename, data))
@@ -440,7 +441,7 @@ export async function smsg(client, m, store) {
   } else {
     throw new Error("Ruta o buffer inválido")
   }
-  const type = (await fileTypeFromBuffer(buffer)) || { mime: "application/octet-stream", ext: "bin", }
+  const type = (await fileType.fromBuffer(buffer)) || { mime: "application/octet-stream", ext: "bin", }
   let mtype = ""
   let mimetype = options.mimetype || type.mime
   let file = buffer
