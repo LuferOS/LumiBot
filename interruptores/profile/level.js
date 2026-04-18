@@ -28,13 +28,13 @@ export default {
     const progresoActual = user.exp - min
     const porcentaje = Math.floor((progresoActual / xp) * 100)
 
-    const txt = `*💙Usuario* ◢ ${db.users[who].name} ◤
+    const txt = `*🌟 Usuario* ◢ ${db.users[who].name} ◤
 
-💙 Nivel › *${user.level || 0}*
-☆ Experiencia › *${user.exp?.toLocaleString() || 0}*
-➨ Progreso › *${progresoActual} => ${xp}* _(${porcentaje}%)_
-🌱 Puesto › *#${rank}*
-💙 Comandos ejecutados › *${user.usedcommands?.toLocaleString() || 0}*`
-    await client.sendMessage(chatId, { text: txt, mentions: [name] }, { quoted: m })
+✨ Nivel › *${user.level || 0}*
+💎 Experiencia › *${user.exp?.toLocaleString() || 0}*
+📊 Progreso › *${progresoActual} => ${xp}* _(${porcentaje}%)_
+👑 Puesto › *#${rank}*
+🎮 Comandos ejecutados › *${user.usedcommands?.toLocaleString() || 0}*`
+    await client.sendFile(chatId, 'https://files.catbox.moe/07u62u.png', 'level.jpg', txt, m)
   }
 }
