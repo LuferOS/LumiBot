@@ -139,7 +139,7 @@ export default {
           fs.unlinkSync(inputPath);
         }
       } else {
-        return client.reply(m.chat, `💙 Por favor, envía una imagen, video, sticker o URL para hacer un sticker.\n> Usa *${usedPrefix + command} -list* para ver formas y efectos`, m, global.miku);
+        return client.reply(m.chat, `💙 Por favor, envía una imagen, video, sticker o URL para hacer un sticker.`, m, global.miku);
       }
     } catch (e) {
       return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`);
