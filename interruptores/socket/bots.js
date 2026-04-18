@@ -64,13 +64,17 @@ export default {
     }
     const totalBots = totalCounts.Owner + totalCounts.Sub
     const totalInGroup = inGroupCounts.Owner + inGroupCounts.Sub
+    const connectedSubs = global.conns.filter(c => c.userId && subs.includes(c.userId)).map(c => c.userId)
+
     let message = ''
-    message += `💙🎵 *BOTS ACTIVOS* 🎵💙\n\n`
-    message += `🌱 *Total registrados:* ${totalBots}\n`
-    message += `💙 *En este grupo:* ${totalInGroup}\n`
-    message += `❌ *No en grupo:* ${totalBots - totalInGroup}\n\n`
+    message += `💙 *BOTS ACTIVOS*\n\n`
+    message += `📊 *Estadísticas*\n`
+    message += `🌱 Total: ${totalBots}\n`
+    message += `💙 En grupo: ${totalInGroup}\n`
+    message += `❌ Fuera: ${totalBots - totalInGroup}\n\n`
     message += `━━━━━━━━━━━━━━━━━━\n\n`
-    message += `👑 *PRINCIPAL* (${totalCounts.Owner})\n\n`
+
+    message += `👑 *BOT PRINCIPAL* (${totalCounts.Owner})\n`
     if (categorizedBots.Owner.length) {
       message += categorizedBots.Owner.join('\n') + '\n\n'
     } else {
@@ -78,17 +82,32 @@ export default {
     }
 
     message += `━━━━━━━━━━━━━━━━━━\n\n`
-    message += `🤖 *SUBS* (${totalCounts.Sub})\n\n`
-
+    message += `🤖 *SUB-BOTS* (${totalCounts.Sub})\n`
     if (categorizedBots.Sub.length) {
-      message += categorizedBots.Sub.join('\n') + '\n\n'
+      message += categorizedBots.Sub.join('\n') + '\n'
+      if (connectedSubs.length > 0) {
+        message += `\n✅ *Conectados (${connectedSubs.length}):*\n`
+        connectedSubs.forEach(num => {
+          const jid = num + '@s.whatsapp.net'
+          const data = global.db.data.settings[jid]
+          const name = data?.namebot || 'Bot'
+          message += `   💙 ${name} (${num})\n`
+        })
+        message += '\n'
+      }
     } else {
       message += `  ∅ Ninguno registrado\n\n`
     }
 
-    message += `✨ Leyenda: ✅ En grupo | ❌ Fuera del grupo\n\n`
+    message += `━━━━━━━━━━━━━━━━━━\n\n`
+    message += `📝 *Leyenda:*\n`
+    message += `✅ En grupo | ❌ Fuera del grupo\n\n`
     message += `✨ *HATSUNE MIKU BOT*`
 
-    await client.sendContextInfoIndex(m.chat, message, {}, m, true, mentionedJid)
+    await client.sendMessage(m.chat, {
+      image: { url: 'https://files.catbox.moe/ucarkl.png' },
+      caption: message,
+      mentions: mentionedJid
+    }, { quoted: m })
   },
 };
