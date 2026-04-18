@@ -2,7 +2,7 @@ export default {
   command: ['report', 'reporte', 'sug', 'suggest'],
   category: 'info',
   run: async (client, m, args, usedPrefix, command) => {
-    // Obtener el texto del mensaje citado o de los argumentos
+   
     let texto = ''
     if (m.quoted && m.quoted.text) {
       texto = m.quoted.text.trim()
@@ -10,7 +10,7 @@ export default {
       texto = args.join(' ').trim()
     }
     
-    // Debug: mostrar información
+  
     console.log('DEBUG - Comando:', command)
     console.log('DEBUG - Args:', args)
     console.log('DEBUG - Texto citado:', m.quoted?.text)
