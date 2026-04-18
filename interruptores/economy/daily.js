@@ -32,7 +32,7 @@ export default {
     user.lastdaily = now + oneDay
     const siguiente = Math.min(20000 + users.streak * 5000, 1015000).toLocaleString()
     let msg = `> Día *${users.streak + 1}* » *+🌱${siguiente}*`
-    if (lost) msg += `\n> ☆ ¡Has perdido tu racha de días!`
+    if (lost) msg += `\n> 👑😒 ¡Has perdido tu racha de días!`
     await m.reply(`💙 Has reclamado tu recompensa diaria de *🌱${recompensa.toLocaleString()} ${monedas}*! (Día *${users.streak}*)\n${msg}`)
   },
 }

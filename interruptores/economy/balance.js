@@ -21,9 +21,9 @@ export default {
     const total = (user.coins || 0) + (user.bank || 0)
     const bal = `💙 Usuario \`<${global.db.data.users[who].name}>\`
 
-⛀ Cartera › *🌱${user.coins?.toLocaleString() || 0} ${monedas}*
-⚿ Banco › *🌱${user.bank?.toLocaleString() || 0} ${monedas}*
-⛁ Total › *🌱${total.toLocaleString()} ${monedas}*
+👝 Cartera › *🌱${user.coins?.toLocaleString() || 0} ${monedas}*
+🏦 Banco › *🌱${user.bank?.toLocaleString() || 0} ${monedas}*
+💰 Total › *🌱${total.toLocaleString()} ${monedas}*
 
 > _Para proteger tu dinero, ¡depósitalo en el banco usando ${usedPrefix}deposit!_`
     await client.sendMessage(chatId, { text: bal }, { quoted: m })
