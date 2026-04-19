@@ -24,12 +24,14 @@ export async function startSubBot(m, client, caption = '', isCode = false, phone
   const senderId = m?.sender
 
   if (sesionesEliminadas.has(id) && !isCommand) {
-    console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${id} Sesión eliminada. Requiere nueva autenticación manual.`))
     return null
   }
 
+  if (!fs.existsSync(sessionFolder) && isCommand) {
+    fs.mkdirSync(sessionFolder, { recursive: true })
+  }
+
   if (!fs.existsSync(sessionFolder)) {
-    console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${id} Carpeta de sesión no existe. Omitiendo.`))
     return null
   }
 
@@ -66,9 +68,7 @@ const sock = makeWASocket({
   if (isCode && caption && client && chatId && commandFlags[senderId]) {
     try {
       await m.reply(caption)
-    } catch (err) {
-      console.error("[Caption Error]", err);
-    }
+    } catch {}
   }
 
   sock.decodeJid = (jid) => {
@@ -93,9 +93,7 @@ const sock = makeWASocket({
               await client.sendMessage(chatId, { delete: msgCode.key });
             } catch {}
           }, 60000);
-        } catch (err) {
-          console.error("[Código Error]", err);
-        }
+        } catch {}
       }
       if (qr && !isCode && client && chatId && commandFlags[senderId]) {
         try {
@@ -106,9 +104,7 @@ const sock = makeWASocket({
               await client.sendMessage(chatId, { delete: msgQR.key })
             } catch {}
           }, 60000)
-        } catch (err) {
-          console.error("[QR Error]", err)
-        }
+        } catch {}
       }
       if (connection === 'open') {
         sock.uptime = Date.now();
@@ -125,7 +121,6 @@ const sock = makeWASocket({
 
         delete reintentos[sock.userId || id]
         await joinChannels(sock)
-        console.log(chalk.gray(`[ 💙 ]  SUB-BOT conectado: ${sock.userId}`))
       }
 
       if (connection === 'close') {
@@ -133,12 +128,10 @@ const sock = makeWASocket({
         const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.reason || 0
 
         if (global.conns.find((c) => c.userId === botId)) {
-          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Ya está conectado en global.conns, omitiendo reconexión`))
           return
         }
 
         if (reconectando.has(botId)) {
-          console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Ya está reconectando, omitiendo reconexión duplicada`))
           return
         }
 
@@ -146,22 +139,18 @@ const sock = makeWASocket({
         reintentos[botId] = intentos + 1
 
         if ([401, 403].includes(reason)) {
-          if (intentos < 3) {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Conexión cerrada (código ${reason}) intento ${intentos}/3 → Reintentando...`))
+          if (intentos < 5) {
             reconectando.add(botId)
             setTimeout(() => {
               reconectando.delete(botId)
               startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
             }, 3000)
           } else {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos. Eliminando sesión. Requiere nueva autenticación.`))
             reconectando.delete(botId)
             try {
               fs.rmSync(sessionFolder, { recursive: true, force: true })
               sesionesEliminadas.add(botId)
-            } catch (e) {
-              console.error(`[ 💙 ] No se pudo eliminar la carpeta ${sessionFolder}:`, e)
-            }
+            } catch {}
             delete reintentos[botId]
             const connIndex = global.conns.findIndex((c) => c.userId === botId)
             if (connIndex !== -1) {
@@ -173,22 +162,18 @@ const sock = makeWASocket({
         }
 
         if ([DisconnectReason.connectionClosed, DisconnectReason.connectionLost, DisconnectReason.timedOut, DisconnectReason.connectionReplaced].includes(reason)) {
-          if (intentos < 3) {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando por timeout (${reason}) intento ${intentos}/3...`))
+          if (intentos < 5) {
             reconectando.add(botId)
             setTimeout(() => {
               reconectando.delete(botId)
               startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
             }, 3000)
           } else {
-            console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Falló tras 3 intentos de reconexión por timeout. Eliminando sesión.`))
             reconectando.delete(botId)
             try {
               fs.rmSync(sessionFolder, { recursive: true, force: true })
               sesionesEliminadas.add(botId)
-            } catch (e) {
-              console.error(`[ 💙 ] No se pudo eliminar la carpeta ${sessionFolder}:`, e)
-            }
+            } catch {}
             delete reintentos[botId]
             const connIndex = global.conns.findIndex((c) => c.userId === botId)
             if (connIndex !== -1) {
@@ -198,16 +183,13 @@ const sock = makeWASocket({
           }
           return
         }
-        console.log(chalk.gray(`[ 💙 ]  SUB-BOT ${botId} Reconectando (razón: ${reason})...`))
         reconectando.add(botId)
         setTimeout(() => {
           reconectando.delete(botId)
           startSubBot(m, client, caption, isCode, phone, chatId, {}, isCommand)
         }, 3000)
       }
-    } catch (error) {
-      console.error(chalk.red(`[ 💙 ] Error en connection.update: ${error.message}`))
-    }
+    } catch {}
   })
 
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
@@ -217,22 +199,18 @@ const sock = makeWASocket({
       let msg = await smsg(sock, raw)
       try {
         main(sock, msg, messages)
-      } catch (err) {
-        console.log(chalk.gray(`[ 💙 ]  Sub » ${err}`))
-      }
+      } catch {}
     }
   })
  
   try {
   await events(sock, m)
-  } catch (err) {
-   console.log(chalk.gray(`[ 💙 ]  → ${err}`))
-  }
+  } catch {}
   return sock
 }
 
 async function joinChannels(client) {
 for (const value of Object.values(global.miku)) {
 if (typeof value === 'string' && value.endsWith('@newsletter')) {
-await client.newsletterFollow(value).catch(err => console.log(chalk.gray(`\n[ 💙 ] Error al seguir el canal ${value}`)))
+await client.newsletterFollow(value).catch(() => {})
 }}}
