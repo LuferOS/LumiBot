@@ -32,7 +32,7 @@ export default {
     user.lastweekly = now + gap
     let nextReward = Math.min(40000 + users.weeklyStreak * 5000, 185000).toLocaleString()
     let msg = `> Semana *${users.weeklyStreak + 1}* » *+🌱${nextReward}*`
-    if (lost) msg += `\n> ☆ ¡Has perdido tu racha de semanas!`
+    if (lost) msg += `\n> 💔 ¡Has perdido tu racha de semanas!`
     client.reply(m.chat, `💙 Has reclamado tu recompensa semanal de *🌱${coins.toLocaleString()} ${currency}* (Semana *${users.weeklyStreak}*)\n${msg}`, m, global.miku)
   }
 }
