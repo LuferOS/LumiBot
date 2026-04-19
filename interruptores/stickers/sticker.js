@@ -64,7 +64,7 @@ export default {
         const vf = buildFFmpegFilters(effects, isVideo, author);
         let ffmpegArgs;
         if (isVideo) {
-          ffmpegArgs = ['-y', '-i', inputPath, '-vf', `${vf},fps=15`, '-an', '-c:v', 'libwebp_anim', '-preset', 'default', '-compression_level', '4', '-q:v', '50', '-loop', '0', '-vsync', '0', outputPath];
+          ffmpegArgs = ['-y', '-i', inputPath, '-vf', `${vf},fps=10,scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000`, '-an', '-c:v', 'libwebp_anim', '-quality', '80', '-loop', '0', '-vsync', 'vfr', outputPath];
         } else {
           ffmpegArgs = ['-y', '-i', inputPath, '-vf', vf, '-an', '-c:v', 'libwebp', '-preset', 'picture', '-compression_level', '6', '-q:v', '70', outputPath];
         }
