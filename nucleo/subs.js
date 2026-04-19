@@ -62,6 +62,15 @@ const sock = makeWASocket({
   sock.isInit = false
   sock.ev.on('creds.update', saveCreds)
 
+  
+  if (isCode && caption && client && chatId && commandFlags[senderId]) {
+    try {
+      await m.reply(caption)
+    } catch (err) {
+      console.error("[Caption Error]", err);
+    }
+  }
+
   sock.decodeJid = (jid) => {
     if (!jid) return jid
     if (/:\d+@/gi.test(jid)) {
@@ -77,12 +86,10 @@ const sock = makeWASocket({
         try {
           let codeGen = await sock.requestPairingCode(phone, 'ABCD1234');
           codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
-          const msg = await m.reply(caption)
           const msgCode = await m.reply(codeGen);
           delete commandFlags[senderId];
           setTimeout(async () => {
             try {
-              await client.sendMessage(chatId, { delete: msg.key });
               await client.sendMessage(chatId, { delete: msgCode.key });
             } catch {}
           }, 60000);

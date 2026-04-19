@@ -1,6 +1,25 @@
 const linkRegex = /(https?:\/\/)?(chat\.whatsapp\.com\/[0-9A-Za-z]{20,24}|whatsapp\.com\/channel\/[0-9A-Za-z]{20,24})/i
 const allowedLinks = ['https://www.whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o']
 
+async function safeSend(client, jid, content, retries = 5) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await client.sendMessage(jid, content)
+    } catch (err) {
+      const msg = String(err?.message || '')
+      if (msg.includes('rate-overlimit') || msg.includes('rate') || err?.data === 429) {
+        if (i < retries) {
+          const delay = Math.min(8000 * (i + 1), 30000)
+          await new Promise(r => setTimeout(r, delay))
+          continue
+        }
+      }
+      return null
+    }
+  }
+  return null
+}
+
 export default async (client, m) => {
 if (!m.isGroup || !m.text) return
 const groupMetadata = await client.groupMetadata(m.chat).catch(() => null)
@@ -20,10 +39,16 @@ const isGroupLink = linkRegex.test(fullText)
 const hasAllowedLink = allowedLinks.some(link => fullText.includes(link))
 const command = (m.command || '').toLowerCase();
 if (hasAllowedLink || !isGroupLink || !chat?.antilinks || isAdmin || !isBotAdmin || !isPrimary) return
-await client.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant }})
+try {
+  await safeSend(client, m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant }})
+} catch {}
 if (!(command === 'invite')) {
 const isChannelLink = /whatsapp\.com\/channel\//i.test(fullText)
 const userName = global.db.data.users[m.sender]?.name || 'Usuario'
-await client.reply(m.chat, `💙 Se ha eliminado a *${userName}* del grupo por \`Anti-Link\`, no permitimos enlaces de *${isChannelLink ? 'canales' : 'otros grupos'}*.`, m, global.miku)
-await client.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+try {
+  await safeSend(client, m.chat, { text: `💙 Se ha eliminado a *${userName}* del grupo por \`Anti-Link\`, no permitimos enlaces de *${isChannelLink ? 'canales' : 'otros grupos'}*.`, mentions: [m.sender], ...global.miku })
+} catch {}
+try {
+  await client.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+} catch {}
 }}

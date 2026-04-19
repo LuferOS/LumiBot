@@ -11,7 +11,7 @@ async function drainWelcomeQueue() {
   while (_welcomeQueue.length > 0) {
     const task = _welcomeQueue.shift()
     try { await task() } catch {}
-    await new Promise(r => setTimeout(r, 3500))
+    await new Promise(r => setTimeout(r, 8000))
   }
   _welcomeRunning = false
 }
@@ -21,7 +21,7 @@ function queueWelcome(task) {
   drainWelcomeQueue()
 }
 
-async function safeSend(client, jid, content, retries = 2) {
+async function safeSend(client, jid, content, retries = 5) {
   for (let i = 0; i <= retries; i++) {
     try {
       return await client.sendMessage(jid, content)
@@ -29,13 +29,15 @@ async function safeSend(client, jid, content, retries = 2) {
       const msg = String(err?.message || '')
       if (msg.includes('rate-overlimit') || msg.includes('rate') || err?.data === 429) {
         if (i < retries) {
-          await new Promise(r => setTimeout(r, 4000 * (i + 1)))
+          const delay = Math.min(8000 * (i + 1), 30000)
+          await new Promise(r => setTimeout(r, delay))
           continue
         }
       }
-      throw err
+      return null
     }
   }
+  return null
 }
 
 export default async (client, m) => {
@@ -52,7 +54,7 @@ export default async (client, m) => {
       let metadata = {};
       try {
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 3000)
+          setTimeout(() => reject(new Error('Timeout')), 10000)
         );
         metadata = await Promise.race([
           client.groupMetadata(anu.id),
@@ -94,12 +96,16 @@ export default async (client, m) => {
         const phone = validJid.split('@')[0];
         
         let pp = 'https://i.pinimg.com/736x/0c/1e/f8/0c1ef8e804983e634fbf13df1044a41f.jpg';
-        try {
-          pp = await Promise.race([
-            client.profilePictureUrl(validJid, 'image'),
-            new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 4000))
-          ])
-        } catch {}
+        for (let i = 0; i < 3; i++) {
+          try {
+            pp = await Promise.race([
+              client.profilePictureUrl(validJid, 'image'),
+              new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 10000))
+            ])
+            break
+          } catch {}
+          if (i < 2) await new Promise(r => setTimeout(r, 3000))
+        }
         
         const contextInfo = {
           isForwarded: true,
@@ -140,11 +146,7 @@ export default async (client, m) => {
 │ 💙 ¡Que disfrutes tu estancia! ✨
 ╰━━━🌸━━━💙━━━🌸━━━╯`;
               await safeSend(client, anu.id, { image: { url: pp }, caption, contextInfo })
-            } catch (err) {
-              if (!err.message?.includes('Connection') && !err.message?.includes('Timeout')) {
-                console.log(chalk.yellow(`💙 Welcome: Error bienvenida - ${err.message}`))
-              }
-            }
+            } catch {}
           })
         }
         
@@ -166,27 +168,19 @@ export default async (client, m) => {
 │ 💙 ¡Esperamos verte de nuevo! ✨
 ╰━━━🌸━━━💙━━━🌸━━━╯`;
               await safeSend(client, anu.id, { image: { url: pp }, caption, contextInfo })
-            } catch (err) {
-              if (!err.message?.includes('Connection') && !err.message?.includes('Timeout')) {
-                console.log(chalk.yellow(`💙 Welcome: Error despedida - ${err.message}`))
-              }
-            }
+            } catch {}
           })
         }
         if (anu.action === 'promote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const usuario = anu.author
-          await client.sendMessage(anu.id, { text: `💙 *@${phone}* ha sido promovido a Administrador por *@${usuario.split('@')[0]}.*`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)], ...global.miku })
+          await safeSend(client, anu.id, { text: `💙 *@${phone}* ha sido promovido a Administrador por *@${usuario.split('@')[0]}.*`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)], ...global.miku })
         }
         if (anu.action === 'demote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const usuario = anu.author
-          await client.sendMessage(anu.id, { text: `💙 *@${phone}* ha sido degradado de Administrador por *@${usuario.split('@')[0]}.*`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)], ...global.miku })
+          await safeSend(client, anu.id, { text: `💙 *@${phone}* ha sido degradado de Administrador por *@${usuario.split('@')[0]}.*`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)], ...global.miku })
         }
       }
-    } catch (err) {
-      if (!err.message?.includes('Connection Closed') && !err.message?.includes('Timeout')) {
-        console.log(chalk.gray(`💙 Welcome Error → ${err.message}`));
-      }
-    }
+    } catch {}
   })
   client.ev.on('messages.upsert', async ({ messages }) => {
   const m = messages[0]
@@ -203,22 +197,22 @@ export default async (client, m) => {
   const groupMetadata = await client.groupMetadata(id).catch(() => null)
   const groupAdmins = groupMetadata?.participants.filter(p => (p.admin === 'admin' || p.admin === 'superadmin')) || []
   if (m.messageStubType == 21) {
-    await client.sendMessage(id, { text: `💙 @${phone} cambió el nombre del grupo a *${m.messageStubParameters[0]}*`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
+    await safeSend(client, id, { text: `💙 @${phone} cambió el nombre del grupo a *${m.messageStubParameters[0]}*`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
   }
   if (m.messageStubType == 22) {
-    await client.sendMessage(id, { text: `💙 @${phone} cambió el icono del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
+    await safeSend(client, id, { text: `💙 @${phone} cambió el icono del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
   }
   if (m.messageStubType == 23) {
-    await client.sendMessage(id, { text: `💙 @${phone} restableció el enlace del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
+    await safeSend(client, id, { text: `💙 @${phone} restableció el enlace del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
   }
   if (m.messageStubType == 24) {
-    await client.sendMessage(id, { text: `💙 @${phone} cambió la descripción del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
+    await safeSend(client, id, { text: `💙 @${phone} cambió la descripción del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
   }
   if (m.messageStubType == 25) {
-    await client.sendMessage(id, { text: `💙 @${phone} cambió los ajustes del grupo para permitir que ${m.messageStubParameters[0] == 'on' ? 'solo admins' : 'todos'} puedan configurar el grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
+    await safeSend(client, id, { text: `💙 @${phone} cambió los ajustes del grupo para permitir que ${m.messageStubParameters[0] == 'on' ? 'solo admins' : 'todos'} puedan configurar el grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
   }
   if (m.messageStubType == 26) {
-    await client.sendMessage(id, { text: `💙 @${phone} cambió los ajustes del grupo para permitir que ${m.messageStubParameters[0] === 'on' ? 'solo los administradores puedan enviar mensajes al grupo.' : 'todos los miembros puedan enviar mensajes al grupo.'}`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
+    await safeSend(client, id, { text: `💙 @${phone} cambió los ajustes del grupo para permitir que ${m.messageStubParameters[0] === 'on' ? 'solo los administradores puedan enviar mensajes al grupo.' : 'todos los miembros puedan enviar mensajes al grupo.'}`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
   }
 })
 }
