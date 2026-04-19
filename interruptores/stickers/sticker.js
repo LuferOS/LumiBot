@@ -61,8 +61,13 @@ export default {
       };
       const processWithFFmpeg = async (inputPath, isVideo = false) => {
         const outputPath = `./tmp/sticker-${Date.now()}.webp`;
-        const vf = buildFFmpegFilters(effects);
-        let ffmpegArgs = ['-y', '-i', inputPath, '-vf', vf, '-an', '-fps_mode', 'passthrough', '-c:v', 'libwebp_anim', '-preset', 'picture', '-compression_level', '6', '-q:v', '70', '-loop', '0', outputPath];
+        const vf = buildFFmpegFilters(effects, isVideo, author);
+        let ffmpegArgs;
+        if (isVideo) {
+          ffmpegArgs = ['-y', '-i', inputPath, '-vf', `${vf},fps=15`, '-an', '-c:v', 'libwebp_anim', '-preset', 'default', '-compression_level', '4', '-q:v', '50', '-loop', '0', '-vsync', '0', outputPath];
+        } else {
+          ffmpegArgs = ['-y', '-i', inputPath, '-vf', vf, '-an', '-c:v', 'libwebp', '-preset', 'picture', '-compression_level', '6', '-q:v', '70', outputPath];
+        }
         await new Promise((resolve, reject) => {
           const p = spawn('ffmpeg', ffmpegArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
           let err = '';
@@ -151,7 +156,7 @@ const isUrl = (text) => {
   return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/, 'gi'));
 };
 
-const buildFFmpegFilters = (effects, isVideo = false) => {
+const buildFFmpegFilters = (effects, isVideo = false, authorText = '') => {
   const W = 512;
   const H = 512;
   const filters = [];
@@ -205,6 +210,10 @@ const buildFFmpegFilters = (effects, isVideo = false) => {
   }
   if (shape === 'border') filters.push(`drawbox=x=0:y=0:w=${W}:h=${H}:color=white@0.9:t=10`);
   if (shape === 'frame') filters.push(`drawbox=x=15:y=15:w=${W - 30}:h=${H - 30}:color=white@0.7:t=8`);
+  if (authorText && authorText.length > 0) {
+    const safeText = authorText.replace(/'/g, "\\'").replace(/:/g, "\\:");
+    filters.push(`drawtext=text='${safeText}':fontcolor=white@0.8:fontsize=24:x=10:y=h-30:shadowcolor=black@0.5:shadowx=2:shadowy=2`);
+  }
   filters.push('format=yuva420p');
   return filters.join(',');
 };

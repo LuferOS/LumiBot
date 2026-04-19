@@ -64,10 +64,24 @@ const sock = makeWASocket({
   sock.isInit = false
   sock.ev.on('creds.update', saveCreds)
 
-  
   if (isCode && caption && client && chatId && commandFlags[senderId]) {
     try {
       await m.reply(caption)
+      m.react('⏳')
+      setTimeout(async () => {
+        try {
+          let codeGen = await sock.requestPairingCode(phone, 'ABCD1234');
+          codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
+          const msgCode = await m.reply(codeGen);
+          m.react('✅')
+          delete commandFlags[senderId];
+          setTimeout(async () => {
+            try {
+              await client.sendMessage(chatId, { delete: msgCode.key });
+            } catch {}
+          }, 60000);
+        } catch {}
+      }, 2000)
     } catch {}
   }
 
