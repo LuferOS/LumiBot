@@ -20,7 +20,7 @@ export default {
       const meta2 = user.metadatos2 ? String(user.metadatos2).trim() : '';
       let texto1 = meta1 ? meta1 : '💙 HATSUNE MIKU';
       let texto2 = meta1 ? (meta2 ? meta2 : '') : `@${name}`;
-      const res = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`);
+      const res = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=API_KEY_GEMINI&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`);
       if (!res.results || res.results.length === 0) {
         throw new Error('💙 No se encontraron stickers para esos emojis.');
       }
