@@ -21,7 +21,7 @@
 | Comando | Categoría | Descripción |
 | :--- | :--- | :--- |
 | `.numbinfo [número]` | **OSINT** | Rastreo de datos filtrados (correos/pass) asociados a un número. |
-| `.scan [objetivo]` | **OSINT** | Escáner táctico de superficie y análisis de perfil. |
+| `.scan [objetivo]` | **ANTIVIRUS** | Escáner táctico de ARCHIVOS A VIRUS TOTAL. |
 | `.add [número] [nombre]` | **Militar** | Incorpora a un recluta al grupo con mensaje de bienvenida formal. |
 | `.addoficial [num] [nom]` | **Militar** | Agrega al usuario y lo corona como **Suboficial de Servicio** en la DB. |
 | `.suboficial` | **Militar** | Consulta el rango, nombre y fecha del suboficial de turno actual. |
