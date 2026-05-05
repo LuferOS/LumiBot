@@ -11,17 +11,22 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       if (args[0] === '-list') {
-        return client.reply(m.chat, `💙 Envía una imagen o video que quieras convertir en sticker.\n\n🌱 Puedes responder a una imagen/video y usar *${usedPrefix + command}*\n💙 También puedes agregar texto: *${usedPrefix + command} Pack | Autor*`, m, global.miku);
+        return client.reply(m.chat, `╭⋯ 🛡️ *MOTOR DE RENDERIZADO LUMIBOT* ⋯》\n┊ ⊳ Responda a una imagen/video con *${usedPrefix + command}*\n┊ ⊳ Inyección de metadatos: *${usedPrefix + command} Pack | Autor*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
       }
+      
       const quoted = m.quoted ? m.quoted : m;
       const mime = (quoted.msg || quoted).mimetype || '';
-      const db = global.db.data
-      const user = db.users[m.sender] || {}
+      const db = global.db.data;
+      const user = db.users[m.sender] || {};
       const name = user.name;
+      
       const meta1 = user.metadatos ? String(user.metadatos).trim() : '';
       const meta2 = user.metadatos2 ? String(user.metadatos2).trim() : '';
-      let texto1 = meta1 ? meta1 : `💙 HATSUNE MIKU`;
-      let texto2 = meta1 ? (meta2 ? meta2 : '') : `@${name}`;
+      
+      // ⚡ LUMIBOT OVERRIDE: Purga de la firma de Miku
+      let texto1 = meta1 ? meta1 : `LumiBOT Security`;
+      let texto2 = meta1 ? (meta2 ? meta2 : '') : `Operador: ${name}`;
+      
       let urlArg = null;
       let argsWithoutUrl = [];
       for (let arg of args) {
@@ -31,17 +36,21 @@ export default {
           argsWithoutUrl.push(arg);
         }
       }
+      
       let filteredText = argsWithoutUrl.join(' ').replace(/-\w+/g, '').trim();
       let marca = filteredText.split(/[\u2022|]/).map(part => part.trim());
       let pack = marca[0] || texto1;
       let author = marca.length > 1 ? marca[1] : texto2;
+      
       const shapeArgs = { '-c': 'circle', '-t': 'triangle', '-s': 'star', '-r': 'roundrect', '-h': 'hexagon', '-d': 'diamond', '-f': 'frame', '-b': 'border', '-w': 'wave', '-m': 'mirror', '-o': 'octagon', '-y': 'pentagon', '-e': 'ellipse', '-z': 'cross', '-v': 'heart', '-x': 'cover', '-i': 'contain' };
       const effectArgs = { '-blur': 'blur', '-sepia': 'sepia', '-sharpen': 'sharpen', '-brighten': 'brighten', '-darken': 'darken', '-invert': 'invert', '-grayscale': 'grayscale', '-rotate90': 'rotate90', '-rotate180': 'rotate180', '-flip': 'flip', '-flop': 'flop', '-normalice': 'normalise', '-negate': 'negate', '-tint': 'tint' };
       const effects = [];
+      
       for (const arg of argsWithoutUrl) {
         if (shapeArgs[arg]) effects.push({ type: 'shape', value: shapeArgs[arg] });
         else if (effectArgs[arg]) effects.push({ type: 'effect', value: effectArgs[arg] });
       }
+      
       const sendWebpWithExif = async (webpBuffer) => {
         const media = { mimetype: 'webp', data: webpBuffer };
         const metadata = { packname: pack, author: author, categories: [''] };
@@ -49,6 +58,7 @@ export default {
         await client.sendMessage(m.chat, { sticker: { url: stickerPath } }, { quoted: m });
         fs.unlinkSync(stickerPath);
       };
+      
       const convertToGif = async (inputPath) => {
         const gifPath = `./tmp/conv-${Date.now()}.gif`;
         await new Promise((resolve, reject) => {
@@ -59,6 +69,7 @@ export default {
         });
         return gifPath;
       };
+      
       const processWithFFmpeg = async (inputPath, isVideo = false) => {
         const outputPath = `./tmp/sticker-${Date.now()}.webp`;
         const vf = buildFFmpegFilters(effects, isVideo, author);
@@ -78,10 +89,12 @@ export default {
         fs.unlinkSync(outputPath);
         await sendWebpWithExif(data);
       };
+      
       const isAnimatedWebp = (buffer) => {
         if (!Buffer.isBuffer(buffer) || buffer.length < 32) return false;
         return buffer.indexOf(Buffer.from('ANIM')) !== -1 || buffer.indexOf(Buffer.from('ANMF')) !== -1;
       };
+      
       const handleWebpBuffer = async (buffer) => {
         const animated = isAnimatedWebp(buffer);
         const inputPath = `./tmp/in-${Date.now()}.webp`;
@@ -101,6 +114,7 @@ export default {
         }
         fs.unlinkSync(inputPath);
       };
+      
       if (/image/.test(mime) || /webp/.test(mime)) {
         let buffer = await quoted.download();
         if (/webp/.test(mime)) {
@@ -114,7 +128,7 @@ export default {
         }
       } else if (/video/.test(mime)) {
         if ((quoted.msg || quoted).seconds > 20) {
-          return m.reply('💙 El video no puede ser muy largo', m, global.miku);
+          return m.reply('╭⋯ ❌ *ALERTA DE SISTEMA* ⋯》\n┊ El archivo supera el límite de 20 segundos.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.miku);
         }
         let buffer = await quoted.download();
         const inputPath = `./tmp/video-${Date.now()}.mp4`;
@@ -124,10 +138,10 @@ export default {
       } else if (urlArg) {
         const url = urlArg;
         if (!url.match(/\.(jpe?g|png|gif|webp|mp4|mov|avi|mkv|webm)(\?.*)?$/i)) {
-          return client.reply(m.chat, '💙 La URL debe ser de una imagen (jpg, png, gif, webp) o video (mp4, mov, avi, mkv, webm)', m, global.miku);
+          return client.reply(m.chat, '╭⋯ ❌ *ERROR DE FORMATO* ⋯》\n┊ La URL no apunta a un archivo multimedia válido.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.miku);
         }
         const response = await fetch(url);
-        if (!response.ok) return client.reply(m.chat, '💙 No pude descargar ese archivo desde la URL.', m, global.miku);
+        if (!response.ok) return client.reply(m.chat, '╭⋯ ❌ *ERROR DE RED* ⋯》\n┊ Servidor de origen rechazó la conexión.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.miku);
         const buffer = Buffer.from(await response.arrayBuffer());
         if (url.match(/\.webp(\?.*)?$/i)) {
           await handleWebpBuffer(buffer);
@@ -144,10 +158,11 @@ export default {
           fs.unlinkSync(inputPath);
         }
       } else {
-        return client.reply(m.chat, `💙 Por favor, envía una imagen, video, sticker o URL para hacer un sticker.`, m, global.miku);
+        return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Requiere imagen, video o URL para ejecutar el renderizado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
       }
     } catch (e) {
-      return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`);
+      console.error("[LUMIBOT DEBUG] Error en sticker.js:", e);
+      return m.reply(`╭⋯ ❌ *LUMIBOT OVERRIDE* ⋯》\n┊ Fallo en la conversión de FFMPEG.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     }
   }
 };

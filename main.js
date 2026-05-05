@@ -37,6 +37,8 @@ export default async (client, m) => {
       }
     } catch (e) {}
   }
+  
+  // ⚡ LUMIBOT OVERRIDE: Gestión de Botones YouTube
   if (buttonId && (
     buttonId.includes('youtube_audio_') ||
     buttonId.includes('youtube_video_360_') ||
@@ -70,10 +72,10 @@ export default async (client, m) => {
     if (option) {
       const user = global.db?.data?.users?.[m.sender]
       if (!user?.lastYTSearch) {
-        return client.reply(m.chat, '⏰ No hay búsqueda activa. Realiza una nueva búsqueda.', m)
+        return client.reply(m.chat, `╭⋯ ⚠️ *SESIÓN CADUCADA* ⋯》\n┊ Bro, no hay ninguna búsqueda activa en memoria.\n┊ Tira el comando de nuevo.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m)
       }
       if (Date.now() - (user.lastYTSearch.timestamp || 0) > 10 * 60 * 1000) {
-        return client.reply(m.chat, '⏰ La búsqueda expiró. Realiza una nueva búsqueda.', m)
+        return client.reply(m.chat, `╭⋯ ⏳ *TIEMPO AGOTADO* ⋯》\n┊ Esa búsqueda ya caducó, mi rey.\n┊ Tienes 10 minutos por sesión. Repite el comando.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m)
       }
       user.monedaDeducted = false
       try {
@@ -84,6 +86,7 @@ export default async (client, m) => {
     }
   }
 
+  // ⚡ LUMIBOT OVERRIDE: Gestión de Botones RPG/Waifus
   if (buttonId && (buttonId.startsWith('waifu_claim_') || buttonId.startsWith('waifu_sell_'))) {
     if (m.isGroup) {
       const chat = global.db?.data?.chats?.[m.chat] || {};
@@ -117,7 +120,7 @@ export default async (client, m) => {
     }
 
     if (m.sender !== userId) {
-      await client.reply(m.chat, '❌ Este personaje no es tuyo. No puedes reclamarlo.', m);
+      await client.reply(m.chat, `╭⋯ 🛑 *ACCESO DENEGADO* ⋯》\n┊ Ese personaje no te pertenece, no seas ladrón.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
       return;
     }
 
@@ -131,14 +134,14 @@ export default async (client, m) => {
     if (!Array.isArray(user.waifu.characters)) user.waifu.characters = []
 
     if (!user.waifu.pending) {
-      await client.reply(m.chat, '❌ No tienes ningún personaje disponible para reclamar.\n\n💡 Usa *.rw* para obtener un nuevo personaje.', m);
+      await client.reply(m.chat, `╭⋯ ⚠️ *INVENTARIO VACÍO* ⋯》\n┊ No tienes personajes en cola para reclamar.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
       return;
     }
 
     if (buttonId.startsWith('waifu_claim_')) {
       user.waifu.characters.push(user.waifu.pending);
       user.waifu.pending = null;
-      await client.reply(m.chat, `✅ Has reclamado a ${userName} en tu colección.`, m);
+      await client.reply(m.chat, `╭⋯ 📦 *ASIGNACIÓN COMPLETADA* ⋯》\n┊ Has añadido al personaje a la colección de @${userName.split('@')[0]}.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
       return;
     }
 
@@ -146,7 +149,7 @@ export default async (client, m) => {
       const sellPrice = Math.floor(user.waifu.pending.rarity * 50);
       user.coins = (user.coins || 0) + sellPrice;
       user.waifu.pending = null;
-      await client.reply(m.chat, `💰 Has vendido el personaje por ${sellPrice} cebollines.`, m);
+      await client.reply(m.chat, `╭⋯ 💸 *LIQUIDACIÓN EXITOSA* ⋯》\n┊ Personaje purgado. Obtenidos ${sellPrice} créditos.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
       return;
     }
   }
@@ -161,27 +164,28 @@ export default async (client, m) => {
   const settings = global.db.data.settings[botJid] || {}
   const user = global.db.data.users[sender] ||= {}
   const users = chat.users[sender] || {}
-  const pushname = m.pushName || 'Sin nombre';
+  const pushname = m.pushName || 'Desconocido';
   
   let groupMetadata = null
   let groupAdmins = []
   let groupName = ''
   if (m.isGroup) {
     groupMetadata = await client.groupMetadata(m.chat).catch(() => null)
-    groupName = groupMetadata?.subject || ''
+    groupName = groupMetadata?.subject || 'Sector Sin Nombre'
     groupAdmins = groupMetadata?.participants.filter(p => (p.admin === 'admin' || p.admin === 'superadmin')) || []
   }  
   const isBotAdmins = m.isGroup ? groupAdmins.some(p => p.phoneNumber === botJid || p.jid === botJid || p.id === botJid || p.lid === botJid ) : false
   const isAdmins = m.isGroup ? groupAdmins.some(p => p.phoneNumber === sender || p.jid === sender || p.id === sender || p.lid === sender ) : false
   const isOwners = [botJid, ...(settings.owner ? [settings.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(sender);
 
+  // Ejecución Pasiva de Plugins
   for (const name in global.plugins) {
     const plugin = global.plugins[name];
     if (plugin && typeof plugin.all === "function") {
       try {
         await plugin.all.call(client, m, { client });
       } catch (err) {
-        console.error(`Error en plugin.all -> ${name}`, err);
+        console.error(`[LUMIBOT DEBUG] Error en plugin.all -> ${name}`, err);
       }
     }
   }
@@ -191,10 +195,10 @@ export default async (client, m) => {
   if (!users.stats[today]) users.stats[today] = { msgs: 0, cmds: 0 };
   users.stats[today].msgs++;
   
-  const rawBotname = settings.namebot || 'Miku';
+  const rawBotname = settings.namebot || 'LuferOS';
   const tipo = settings.type || 'Sub';
   const cleanBotname = rawBotname.replace(/[^a-zA-Z0-9\s]/g, '')
-  const namebot = cleanBotname || 'Miku';
+  const namebot = cleanBotname || 'LuferOS';
   const shortForms = [namebot.charAt(0), namebot.split(" ")[0], tipo.split(" ")[0], namebot.split(" ")[0].slice(0, 2), namebot.split(" ")[0].slice(0, 3)];
   const prefixes = shortForms.map(name => `${name}`);
   prefixes.unshift(namebot);
@@ -226,7 +230,7 @@ export default async (client, m) => {
           continue;
         }
       } catch (err) {
-        console.error(`Error en plugin.all -> ${name}`, err);
+        console.error(`[LUMIBOT DEBUG] Error en plugin.before -> ${name}`, err);
       }
     }
   }
@@ -238,14 +242,15 @@ export default async (client, m) => {
   let text = args.join(' ');
   if (!command) return;
   
+  // ⚡ LUMIBOT OVERRIDE: Log de Consola Táctica
   const chatData = global.db.data.chats[from] || {};
   const consolePrimary = chatData.primaryBot;
   if (m.message || !consolePrimary || consolePrimary === botJid) {
     const bodyPreview = typeof body === 'string' && body.length > 50 ? `${body.slice(0, 50)}…` : body;
-    const h = chalk.bold.blue('╔⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍···');
-    const t = chalk.bold.blue('╚⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍⚍···');
-    const v = chalk.bold.blue('┇');
-    console.log(`\n${h}\n${chalk.bold.yellow(`${v} Fecha: ${chalk.whiteBright(moment().format('DD/MM/YY HH:mm:ss'))} p. m.`)}\n${chalk.bold.blueBright(`${v} Usuario: ${chalk.whiteBright(`(${pushname})`)}`)}\n${chalk.bold.magentaBright(`${v} Remitente: ${gradient('deepskyblue', 'darkorchid')(sender)}`)}\n${m.isGroup ? chalk.bold.cyanBright(`${v} Grupo: ${chalk.greenBright(groupName)}\n${v} Mensaje: ${bodyPreview}`) : chalk.bold.greenBright(`${v} Mensaje: ${bodyPreview}`)}\n${t}`);
+    const h = chalk.bold.cyan('╭⋯ 🛡️ LUMIBOT TERMINAL ⋯》');
+    const t = chalk.bold.cyan('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》');
+    const v = chalk.bold.cyan('┊');
+    console.log(`\n${h}\n${chalk.bold.yellow(`${v} Fecha: ${chalk.whiteBright(moment().format('DD/MM/YY HH:mm:ss'))}`)}\n${chalk.bold.blueBright(`${v} Operativo: ${chalk.whiteBright(`(${pushname})`)}`)}\n${chalk.bold.magentaBright(`${v} ID Red: ${gradient('deepskyblue', 'darkorchid')(sender.split('@')[0])}`)}\n${m.isGroup ? chalk.bold.greenBright(`${v} Sector: ${chalk.whiteBright(groupName)}\n${v} Comando: ${bodyPreview}`) : chalk.bold.greenBright(`${v} Comando DM: ${bodyPreview}`)}\n${t}`);
   }
   
   const hasPrefix = settings.prefix === true ? true : (Array.isArray(settings.prefix) ? settings.prefix : typeof settings.prefix === 'string' ? [settings.prefix] : []).some(p => textToMatch?.startsWith(p));
@@ -291,30 +296,39 @@ export default async (client, m) => {
     const allowedInPrivateForUsers = ['allmenu', 'help', 'menu', 'infobot', 'botinfo', 'invite', 'invitar', 'ping', 'speed', 'p', 'status', 'estado', 'report', 'reporte', 'sug', 'suggest', 'token', 'join', 'unir', 'logout', 'reload', 'self', 'setbanner', 'setbotbanner', 'setchannel', 'setbotchannel', 'setbotcurrency', 'setcurrency', 'seticon', 'setboticon', 'setlink', 'setbotlink', 'setbotname', 'setname', 'setbotowner', 'setowner', 'setimage', 'setpfp', 'setprefix', 'setbotprefix', 'setstatus', 'setusername', 'code', 'qr']
     if (!global.owner.map(num => num + '@s.whatsapp.net').includes(sender) && !allowedInPrivateForUsers.includes(command)) return;
   }
+  
+  // ⚡ LUMIBOT OVERRIDE: Manejo de Baneos
   if (chat?.isBanned && !(command === 'bot' && text === 'on') && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
-    await m.reply(`💙 El bot *${settings.botname}* está desactivado en este grupo.\n\n> 🌱 Un *administrador* puede activarlo con el comando:\n> » *${usedPrefix}bot on*`);
+    await m.reply(`╭⋯ 🛑 *SISTEMA DESCONECTADO* ⋯》\n┊ Mis operaciones están suspendidas en este sector.\n┊ Dile a un Admin que use *${usedPrefix}bot on* si quieren mi ayuda.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     return;
   }
   if (m.text && user.banned && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
-    await m.reply(`💙 Estás ${user.genre === 'Mujer' ? 'baneada' : user.genre === 'Hombre' ? 'baneado' : 'baneado/a'}, no puedes usar comandos en este bot!\n\n> 🌱 *Razón ›* ${user.bannedReason || 'Sin especificar'}\n\n> 🌱 Si tienes evidencia que respalde que este mensaje es un error, puedes exponer tu caso con un moderador.`);
+    await m.reply(`╭⋯ 🚫 *OPERATIVO BLOQUEADO* ⋯》\n┊ Estás en mi lista negra. Cero acceso al sistema.\n┊ ⊳ *Motivo:* ${user.bannedReason || 'Infracción táctica'}\n┊ Si crees que es un error, llora en soporte o busca un Admin.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     return;
   }
 
   if (!users.stats) users.stats = {};
   if (!users.stats[today]) users.stats[today] = { msgs: 0, cmds: 0 }; 
   if (chat.adminonly && !isAdmins) return;
+  
   const cmdData = global.comandos.get(command);
   if (!cmdData) {
     if (settings.prefix === true) return;
     await client.readMessages([m.key]);
-    return m.reply(`💙 El comando *${command}* no existe.\n> 🌱 Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`);
+    return m.reply(`╭⋯ ⚠️ *SINTAXIS DESCONOCIDA* ⋯》\n┊ El comando *${command}* no existe en mi código.\n┊ Escribe *${usedPrefix}menu* para ver la lista real.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
   }
+  
   if (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
     if (settings.prefix === true) return;
-    return m.reply(`💙 El comando *${command}* no existe.\n> 🌱 Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`);
+    return m.reply(`╭⋯ ⚠️ *SINTAXIS DESCONOCIDA* ⋯》\n┊ El comando *${command}* no existe en mi código.\n┊ Escribe *${usedPrefix}menu* para ver la lista real.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
   }
-  if (cmdData.isAdmin && !isAdmins) return client.reply(m.chat, mess.admin, m);
-  if (cmdData.botAdmin && !isBotAdmins) return client.reply(m.chat, mess.botAdmin, m);
+  
+  const msgNoAdmin = `╭⋯ 🛑 *ACCESO DENEGADO* ⋯》\n┊ Comando restringido. Solo para los Administradores de este grupo.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
+  const msgNoBotAdmin = `╭⋯ ⚠️ *PERMISOS INSUFICIENTES* ⋯》\n┊ No puedo ejecutar esto si no me das rango de Administrador primero.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
+
+  if (cmdData.isAdmin && !isAdmins) return client.reply(m.chat, msgNoAdmin, m);
+  if (cmdData.botAdmin && !isBotAdmins) return client.reply(m.chat, msgNoBotAdmin, m);
+  
   try {
     await client.readMessages([m.key]);
     user.usedcommands = (user.usedcommands || 0) + 1;
@@ -326,7 +340,7 @@ export default async (client, m) => {
     users.stats[today].cmds++;
     await cmdData.run(client, m, args, usedPrefix, command, text);
   } catch (error) {
-    await client.sendMessage(m.chat, { text: `💙 *ERROR*\n\n💙 Ocurrió un error al ejecutar el comando.\n🌱 *Error:* ${error.message || error}` }, { quoted: m });
+    await client.sendMessage(m.chat, { text: `╭⋯ ❌ *ERROR CRÍTICO DEL NÚCLEO* ⋯》\n┊ El procesador colapsó ejecutando este módulo.\n┊ ⊳ *Detalles:* ${error.message || error}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》` }, { quoted: m });
   }
   level(m);
 };

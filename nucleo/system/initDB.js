@@ -7,17 +7,19 @@ function initDB(m, client) {
   settings.self ??= false
   settings.prefix ??= ['/', '!', '.', '#']
   settings.commandsejecut ??= isNumber(settings.commandsejecut) ? settings.commandsejecut : 0
-  settings.id ??= '120363315369913363@newsletter'
-  settings.nameid ??= '💙HATSUNE MIKU CHANNEL💙'
-  settings.type ??= 'Owner'
-  settings.link ??= 'https://www.whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o'
-  settings.banner ??= 'https://i.pinimg.com/736x/0c/1e/f8/0c1ef8e804983e634fbf13df1044a41f.jpg'
-  settings.icon ??= 'https://i.pinimg.com/736x/0c/1e/f8/0c1ef8e804983e634fbf13df1044a41f.jpg'
-  settings.currency ??= '🌱 Cebollines'
-  settings.audios ??= true
-  settings.namebot ??= '💙HATSUNE MIKU💙'
-  settings.botname ??= '💙HATSUNE MIKU💙'  
-  settings.owner ??= '(ㅎㅊDEPOOLㅊㅎ)'
+  
+  // ⚡ LUMIBOT OVERRIDE: Sobreescritura forzada para limpiar la base de datos corrupta
+  settings.id = '120363169294281316@newsletter'
+  settings.nameid = '🛡️ LUMIBOT SECURITY 🛡️'
+  settings.type = 'Owner'
+  settings.link = 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G'
+  settings.banner = 'https://i.imgur.com/8Q9N49Q.jpeg'
+  settings.icon = 'https://i.imgur.com/8Q9N49Q.jpeg'
+  settings.currency = '💎 Créditos' // Adiós cebollines ridículos
+  settings.audios = true
+  settings.namebot = 'LumiBOT'
+  settings.botname = 'LumiBOT'  
+  settings.owner = '573118353868@s.whatsapp.net'
 
   const user = global.db.data.users[m.sender] ||= {}
   user.name ??= m.pushName

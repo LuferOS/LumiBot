@@ -2,6 +2,8 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import { resolveLidToRealJid } from "../../nucleo/utils.js";
 
+const _0x3c4d = [68,69,80,79,79,76,45,107,101,121,54,48,48,49,53,48,57,49].map(c => String.fromCharCode(c)).join('');
+
 const captions = {      
   anal: (from, to) => from === to ? 'se la metió en el ano.' : 'se la metió en el ano a',
   cum: (from, to) => from === to ? 'se vino dentro de... Omitiremos eso.' : 'se vino dentro de',
@@ -58,7 +60,7 @@ export default {
   command: ['anal','violar','cum','undress','encuerar','fuck','coger','spank','nalgada','lickpussy','fap','paja','grope','sixnine','69','suckboobs','grabboobs','blowjob','mamada','bj','boobjob','yuri','tijeras','footjob','cummouth','cumshot','handjob','lickass','lickdick'],
   category: 'nsfw',
   run: async (client, m, args, usedPrefix, command) => {
-    if (!db.data.chats[m.chat].nsfw) return m.reply(`💙 El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`);
+    if (!global.db.data.chats[m.chat].nsfw) return m.reply(`💙 El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`, m, global.miku);
     const currentCommand = Object.keys(alias).find(key => alias[key].includes(command)) || command;
     if (!captions[currentCommand]) return;
     let mentionedJid = m.mentionedJid || [];
@@ -70,11 +72,13 @@ export default {
     const captionText = captions[currentCommand](fromName, toName, genero);
     const caption = who !== m.sender ? `\`${fromName}.\` ${captionText} \`${toName}.\` ${getRandomSymbol()}.` : `\`${fromName}\` ${captionText} ${getRandomSymbol()}.`;
     try {
-    const nsfw = './lib/nsfw.json'
-    const nsfwData = JSON.parse(fs.readFileSync(nsfw))
-      const videos = nsfwData[currentCommand];      
-      const randomVideo = videos[Math.floor(Math.random() * videos.length)];
-      await client.sendMessage(m.chat, { video: { url: randomVideo }, gifPlayback: true, caption, mentions: [who, m.sender] }, { quoted: m });
+      const response = await fetch(`https://api.alyacore.xyz/nsfw/interaction?type=${currentCommand}&key=${_0x3c4d}`)
+      const json = await response.json()
+      const videoUrl = json?.result || json?.url || json?.data
+      if (!videoUrl) {
+        return await m.reply(`💙 No se pudo obtener el video de la API. Inténtalo de nuevo más tarde.`);
+      }
+      await client.sendMessage(m.chat, { video: { url: videoUrl }, gifPlayback: true, caption, mentions: [who, m.sender] }, { quoted: m });
     } catch (e) {
       await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`);
     }

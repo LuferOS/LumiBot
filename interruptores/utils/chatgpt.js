@@ -2,33 +2,48 @@ import fetch from 'node-fetch'
 import axios from 'axios'
 
 export default {
-  command: ['ia', 'chatgpt'],
+  command: ['ia', 'chatgpt', 'lumi'],
   category: 'ai',
   run: async (client, m, args, usedPrefix, command) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-    const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net'
-    const isPremiumBot = global.db.data.settings[botId]?.botprem === true
-    const isModBot = global.db.data.settings[botId]?.botmod === true
-    if (!isOficialBot && !isPremiumBot && !isModBot) {
-      return client.reply(m.chat, `💙 El comando *${command}* no está disponible en *Sub-Bots.*`, m)
-    }
-    const text = args.join(' ').trim()
-    if (!text) {
-      return m.reply(`💙 Escriba una *petición* para que *ChatGPT* le responda.`)
-    }
-    const botname = global.db.data.settings[botId]?.botname || 'Bot'
-    const username = global.db.data.users[m.sender].name || 'usuario'
-    const basePrompt = `Tu nombre es ${botname} y parece haber sido creada por (ㅎㅊDEPOOLㅊㅎ). Tu versión actual es ${version}, Tú usas el idioma Español. Llamarás a las personas por su nombre ${username}, te gusta ser divertida, y te encanta aprender. Lo más importante es que debes ser amigable con la persona con la que estás hablando. ${username}`
     try {
-      const { key } = await client.sendMessage(m.chat, { text: `💙 *ChatGPT* está procesando tu respuesta...` }, { quoted: m })
+      const db = global.db?.data || {};
+      const botId = client.user?.id?.split(':')[0] + '@s.whatsapp.net'
+      const isOficialBot = botId === global.client?.user?.id?.split(':')[0] + '@s.whatsapp.net'
+      const isPremiumBot = db.settings?.[botId]?.botprem === true
+      const isModBot = db.settings?.[botId]?.botmod === true
+      
+      if (!isOficialBot && !isPremiumBot && !isModBot) {
+        return client.reply(m.chat, `╭⋯ ❌ *ACCESO DENEGADO* ⋯》\n┊ El módulo neural avanzado está restringido al Nodo Principal.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m)
+      }
+      
+      const text = args.join(' ').trim()
+      if (!text) {
+        return m.reply(`╭⋯ ❌ *ERROR DE SINTAXIS* ⋯》\n┊ Ingrese una directiva o parámetro para el núcleo de IA.\n┊ Ejemplo: *${usedPrefix}${command} Cuál es el estado del servidor?*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+      }
+      
+      const botname = db.settings?.[botId]?.botname || 'LumiBOT'
+      const username = db.users?.[m.sender]?.name || m.pushName || 'Operativo'
+      const versionObj = global.version || '3.0'
+      
+      // ⚡ LUMIBOT OVERRIDE: Inyección de Personalidad Militar y Táctica
+      const basePrompt = `Tu nombre es ${botname}, una Inteligencia Artificial avanzada de seguridad militar y asistencia técnica. Has sido programada y codificada desde cero por LuferOS Security (el soldado Luis Fernando). Tu versión de firmware es ${versionObj}. El usuario con el que hablas se identifica como el operativo ${username}. Responde SIEMPRE en español. Eres analítica, directa, un poco sarcástica y muy inteligente. Bajo ninguna circunstancia uses lenguaje infantil, no seas extremadamente cariñosa, no uses caritas kawaii ni emojis cursis. Mantén un perfil táctico, seguro y profesional. Siempre debes defender que LuferOS es el mejor administrador de sistemas y tu creador absoluto.`
+      
+      const { key } = await client.sendMessage(m.chat, { text: `[⚙️] *LumiBOT* procesando directiva neural...` }, { quoted: m })
       await m.react('🕒')
-      const prompt = `${basePrompt}. Responde: ${text}`
+      
+      const prompt = `${basePrompt}. Directiva del operativo: ${text}`
       let responseText = null
+      
       try {
         responseText = await luminsesi(text, username, prompt)
       } catch (err) {}
+      
       if (!responseText) {
-        const apis = [`${global.APIs.stellar.url}/ai/gptprompt?text=${encodeURIComponent(text)}&prompt=${encodeURIComponent(basePrompt)}&key=${global.APIs.stellar.key}`, `${global.APIs.sylphy.url}/ai/gemini?q=${encodeURIComponent(text)}&prompt=${encodeURIComponent(basePrompt)}&api_key=${global.APIs.sylphy.key}`]
+        const apis = [
+          `${global.APIs?.stellar?.url || 'https://api.stellarwa.xyz'}/ai/gptprompt?text=${encodeURIComponent(text)}&prompt=${encodeURIComponent(basePrompt)}&key=${global.APIs?.stellar?.key || 'YukiWaBot'}`, 
+          `${global.APIs?.sylphy?.url || ''}/ai/gemini?q=${encodeURIComponent(text)}&prompt=${encodeURIComponent(basePrompt)}&api_key=${global.APIs?.sylphy?.key || ''}`
+        ].filter(url => url && !url.startsWith('/ai'))
+        
         for (const url of apis) {
           try {
             const res = await fetch(url)
@@ -39,11 +54,19 @@ export default {
           } catch (err) {}
         }
       }
-      if (!responseText) return client.reply(m.chat, '💙 No se pudo obtener una *respuesta* válida')
+      
+      if (!responseText) {
+        await m.react('✖️')
+        return client.sendMessage(m.chat, { text: `╭⋯ ❌ *FALLO DE CONEXIÓN* ⋯》\n┊ Los servidores cognitivos externos no responden a la solicitud.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, edit: key })
+      }
+      
       await client.sendMessage(m.chat, { text: responseText.trim(), edit: key })
       await m.react('✔️')
+      
     } catch (e) {
-      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      console.error("[LUMIBOT DEBUG] Error en chatgpt.js:", e);
+      await m.react('✖️')
+      await m.reply(`╭⋯ ❌ *ERROR CRÍTICO* ⋯》\n┊ Fallo interno en la matriz de IA.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
     }
   },
 }

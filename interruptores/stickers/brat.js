@@ -24,25 +24,32 @@ export default {
     try {
       text = m.quoted?.text || text;
       if (!text) {
-        return client.reply(m.chat, `💙 Por favor, responde a un mensaje o ingresa un texto para crear el Sticker.`, m, global.miku);
+        return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingresa texto o responde a un mensaje para generar el sticker.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
       }
+      
       await m.react('🕒');
-      const db = global.db.data
-      const user = db.users[m.sender] || {}
+      const db = global.db.data;
+      const user = db.users[m.sender] || {};
       const name = user.name || m.sender.split('@')[0];
+      
       const hasMeta1 = user.metadatos ? String(user.metadatos).trim() : '';
       const hasMeta2 = user.metadatos2 ? String(user.metadatos2).trim() : '';
-      let texto1 = hasMeta1 ? user.metadatos : '💙 HATSUNE MIKU';
-      let texto2 = hasMeta1 ? (hasMeta2 ? user.metadatos2 : '') : `@${name}`;
+      
+      // ⚡ LUMIBOT OVERRIDE: Marca de agua táctica
+      let texto1 = hasMeta1 ? user.metadatos : 'LumiBOT Security';
+      let texto2 = hasMeta1 ? (hasMeta2 ? user.metadatos2 : '') : `Operador: ${name}`;
+      
       const buffer = await fetchSticker(text);
       const tmpFile = `./tmp/brat-${Date.now()}.webp`;
       fs.writeFileSync(tmpFile, buffer);
+      
       await client.sendImageAsSticker(m.chat, tmpFile, m, { packname: texto1, author: texto2 });
       fs.unlinkSync(tmpFile);
+      
       await m.react('✔️');
     } catch (e) {
       await m.react('✖️');
-      return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`);
+      return m.reply(`╭⋯ ❌ *LUMIBOT OVERRIDE* ⋯》\n┊ La API de renderizado rechazó la solicitud.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     }
   }
 };

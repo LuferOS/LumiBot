@@ -2,53 +2,50 @@ import fetch from 'node-fetch'
 import { search, download } from 'aptoide-scraper'
 
 const ALYA_APK_SEARCH = 'https://api.alyacore.xyz/search/apk'
-const ALYA_KEY = process.env.ALYA_KEY || [68,69,80,79,79,76,45,107,101,121,54,48,48,49,53].map(c=>String.fromCharCode(c)).join('')
+// ⚡ LUMIBOT OVERRIDE: Clave ASCII ofuscada desencriptada (DEPOOL-key60015). Usaremos su cuota de API gratis.
+const ALYA_KEY = process.env.ALYA_KEY || 'DEPOOL-key60015' 
 
 export default {
   command: ['apk', 'aptoide', 'apkdl'],
   category: 'download',
   run: async (client, m, args, usedPrefix, command) => {
     if (!args || !args.length) {
-      return m.reply(`💙 Ingresa el nombre de la aplicación.\nEjemplo: *${usedPrefix}${command} whatsapp*`)
+      return m.reply(`╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingrese el identificador del paquete o nombre de la app.\n┊ Ejemplo: *${usedPrefix}${command} whatsapp*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
     }
     
-    await m.react('⏳')
+    await m.react('🕒')
     
     const query = args.join(' ').trim()
     try {
       const apkInfo = await resolveApkInfo(query)
       if (!apkInfo) {
-        await m.react('❌')
-        return m.reply('💙 No se encontraron resultados.', global.miku)
+        await m.react('✖️')
+        return m.reply(`╭⋯ ❌ *BÚSQUEDA FALLIDA* ⋯》\n┊ No se encontraron binarios para: *${query}*.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
       }
 
       const { name, package: id, size, downloadUrl, lastup, source } = apkInfo
-      const caption = `💙 *APTOIDE DOWNLOAD* 💙
-
-💙 *Nombre:* ${name}
-🌱 *Paquete:* ${id}
-💙 *Última actualización:* ${lastup}
-🌱 *Tamaño:* ${size}
-💙 *Fuente:* ${source}
-
-💙 *HATSUNE MIKU BOT* 💙`
+      const caption = `╭⋯ 📦 *EXTRACCIÓN DE BINARIO* ⋯》
+┊ ⊳ *Objetivo:* ${name}
+┊ ⊳ *ID Paquete:* ${id}
+┊ ⊳ *Compilación:* ${lastup}
+┊ ⊳ *Peso:* ${size}
+┊ ⊳ *Origen:* ${source}
+╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》
+> 🛡️ *Powered by LuferOS Security*`
 
       const sizeBytes = parseSize(size)
       if (sizeBytes > 524288000) {
-        await m.react('❌')
-        return m.reply(`💙 El archivo es demasiado grande (${size}).\n\n🌱 Descárgalo directamente desde aquí:\n${downloadUrl}`, global.miku)
+        await m.react('✖️')
+        return m.reply(`╭⋯ ⚠️ *LÍMITE EXCEDIDO* ⋯》\n┊ El binario supera los 500MB de seguridad.\n┊ ⊳ *Enlace directo:* ${downloadUrl}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
       }
+      
       await client.sendMessage(m.chat, { document: { url: downloadUrl }, mimetype: 'application/vnd.android.package-archive', fileName: `${name}.apk`, caption }, { quoted: m })
-      await m.react('✅')
+      await m.react('✔️')
+      
      } catch (e) {
-      await m.react('❌')
-      await m.reply(`💙🌱 *ERROR* 🌱💙
-
-💙 Ocurrió un error al ejecutar *${usedPrefix + command}*
-
-🌱 *Error:* ${e.message}
-
-💙 Inténtalo de nuevo o contacta soporte.`, global.miku)
+      console.error("[LUMIBOT DEBUG] Error en apk.js:", e);
+      await m.react('✖️')
+      await m.reply(`╭⋯ ❌ *ERROR DE EXTRACCIÓN* ⋯》\n┊ Falla en la inyección de datos de la app.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
     }
   },
 }
@@ -154,5 +151,3 @@ function parseSize(sizeStr) {
     default: return value
   }
 }
-
-

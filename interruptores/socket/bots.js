@@ -14,7 +14,6 @@ export default {
     const bot = global.db.data.settings[botId]
     const botname = bot.botname
     const namebot = bot.namebot
-    const banner = bot.icon
     const from = m.key.remoteJid
     const groupMetadata = m.isGroup ? await client.groupMetadata(from).catch(() => {}) : ''
     const groupParticipants = groupMetadata?.participants?.map((p) => p.phoneNumber || p.jid || p.lid || p.id) || []
@@ -36,16 +35,16 @@ export default {
       const jid = number + '@s.whatsapp.net'
       mentionedJid.push(jid)
       const data = global.db.data.settings[jid]
-      const name = data?.namebot || 'Bot'
+      const name = data?.namebot || 'Sub-Nodo'
       const inGroup = groupParticipants.includes(jid) ? '✅' : '❌'
-      return `   ${emoji} *${name}*\n   📱 wa.me/${number}\n   ${inGroup}\n`
+      return `┊   ${emoji} *${name}*\n┊   ⊳ wa.me/${number}\n┊   ⊳ Estado: ${inGroup}\n`
     }
     if (global.db.data.settings[mainBotJid]) {
-      const name = global.db.data.settings[mainBotJid].namebot || 'Bot'
+      const name = global.db.data.settings[mainBotJid].namebot || 'LumiBOT Central'
       const handle = `@${mainBotJid.split('@')[0]}`
       if (isMainBotInGroup) {
         mentionedJid.push(mainBotJid)
-        categorizedBots.Owner.push(`   💙 *${name}*\n   📱 wa.me/${mainBotJid.split('@')[0]}\n   ✅\n`)
+        categorizedBots.Owner.push(`┊   👑 *${name}*\n┊   ⊳ wa.me/${mainBotJid.split('@')[0]}\n┊   ⊳ Estado: ✅\n`)
       }
     }
     subs.forEach((num) => {
@@ -67,36 +66,37 @@ export default {
     const connectedSubs = global.conns.filter(c => c.userId && subs.includes(c.userId)).map(c => c.userId)
 
     let message = ''
-    message += `💙 *BOTS ACTIVOS*\n\n`
-    message += `📊 *Estadísticas*\n`
-    message += `🌱 Total: ${totalBots}\n`
-    message += `💙 En grupo: ${totalInGroup}\n`
-    message += `❌ Fuera: ${totalBots - totalInGroup}\n\n`
-    message += `━━━━━━━━━━━━━━━━━━\n\n`
+    message += `╭⋯ 📡 *TOPOLOGÍA DE RED LUMIBOT* ⋯》\n`
+    message += `┊\n`
+    message += `┊ 📊 *MÉTRICAS GLOBALES*\n`
+    message += `┊ ⊳ Nodos Totales: ${totalBots}\n`
+    message += `┊ ⊳ Operativos en Sector: ${totalInGroup}\n`
+    message += `┊ ⊳ Desplegados exterior: ${totalBots - totalInGroup}\n`
+    message += `┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n`
 
-    message += `👑 *BOT PRINCIPAL* (${totalCounts.Owner})\n`
+    message += `┊ 👑 *NÚCLEO PRINCIPAL* (${totalCounts.Owner})\n`
     if (categorizedBots.Owner.length) {
-      message += categorizedBots.Owner.join('\n') + '\n\n'
+      message += categorizedBots.Owner.join('\n') + '\n'
     } else {
-      message += `  ∅ No registrado\n\n`
+      message += `┊   ∅ Fuera de este sector\n\n`
     }
 
-    message += `━━━━━━━━━━━━━━━━━━\n\n`
-    message += `🤖 *SUB-BOTS* (${totalCounts.Sub})\n`
+    message += `┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n`
+    message += `┊ 🤖 *SUB-NODOS ESCLAVOS* (${totalCounts.Sub})\n`
     if (categorizedBots.Sub.length) {
       message += categorizedBots.Sub.join('\n') + '\n'
     } else {
-      message += `  ∅ Ninguno registrado\n\n`
+      message += `┊   ∅ Ninguno registrado\n\n`
     }
 
-    message += `━━━━━━━━━━━━━━━━━━\n\n`
-    message += `📝 *Leyenda:*\n`
-    message += `✅ En grupo | ❌ Fuera del grupo\n\n`
-    message += `✨ *HATSUNE MIKU BOT*`
+    message += `┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n`
+    message += `┊ 📝 *LEYENDA DE DESPLIEGUE:*\n`
+    message += `┊ [✅] En grupo | [❌] Fuera del grupo\n`
+    message += `╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
 
+    // ⚡ LUMIBOT OVERRIDE: Envío en texto puro, cero dependencias multimedia
     await client.sendMessage(m.chat, {
-      image: { url: 'https://files.catbox.moe/ucarkl.png' },
-      caption: message,
+      text: message,
       mentions: mentionedJid
     }, { quoted: m })
   },

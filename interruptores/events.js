@@ -2,6 +2,9 @@ import fetch from 'node-fetch'
 let WAMessageStubType = (await import('@whiskeysockets/baileys')).default
 import chalk from 'chalk'
 
+// ⚡ LUMIBOT OVERRIDE: Importamos el descifrador de LIDs de tu núcleo
+import { resolveLidToRealJid } from '../nucleo/utils.js'
+
 const _welcomeQueue = []
 let _welcomeRunning = false
 
@@ -43,23 +46,13 @@ async function safeSend(client, jid, content, retries = 5) {
 export default async (client, m) => {
   client.ev.on('group-participants.update', async (anu) => {
     try {
-      if (!anu || !anu.id || !anu.participants || !Array.isArray(anu.participants)) {
-        return;
-      }
-
-      if (client.ws?.socket?.readyState !== 1) {
-        return;
-      }
+      if (!anu || !anu.id || !anu.participants || !Array.isArray(anu.participants)) return;
+      if (client.ws?.socket?.readyState !== 1) return;
 
       let metadata = {};
       try {
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 10000)
-        );
-        metadata = await Promise.race([
-          client.groupMetadata(anu.id),
-          timeoutPromise
-        ]);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000));
+        metadata = await Promise.race([client.groupMetadata(anu.id), timeoutPromise]);
       } catch (err) {
         metadata = { subject: 'Grupo', participants: [] };
       }
@@ -76,26 +69,23 @@ export default async (client, m) => {
 
       for (const jid of anu.participants) {
         let validJid = jid;
+        if (typeof jid === 'object' && jid !== null) validJid = jid.phoneNumber || jid.id || jid;
+        if (typeof validJid === 'number') validJid = `${validJid}@s.whatsapp.net`;
+        if (typeof validJid === 'string' && !validJid.includes('@')) validJid = `${validJid}@s.whatsapp.net`;
+        if (!validJid || typeof validJid !== 'string' || !validJid.includes('@')) continue;
         
-        if (typeof jid === 'object' && jid !== null) {
-          validJid = jid.phoneNumber || jid.id || jid;
-        }
-        
-        if (typeof validJid === 'number') {
-          validJid = `${validJid}@s.whatsapp.net`;
-        }
-        
-        if (typeof validJid === 'string' && !validJid.includes('@')) {
-          validJid = `${validJid}@s.whatsapp.net`;
-        }
-        
-        if (!validJid || typeof validJid !== 'string' || !validJid.includes('@')) {
-          continue;
+        // ⚡ LUMIBOT OVERRIDE: Desencriptar LID si el usuario está oculto
+        if (validJid.includes('@lid')) {
+          try {
+            validJid = await resolveLidToRealJid(validJid, client, anu.id) || validJid;
+          } catch (e) {
+            console.error('[LUMIBOT DEBUG] Error resolviendo LID en welcome:', e);
+          }
         }
         
         const phone = validJid.split('@')[0];
         
-        let pp = 'https://i.pinimg.com/736x/0c/1e/f8/0c1ef8e804983e634fbf13df1044a41f.jpg';
+        let pp = 'https://i.imgur.com/8Q9N49Q.jpeg';
         for (let i = 0; i < 3; i++) {
           try {
             pp = await Promise.race([
@@ -110,18 +100,18 @@ export default async (client, m) => {
         const contextInfo = {
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: botSettings.id || '120363315369913363@newsletter',
+            newsletterJid: botSettings.id || '120363169294281316@newsletter',
             serverMessageId: '0',
-            newsletterName: botSettings.nameid || '💙 HATSUNE MIKU CHANNEL💙'
+            newsletterName: botSettings.nameid || '🛡️ LUMIBOT SECURITY 🛡️'
           },
           externalAdReply: {
-            title: botSettings.namebot || 'HATSUNE MIKU',
-            body: global.dev || '© 🄿🄾🅆🄴🅁🄴🄳 (ㅎㅊDEPOOLㅊㅎ)',
+            title: botSettings.namebot || 'SISTEMA LUMIBOT',
+            body: global.dev || '© Powered by LuferOS Security',
             mediaUrl: null,
             description: null,
             previewType: 'PHOTO',
-            thumbnailUrl: botSettings.icon || 'https://i.pinimg.com/736x/30/42/b8/3042b89ced13fefda4e75e3bc6dc2a57.jpg',
-            sourceUrl: botSettings.link || 'https://www.whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o',
+            thumbnailUrl: botSettings.icon || 'https://i.imgur.com/8Q9N49Q.jpeg',
+            sourceUrl: botSettings.link || 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G',
             mediaType: 1,
             renderLargerThumbnail: false
           },
@@ -129,90 +119,79 @@ export default async (client, m) => {
         };
         
         if (anu.action === 'add' && (!primaryBotId || primaryBotId === botId)) {
-          const customMessage = chat?.sWelcome ? chat.sWelcome.replace(/{usuario}/g, `@${phone}`).replace(/{grupo}/g, metadata.subject).replace(/{desc}/g, metadata?.desc || 'Sin descripción') : '';
-          
           queueWelcome(async () => {
             try {
-              const caption = customMessage || `╭━━━🌸━━━💙━━━🌸━━━╮
-┃  🎵 *¡ Bienvenid${phone.endsWith('a') ? 'a' : 'o'} al grupo !* 🎵
-╰━━━🌸━━━💙━━━🌸━━━╯
-│
-├◦ 🌸 *Usuario* ⟶ @${phone}
-├◦ 💙 *Grupo* ⟶ ${metadata.subject || 'Grupo'}
-├◦ 🌱 *Miembros* ⟶ Ahora somos ${memberCount}
-│
-├━━━━━━━━━━━━━━━━━━╮
-│ 🌱 Usa */menu* para ver comandos.
-│ 💙 ¡Que disfrutes tu estancia! ✨
-╰━━━🌸━━━💙━━━🌸━━━╯`;
+              const caption = `╭⋯ 🚀 *NUEVO INGRESO* ⋯》\n┊ ⊳ *Usuario:* @${phone}\n┊ ⊳ *Grupo:* ${metadata.subject || 'Grupo'}\n┊ ⊳ *Miembros:* ${memberCount}\n┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n┊ 💡 Escribe *.menu* para ver todo\n┊ lo que puedo hacer por ti.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
               await safeSend(client, anu.id, { image: { url: pp }, caption, contextInfo })
             } catch {}
           })
         }
         
         if ((anu.action === 'remove' || anu.action === 'leave') && (!primaryBotId || primaryBotId === botId)) {
-          const customMessage = chat?.sGoodbye ? chat.sGoodbye.replace(/{usuario}/g, `@${phone}`).replace(/{grupo}/g, metadata.subject).replace(/{desc}/g, metadata?.desc || 'Sin descripción') : '';
-          
           queueWelcome(async () => {
             try {
-              const caption = customMessage || `╭━━━🌸━━━💙━━━🌸━━━╮
-┃  🎵 *¡ Hasta pronto !* 🎵
-╰━━━🌸━━━💙━━━🌸━━━╯
-│
-├◦ 🌸 *Usuario* ⟶ @${phone}
-├◦ 💙 *Grupo* ⟶ ${metadata.subject || 'Grupo'}
-├◦ 🌱 *Miembros* ⟶ Ahora somos ${memberCount}
-│
-├━━━━━━━━━━━━━━━━━━╮
-│ 🌸 Fue un placer tenerte aquí.
-│ 💙 ¡Esperamos verte de nuevo! ✨
-╰━━━🌸━━━💙━━━🌸━━━╯`;
+              const caption = `╭⋯ 👋 *USUARIO SALIÓ* ⋯》\n┊ ⊳ *Usuario:* @${phone}\n┊ ⊳ *Miembros actuales:* ${memberCount}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
               await safeSend(client, anu.id, { image: { url: pp }, caption, contextInfo })
             } catch {}
           })
         }
+        
+        // Purga de "global.miku" en eventos administrativos
         if (anu.action === 'promote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const usuario = anu.author
-          await safeSend(client, anu.id, { text: `💙 *@${phone}* ha sido promovido a Administrador por *@${usuario.split('@')[0]}.*`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)], ...global.miku })
+          await safeSend(client, anu.id, { text: `[⚡] ⊳ *@${phone}* ahora es *Admin*.\nAcción realizada por: *@${usuario.split('@')[0]}*.`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)] })
         }
         if (anu.action === 'demote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const usuario = anu.author
-          await safeSend(client, anu.id, { text: `💙 *@${phone}* ha sido degradado de Administrador por *@${usuario.split('@')[0]}.*`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)], ...global.miku })
+          await safeSend(client, anu.id, { text: `[⚠️] ⊳ *@${phone}* dejó de ser Admin.\nAcción realizada por: *@${usuario.split('@')[0]}*.`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)] })
         }
       }
     } catch {}
   })
+  
   client.ev.on('messages.upsert', async ({ messages }) => {
-  const m = messages[0]
-  if (!m.messageStubType) return
-  const id = m.key.remoteJid
-  const chat = global.db.data.chats[id]
-  const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-  const primaryBotId = chat?.primaryBot
-  if (!chat?.alerts || (primaryBotId && primaryBotId !== botId)) return
-  const isSelf = global.db.data.settings[botId]?.self ?? false
-  if (isSelf) return
-  const actor = m.key?.participant || m.participant || m.key?.remoteJid
-  const phone = actor.split('@')[0]
-  const groupMetadata = await client.groupMetadata(id).catch(() => null)
-  const groupAdmins = groupMetadata?.participants.filter(p => (p.admin === 'admin' || p.admin === 'superadmin')) || []
-  if (m.messageStubType == 21) {
-    await safeSend(client, id, { text: `💙 @${phone} cambió el nombre del grupo a *${m.messageStubParameters[0]}*`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
-  }
-  if (m.messageStubType == 22) {
-    await safeSend(client, id, { text: `💙 @${phone} cambió el icono del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
-  }
-  if (m.messageStubType == 23) {
-    await safeSend(client, id, { text: `💙 @${phone} restableció el enlace del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
-  }
-  if (m.messageStubType == 24) {
-    await safeSend(client, id, { text: `💙 @${phone} cambió la descripción del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
-  }
-  if (m.messageStubType == 25) {
-    await safeSend(client, id, { text: `💙 @${phone} cambió los ajustes del grupo para permitir que ${m.messageStubParameters[0] == 'on' ? 'solo admins' : 'todos'} puedan configurar el grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
-  }
-  if (m.messageStubType == 26) {
-    await safeSend(client, id, { text: `💙 @${phone} cambió los ajustes del grupo para permitir que ${m.messageStubParameters[0] === 'on' ? 'solo los administradores puedan enviar mensajes al grupo.' : 'todos los miembros puedan enviar mensajes al grupo.'}`, mentions: [actor, ...groupAdmins.map(v => v.id)], ...global.miku })
-  }
-})
+    const m = messages[0]
+    if (!m.messageStubType) return
+    const id = m.key.remoteJid
+    const chat = global.db.data.chats[id]
+    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const primaryBotId = chat?.primaryBot
+    if (!chat?.alerts || (primaryBotId && primaryBotId !== botId)) return
+    const isSelf = global.db.data.settings[botId]?.self ?? false
+    if (isSelf) return
+    
+    let actor = m.key?.participant || m.participant || m.key?.remoteJid
+    
+    if (actor && actor.includes('@lid')) {
+      try {
+        actor = await resolveLidToRealJid(actor, client, id) || actor;
+      } catch (e) {
+        console.error('[LUMIBOT DEBUG] Error resolviendo LID en evento stub:', e);
+      }
+    }
+    
+    const phone = actor.split('@')[0]
+    const groupMetadata = await client.groupMetadata(id).catch(() => null)
+    const groupAdmins = groupMetadata?.participants.filter(p => (p.admin === 'admin' || p.admin === 'superadmin')) || []
+    
+    // Purga de "global.miku" en notificaciones
+    if (m.messageStubType == 21) {
+      await safeSend(client, id, { text: `[⚙️] ⊳ *@${phone}* cambió el nombre del grupo a *${m.messageStubParameters[0]}*`, mentions: [actor, ...groupAdmins.map(v => v.id)] })
+    }
+    if (m.messageStubType == 22) {
+      await safeSend(client, id, { text: `[🖼️] ⊳ *@${phone}* cambió la foto del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)] })
+    }
+    if (m.messageStubType == 23) {
+      await safeSend(client, id, { text: `[🔗] ⊳ *@${phone}* restableció el enlace de invitación.`, mentions: [actor, ...groupAdmins.map(v => v.id)] })
+    }
+    if (m.messageStubType == 24) {
+      await safeSend(client, id, { text: `[📝] ⊳ *@${phone}* modificó la descripción del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)] })
+    }
+    if (m.messageStubType == 25) {
+      await safeSend(client, id, { text: `[🔒] ⊳ *@${phone}* ajustó los permisos. Ahora ${m.messageStubParameters[0] == 'on' ? 'solo los *Admins*' : 'todos los *Miembros*'} pueden editar la información del grupo.`, mentions: [actor, ...groupAdmins.map(v => v.id)] })
+    }
+    if (m.messageStubType == 26) {
+      await safeSend(client, id, { text: `[💬] ⊳ *@${phone}* cambió la configuración del chat. ${m.messageStubParameters[0] === 'on' ? 'El grupo está cerrado (Solo Admins).' : 'El grupo está abierto para todos.'}`, mentions: [actor, ...groupAdmins.map(v => v.id)] })
+    }
+  })
 }

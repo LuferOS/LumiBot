@@ -14,94 +14,103 @@ function rTime(seconds) {
 }
 
 export default {
-  command: ['infobot', 'infosocket'],
+  command: ['infobot', 'infosocket', 'botinfo'],
   category: 'info',
   run: async (client, m, args, usedPrefix, command) => {
-    const botId = client.user.id.split(':')[0] + "@s.whatsapp.net"
-    const botSettings = global.db.data.settings[botId] || {}
-    const botname = botSettings.botname
-    const namebot = botSettings.namebot
-    const monedas = botSettings.currency
-    const banner = botSettings.banner
-    const prefijo = botSettings.prefix
-    const owner = botSettings.owner
-    const canalId = botSettings.id
-    const canalName = botSettings.nameid
-    const link = botSettings.link
-    let desar = 'Oculto'
-    if (owner && !isNaN(owner.replace(/@s\.whatsapp\.net$/, ''))) {
-      const userData = global.db.data.users[owner]
-      desar = userData?.genre || 'Oculto'
-    }
-    const platform = os.type()
-    const now = new Date()
-    const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bogota' }))
-    const nodeVersion = process.version
-    const sistemaUptime = rTime(os.uptime())
-    const uptime = process.uptime()
-    const uptimeDate = new Date(colombianTime.getTime() - uptime * 1000)
-    const formattedUptimeDate = uptimeDate.toLocaleString('es-ES', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).replace(/^./, m => m.toUpperCase())
-    const isOficialBot = botId === global.client.user.id.split(':')[0] + "@s.whatsapp.net"
-    const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot'
     try {
-    const message = `💮 Información del bot *${botname}!*
+      const db = global.db?.data || {}
+      const botId = client.user?.id?.split(':')[0] + "@s.whatsapp.net"
+      const botSettings = db.settings?.[botId] || {}
+      
+      const botname = botSettings.botname || 'LumiBOT'
+      const namebot = botSettings.namebot || 'Lumi'
+      const monedas = botSettings.currency || 'Créditos'
+      const banner = botSettings.banner || global.banner || 'https://i.imgur.com/8Q9N49Q.jpeg'
+      const prefijo = botSettings.prefix || '.'
+      const owner = botSettings.owner || global.owner?.[0] + '@s.whatsapp.net' || '573118353868@s.whatsapp.net'
+      
+      const canalId = botSettings.id || '120363169294281316@newsletter'
+      const canalName = botSettings.nameid || '🛡️ LUMIBOT SECURITY 🛡️'
+      const link = botSettings.link || global.links?.github || 'https://github.com/LuferOS'
 
-💙 *Nombre Corto ›* ${namebot}
-💙 *Nombre Largo ›* ${botname}
-💙 *Moneda ›* ${monedas}
-💙 *Prefijo${Array.isArray(prefijo) && prefijo.length > 1 ? 's' : ''} ›* ${prefijo === true ? '`sin prefijos`' : (Array.isArray(prefijo) ? prefijo : [prefijo || '/']).map(p => `\`${p}\``).join(', ')}
+      let desar = 'Oculto'
+      if (owner && !isNaN(owner.replace(/@s\.whatsapp\.net$/, ''))) {
+        const userData = db.users?.[owner]
+        desar = userData?.genre || 'Oculto'
+      }
 
-❒ *Tipo ›* ${botType}
-❒ *Plataforma ›* ${platform}
-❒ *NodeJS ›* ${nodeVersion}
-❒ *Activo desde ›* ${formattedUptimeDate}
-❒ *Sistema Activo ›* ${sistemaUptime}
-❒ *${desar === 'Hombre' ? 'Dueño' : desar === 'Mujer' ? 'Dueña' : 'Dueño(a)'} ›* ${owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? `@${owner.split('@')[0]}` : owner) : "Oculto por privacidad"}
+      const platform = os.type()
+      const now = new Date()
+      const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bogota' }))
+      const nodeVersion = process.version
+      const sistemaUptime = rTime(os.uptime())
+      const uptime = process.uptime()
+      const uptimeDate = new Date(colombianTime.getTime() - uptime * 1000)
+      const formattedUptimeDate = uptimeDate.toLocaleString('es-ES', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }).replace(/^./, str => str.toUpperCase())
 
-> \`Enlace:\` ${link}`.trim()
-await client.sendMessage(m.chat, banner.includes('.mp4') || banner.includes('.webm') ? {
-            video: { url: banner },
-            gifPlayback: true,
-            caption: message,
-            contextInfo: {
-              mentionedJid: [owner, m.sender],
-              isForwarded: true,
-              forwardedNewsletterMessageInfo: {
-                newsletterJid: canalId,
-                serverMessageId: '',
-                newsletterName: canalName
-              }
-            }
-          } : {
-            text: message,
-            contextInfo: {
-              mentionedJid: [owner, m.sender],
-              isForwarded: true,
-              forwardedNewsletterMessageInfo: {
-                newsletterJid: canalId,
-                serverMessageId: '',
-                newsletterName: canalName
-              },
-              externalAdReply: {
-                title: botname,
-                body: `${namebot},© 🄿🄾🅆🄴🅁🄴🄳 (ㅎㅊDEPOOLㅊㅎ)`,
-                showAdAttribution: false,
-                thumbnailUrl: banner,
-                mediaType: 1,
-                previewType: 0,
-                renderLargerThumbnail: true
-              }
-            }
-          }, { quoted: m });
-   } catch (e) {
-     return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
-   }
+      const isOficialBot = botId === (global.client?.user?.id?.split(':')[0] + "@s.whatsapp.net")
+      const botType = isOficialBot ? 'Núcleo Principal' : 'Sub-Nodo'
+      
+      const tituloDesarrollador = desar === 'Hombre' ? 'Creador' : desar === 'Mujer' ? 'Creadora' : 'Creador(a)'
+      const ownerDisplay = owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? `@${owner.split('@')[0]}` : owner) : "LuferOS"
+
+      const message = `╭⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》
+┊ 🤖 *DATOS DEL SISTEMA*
+┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┊ ⊳ *Identidad ›* ${botname} (${namebot})
+┊ ⊳ *Divisa ›* ${monedas}
+┊ ⊳ *Prefijo(s) ›* ${prefijo === true ? '`Multiprefijo`' : (Array.isArray(prefijo) ? prefijo : [prefijo || '/']).map(p => `\`${p}\``).join(', ')}
+┊ ⊳ *Clasificación ›* ${botType}
+┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┊ ⚙️ *HARDWARE & SOFTWARE*
+┊ ⊳ *SO Base ›* ${platform}
+┊ ⊳ *Entorno ›* NodeJS ${nodeVersion}
+┊ ⊳ *Inicio Sistema ›* ${formattedUptimeDate}
+┊ ⊳ *Tiempo Activo ›* ${sistemaUptime}
+┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┊ 👑 *PROPIEDAD*
+┊ ⊳ *${tituloDesarrollador} ›* ${ownerDisplay}
+┊ ⊳ *Enlace ›* ${link}
+╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`.trim()
+
+      let msgPayload = {
+        contextInfo: {
+          mentionedJid: [owner, m.sender].filter(Boolean),
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: canalId,
+            serverMessageId: 0, // Se recomienda numérico para Baileys
+            newsletterName: canalName
+          }
+        }
+      }
+
+      if (banner.endsWith('.mp4') || banner.endsWith('.webm')) {
+        msgPayload.video = { url: banner }
+        msgPayload.gifPlayback = true
+        msgPayload.caption = message
+      } else {
+        msgPayload.text = message
+        msgPayload.contextInfo.externalAdReply = {
+          title: botname,
+          body: `© Powered by LuferOS Security`,
+          showAdAttribution: false,
+          thumbnailUrl: banner,
+          mediaType: 1,
+          previewType: 0,
+          renderLargerThumbnail: true,
+          sourceUrl: link
+        }
+      }
+
+      await client.sendMessage(m.chat, msgPayload, { quoted: m });
+      
+    } catch (e) {
+      console.error("[LUMIBOT DEBUG] Error en infobot:", e);
+      return m.reply(`╭⋯ ❌ *LUMIBOT - ERROR* ⋯》\n┊ Fallo al recuperar la información del sistema.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+    }
   }
 };

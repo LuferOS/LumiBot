@@ -15,29 +15,46 @@ export default {
       const q = m.quoted || m
       const mime = q?.mimetype || q?.msg?.mimetype || ''
 
-      if (!mime) return m.reply(`💙 Responde a una *imagen* con:\n${usedPrefix + command}`)
-      if (!/^image\/(jpe?g|png|webp)$/i.test(mime)) return m.reply(`💙 El formato *${mime || 'desconocido'}* no es compatible`)
+      if (!mime) {
+          return m.reply(`╭⋯ 📸 *Falta la imagen, bro* ⋯》\n┊ Responde a una foto para subirle la calidad y dejarla nítida.\n┊ Uso: ${usedPrefix + command}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+      }
+      
+      if (!/^image\/(jpe?g|png|webp)$/i.test(mime)) {
+          return m.reply(`╭⋯ 👾 *Formato no soportado* ⋯》\n┊ Ese tipo de archivo (*${mime || 'raro'}*) no me sirve.\n┊ Manda un JPG o PNG normalito.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+      }
 
+      await m.react('🕒')
       const buffer = await q.download?.()
-      if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 10) return m.reply('💙 No se pudo descargar la imagen')
+      
+      if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 10) {
+          await m.react('✖️')
+          return m.reply(`╭⋯ ⚠️ *Error de descarga* ⋯》\n┊ No pude bajar la imagen original. Pásala de nuevo a ver si ahora sí agarra.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+      }
 
       const ft = await safeFileType(buffer)
       const inputMime = ft?.mime || mime || 'image/jpeg'
-      if (!/^image\/(jpe?g|png|webp)$/i.test(inputMime)) return m.reply(`💙 El formato *${inputMime}* no es compatible`)
+      if (!/^image\/(jpe?g|png|webp)$/i.test(inputMime)) {
+          await m.react('✖️')
+          return m.reply(`╭⋯ 👾 *Archivo corrupto* ⋯》\n┊ El formato interno (*${inputMime}*) no es compatible para escalarlo en HD.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+      }
 
       const result = await vectorinkEnhanceFromBuffer(buffer, inputMime)
 
       if (!result?.ok || !result?.buffer) {
+        await m.react('✖️')
         const msg = result?.error?.code || result?.error?.step || result?.error?.message || 'error'
-        return m.reply(`💙 No se pudo *mejorar* la imagen (${msg})`)
+        return m.reply(`╭⋯ 🔧 *Fallo en el servidor* ⋯》\n┊ La IA de VectorInk rechazó la imagen. Seguro está muy pesada o el server anda caído.\n┊ Info del error: ${msg}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
       }
 
-      await client.sendMessage(m.chat, { image: result.buffer, caption: null }, { quoted: m })
+      const caption = `╭⋯ 🔥 *IMAGEN EN HD* ⋯》\n┊ ⊳ *Resolución:* Mejorada a tope\n┊ ⊳ *Motor:* VectorInk API\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n> ⚡ *Powered by LuferOS*`
+
+      await client.sendMessage(m.chat, { image: result.buffer, caption: caption }, { quoted: m })
+      await m.react('✔️')
+      
     } catch (e) {
-      console.error(e)
-      await m.reply(
-        `> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e?.message || String(e)}*]`
-      )
+      console.error("[LUMIBOT DEBUG] Error en hd.js:", e)
+      await m.react('✖️')
+      await m.reply(`╭⋯ ❌ *Error del sistema* ⋯》\n┊ Algo reventó feo procesando la foto.\n┊ Detalle: ${e?.message || String(e)}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
     }
   }
 }

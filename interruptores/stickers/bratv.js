@@ -14,25 +14,34 @@ export default {
     try {
       text = m.quoted?.text || text;
       if (!text) {
-        return client.reply(m.chat, '💙 Por favor, responde a un mensaje o ingresa un texto para crear el Sticker.', m, global.miku);
+        // ⚡ LUMIBOT OVERRIDE: Purga final de la variable global.miku
+        return m.reply(`╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingresa texto o responde a un mensaje para generar el sticker animado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
       }
+      
       await m.react('🕒');
-      const db = global.db.data
-      const user = db.users[m.sender] || {}
+      const db = global.db.data;
+      const user = db.users[m.sender] || {};
       const name = user.name || m.sender.split('@')[0];
+      
       const meta1 = user.metadatos ? String(user.metadatos).trim() : '';
       const meta2 = user.metadatos2 ? String(user.metadatos2).trim() : '';
-      let texto1 = meta1 ? meta1 : '💙 HATSUNE MIKU';
-      let texto2 = meta1 ? (meta2 ? meta2 : '') : `@${name}`;
+      
+      // ⚡ LUMIBOT OVERRIDE: Marca de agua táctica para video
+      let texto1 = meta1 ? meta1 : 'LumiBOT Security';
+      let texto2 = meta1 ? (meta2 ? meta2 : '') : `Operador: ${name}`;
+      
       const videoBuffer = await fetchStickerVideo(text);
       const tmpFile = `./tmp/bratv-${Date.now()}.mp4`;
       fs.writeFileSync(tmpFile, videoBuffer);
+      
       await client.sendVideoAsSticker(m.chat, tmpFile, m, { packname: texto1, author: texto2 });
       fs.unlinkSync(tmpFile);
+      
       await m.react('✔️');
     } catch (e) {
+      console.error("[LUMIBOT DEBUG] Error en bratv.js:", e);
       await m.react('✖️');
-      return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`);
+      return m.reply(`╭⋯ ❌ *LUMIBOT OVERRIDE* ⋯》\n┊ Fallo en la renderización del motor de video.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     }
   }
 };

@@ -27,7 +27,7 @@ async function uploadCatbox(buffer, mime) {
   })
 
   if (typeof res.data !== "string" || !res.data.startsWith("https://")) {
-    throw new Error("Respuesta inválida de Catbox: " + JSON.stringify(res.data))
+    throw new Error("Respuesta inválida del host: " + JSON.stringify(res.data))
   }
   return res.data
 }
@@ -44,7 +44,7 @@ async function uploadUguu(buffer) {
 
   const data = res.data
   const url = data?.files?.[0]?.url
-  if (!url) throw new Error("Respuesta inválida de Uguu: " + JSON.stringify(data))
+  if (!url) throw new Error("Respuesta inválida del host: " + JSON.stringify(data))
   return url
 }
 
@@ -59,7 +59,7 @@ async function uploadQuax(buffer, mime) {
   })
 
   const data = res.data
-  if (!data?.files?.[0]?.url) throw new Error("Respuesta inválida de Quax: " + JSON.stringify(data))
+  if (!data?.files?.[0]?.url) throw new Error("Respuesta inválida del host: " + JSON.stringify(data))
   return data.files[0].url
 }
 
@@ -76,26 +76,23 @@ async function uploadAuto(buffer, mime) {
 }
 
 export default {
-  command: ["tourl"],
+  command: ["tourl", "subir", "url"],
   category: "utils",
-    run: async (client, m, args, usedPrefix, command) => {
+  run: async (client, m, args, usedPrefix, command) => {
     const q = m.quoted || m
     const mime = (q.msg || q).mimetype || ""
+    
     if (!mime) {
-      return client.reply(
-        m.chat,
-        `💙 Responde a una imagen o video con *${usedPrefix + command}  [servidor]* para convertirlo en URL.\n\n` +
-        `Servidores disponibles:\n` +
-        `› catbox (permanente)\n` +
-        `› quax   (permanente)\n` +
-        `› uguu   (temporal, 24h)`,
-        m
-      )
+      return m.reply(`╭⋯ ⚠️ *SINTAXIS INCOMPLETA* ⋯》\n┊ Responde a un archivo multimedia para inyectarlo en la nube.\n┊ ⊳ *Uso:* ${usedPrefix + command} [catbox | quax | uguu | auto]\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
     }
 
     try {
+      await m.react('🕒')
       const media = await q.download()
-      if (!media) return m.reply("💙 No se pudo descargar el archivo.")
+      if (!media) {
+          await m.react('✖️')
+          return m.reply(`╭⋯ ❌ *ERROR DE EXTRACCIÓN* ⋯》\n┊ Imposible descargar el archivo original. Verifica que no esté corrupto.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+      }
 
       const serverArg = args[0]?.toLowerCase() || "auto"
       let link, server
@@ -115,13 +112,21 @@ export default {
         server = autoRes.server
       }
 
-      const userName = m.pushName || "Usuario"
-      const upload = `╭─「 📤 *UPLOAD* 」\n│ 💙 *Servidor ›* ${server.toUpperCase()}\n│ 💙 *Link ›* ${link}\n│ 🌱 *Peso ›* ${formatBytes(media.length)}\n│ 💙 *Tipo ›* ${mime.split("/")[1].toUpperCase() || "UNKNOWN"}\n│ 🌱 *Solicitado por ›* ${userName}\n╰────────────╯`
+      const caption = `╭⋯ 📡 *ENLACE GENERADO* ⋯》
+┊ ⊳ *Nodo Host:* ${server.toUpperCase()}
+┊ ⊳ *Peso del paquete:* ${formatBytes(media.length)}
+┊ ⊳ *Formato:* ${mime.split("/")[1].toUpperCase() || "BIN"}
+┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┊ 🔗 *URL:* ${link}
+╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n> ⚡ *Powered by LuferOS*`
 
-      return m.reply(upload)
+      await client.sendMessage(m.chat, { text: caption }, { quoted: m })
+      await m.react('✔️')
+
     } catch (e) {
-      console.error(e)
-      await m.reply(`${e}`)
+      console.error("[LUMIBOT DEBUG] Error en tourl.js:", e)
+      await m.react('✖️')
+      await m.reply(`╭⋯ ❌ *FALLO DE CONEXIÓN* ⋯》\n┊ Los servidores rechazaron la carga del archivo.\n┊ ⊳ *Detalles:* ${e.message || String(e)}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
     }
   }
 }
