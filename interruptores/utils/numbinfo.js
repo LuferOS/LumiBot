@@ -10,9 +10,9 @@ import { StringSession } from "telegram/sessions/index.js";
 // Deja este campo en blanco ("") si es tu primera vez. 
 // LuferOS tiene un generador automático: al arrancar el bot con 'npm start', 
 // la consola te pedirá tu número y un código OTP para generar esta llave por ti.
-const STRING_SESSION = "1AQAOMTQ5LjE1NC4xNzUuNTUBuyEDWl3Z2SjpcD3zXMUMS+tzpqaVznW5/Bye6agbRAs/kBYmwKSOL2oiFYQldR6nTyMHOyOnj2pOhlkgDWP+gZxI6sjWdviUuWTerNdE8ZpzyGCds6+WdQQIMt90iZ5MvO+jpaZCJLbdSzF7YnfkQdTgTM2s99YDXc/jlkamX3MTCqB+k6+wIZmU1qgQAKja4t5gBfqS392zzALZwf1+PikNayT+WvB9B/Q0Vu9YAHOWs3a7VSWhpJAUPxaNE18gnp74hJWWwWT+EJgTqwi/7Qlb98FJEA8XgwE1MBnDcL7Jf1djsjEY3Ic52fiHO2J4g566Bm5ruuj6q0pn7IHzyXg=";
-const API_ID = 38551390; 
-const API_HASH = "eef7d73b19f08dbde33897f7dc39d050";
+const STRING_SESSION = "STRING_AQUI";
+const API_ID = 123456; 
+const API_HASH = "API_AQUI";
 
 
 // 🌐 NODOS MULTIPLES DE EXTRACCIÓN (Agrega aquí tus bots OSINT)
