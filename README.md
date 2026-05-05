@@ -62,5 +62,5 @@ Los módulos de trolleo generan información falsa y aleatoria.
 El comando .numbinfo es una herramienta de concienciación sobre ciberseguridad basada en datos públicos.
 El desarrollador no se responsabiliza por el uso inadecuado de la herramienta.
 <div align="center">
-<p><b>Developed by Comandante LuferOS 🇨🇴</b></p>
+<p><b>Developed by Comandante LuferOS 🇨🇴 DAME UNA ESTRELLA MINIMO WE</b></p>
 </div>
