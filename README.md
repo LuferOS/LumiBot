@@ -51,12 +51,12 @@ bash
 npm install
 npm start
 
-📱 Opción B: Instalación en Android (Termux)
+## 📱 Opción B: Instalación en Android (Termux)
 Usa exclusivamente la versión de F-Droid.
-🏆 Créditos y Reconocimientos
+### 🏆 Créditos y Reconocimientos
 Depool: Creador de la base original Hatsune Miku. Se utilizó su core estructural, gestión de variables y comandos base para el desarrollo de este framework.
 Comandante LuferOS: Ingeniero Jefe. Desarrollo de módulos OSINT, IA analítica, sistema de administración militar, corrección de bugs y optimización táctica general.
-⚖️ Aviso Legal
+### ⚖️ Aviso Legal
 Este software se distribuye con fines educativos.
 Los módulos de trolleo generan información falsa y aleatoria.
 El comando .numbinfo es una herramienta de concienciación sobre ciberseguridad basada en datos públicos.
