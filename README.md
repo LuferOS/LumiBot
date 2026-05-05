@@ -4,6 +4,9 @@
 **Tactical WhatsApp Framework & OSINT Multi-Tool**
 
 ![Version](https://img.shields.io/badge/Version-1.0.5--Stable-blue?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Telegram](https://img.shields.io/badge/Telegram-MTProto-0088cc?style=for-the-badge&logo=telegram) ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/LuferOS/LumiBot?style=for-the-badge&logo=github&color=gold)
+![Downloads](https://img.shields.io/github/downloads/LuferOS/LumiBot/total?style=for-the-badge&logo=github&color=green)
+![Views](https://img.shields.io/badge/dynamic/json?style=for-the-badge&label=Vistas&query=value&url=https%3A%2F%2Fapi.countapi.xyz%2Fhit%2FLuferOS-LumiBot%2Fviews&color=blue)
 
 <p><i>La central de mando definitiva para administración militar, inteligencia de datos y automatización avanzada.</i></p>
 ---
