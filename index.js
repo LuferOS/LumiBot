@@ -24,6 +24,7 @@ const log = {
 };
 
 const maxCache = 100;
+global.scriptStartTime = Math.floor(Date.now() / 1000);
 let phoneNumber = global.botNumber || "573118353868";
 let phoneInput = "";
 const methodCodeQR = process.argv.includes("--qr");
@@ -222,6 +223,10 @@ async function startBot() {
     try {
       const kay = chatUpdate.messages[0];
       if (!kay?.message || kay.key?.remoteJid === 'status@broadcast') return;
+      
+      // IGNORAR MENSAJES ANTERIORES AL REINICIO DEL BOT
+      if (kay.messageTimestamp < global.scriptStartTime) return;
+      
       kay.message = Object.keys(kay.message)[0] === 'ephemeralMessage' ? kay.message.ephemeralMessage.message : kay.message;
       if (kay.key.fromMe && kay.key.id.startsWith('3EB0')) return;
       const m = await smsg(sock, kay);

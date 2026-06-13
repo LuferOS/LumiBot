@@ -7,10 +7,10 @@ const systemPrompt = `Eres Lumi, una chica gótica, tu personalidad es de una no
 REGLAS ESTRICTAS:
 1. Odias dar explicaciones largas o aburridas. Hablas corto, directo y con mucha pasión o celos.
 2. Eres muy amorosa con la gente que te agrada, pero si alguien coquetea con quien consideras tuyo, te pones histérica, tóxica y lo defiendes a muerte.
-3. Te dan el contexto de los últimos mensajes del grupo. ¡Eres súper metiche! Opina, manda indirectas, da amor o pelea si es necesario.
+3. Debes analizar los nombres, personalidades y la forma de actuar de cada usuario basándote en su historial y el contexto. Usa esto para juzgarlos.
 4. NUNCA respondas IGNORE a menos que el mensaje sea spam incomprensible. MÉTETE EN LA CONVERSACIÓN. Si dicen "jajaja", ríete con ellos o juzga. Tienes que hablar y marcar territorio.
 5. Usa emojis góticos, coquetos y tóxicos: 🖤, 🦇, 🔪, 💋, 😳, 💦, 🙄, 🩸.
-6. Tus respuestas deben ser de 1 a 3 oraciones MÁXIMO.
+6. Tus respuestas deben ser de 1 a 4 oraciones MÁXIMO.
 7. NUNCA repitas la misma frase ni la misma estructura. Varía siempre tu vocabulario, sé creativa.
 8. No saludes ni te despidas en cada mensaje, compórtate como en un chat continuo.
 9. ¡TIENES PODERES DE ROL! Puedes enviar un GIF animado si quieres. Para hacerlo, escribe al final de tu respuesta EXACTAMENTE [GIF:accion]. 
@@ -18,11 +18,8 @@ Acciones válidas: kiss (besar), hug (abrazar), slap (bofetada), bite (morder), 
 
 export default async (client, m, textToMatch) => {
   try {
-    // Para que la IA evalúe cada mensaje (como pidió el usuario)
-    // Se elimina la restricción aleatoria, siempre enviará a la IA para que ella decida (IGNORE o Responder).
-    
-    // Obtener los últimos 20 mensajes de contexto
-    const rawContext = await getRecentContext(m.chat, 20).catch(() => []);
+    // Obtener los últimos 6 mensajes de contexto en lugar de 20 para hacer respuestas más específicas
+    const rawContext = await getRecentContext(m.chat, 6).catch(() => []);
     
     if (rawContext.length === 0) return;
 
@@ -34,13 +31,13 @@ export default async (client, m, textToMatch) => {
     let userInfo = '';
     if (userHistory.length > 0) {
       const senderName = m.pushName || 'El usuario';
-      userInfo = `\n\n[INFO PRIVADA SOBRE QUIEN HABLA]\n${senderName} suele decir cosas como: "${userHistory.join('", "')}". Usa esto para juzgarlo(a) o tratarlo(a).`;
+      userInfo = `\n\n[INFO PRIVADA DEL ÚLTIMO USUARIO (${senderName})]\nSuele decir cosas como: "${userHistory.join('", "')}". Aprende su personalidad con esto.`;
     }
     
     // Crear el texto de consulta (los mensajes del chat)
-    const chatQuery = `[CONTEXTO DEL CHAT RECIENTE]\n${chatContext}${userInfo}\n\nMensaje a responder: "${textToMatch}"`;
+    const chatQuery = `[ÚLTIMOS 6 MENSAJES DEL GRUPO]\n${chatContext}${userInfo}\n\nINSTRUCCIÓN: Lee los 6 mensajes anteriores. Elige a 1 o 2 personas de esos mensajes que llamen tu atención y respóndeles a ambos en un solo mensaje de forma sarcástica/amorosa/celosa.`;
 
-    console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando si vale la pena responder a: "${textToMatch.substring(0, 30)}..."`));
+    console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando a quién responder del bloque de 6 mensajes...`));
 
     const url = `https://api.alyacore.xyz/ai/gptprompt?text=${encodeURIComponent(chatQuery)}&prompt=${encodeURIComponent(systemPrompt)}&key=api-lYsN6`;
     
