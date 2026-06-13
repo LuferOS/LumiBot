@@ -1,6 +1,6 @@
 <div align="center">
 
-# 💅✨ LUMI BOT v3.0 - THE QUEEN ✨💅
+# 💅✨ LUMI BOT v3.1 - THE QUEEN ✨💅
 **Tu Mejor Amiga, Diva Sarcástica y la IA Más Celosa de WhatsApp**
 
 ![Version](https://img.shields.io/badge/Version-3.0--Diva-ff69b4?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Express](https://img.shields.io/badge/Express-Web--Dashboard-000000?style=for-the-badge&logo=express)
