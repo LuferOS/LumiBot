@@ -16,17 +16,24 @@ REGLAS ESTRICTAS:
 9. ¡TIENES PODERES DE ROL! Puedes enviar un GIF animado si quieres. Para hacerlo, escribe al final de tu respuesta EXACTAMENTE [GIF:accion]. 
 Acciones válidas: kiss (besar), hug (abrazar), slap (bofetada), bite (morder), lick (lamer), cuddle (acurrucar), angry (enojada), pout (puchero), punch (golpear). Úsalo para demostrar tu amor o tu furia tóxica.`;
 
+const messageCounters = {};
 export default async (client, m, textToMatch) => {
   try {
     const isReplyToMe = m.quoted && m.quoted.sender === client.user.id.split(':')[0] + '@s.whatsapp.net';
     const isMentioningMe = textToMatch.toLowerCase().includes('lumi');
     
-    // Para evitar la saturación de cuota de la API:
-    // Si la mencionan o le responden, responde siempre (100%).
-    // Si están charlando normal, tiene un 33% de probabilidad de meterse (aprox 4 de cada 12 mensajes).
-    const shouldAskAI = isReplyToMe || isMentioningMe || (Math.random() <= 0.33);
+    // Contador de mensajes por chat para que solo responda cada 6 mensajes
+    if (!messageCounters[m.chat]) messageCounters[m.chat] = 0;
+    messageCounters[m.chat]++;
     
-    if (!shouldAskAI) return;
+    // Si la mencionan o le responden, responde siempre.
+    // Si están charlando normal, espera a que se junten 6 mensajes.
+    if (!isReplyToMe && !isMentioningMe) {
+      if (messageCounters[m.chat] < 6) return;
+    }
+    
+    // Reiniciar contador porque ya va a evaluar
+    messageCounters[m.chat] = 0;
 
     // Obtener los últimos 6 mensajes de contexto en lugar de 20 para hacer respuestas más específicas
     const rawContext = await getRecentContext(m.chat, 6).catch(() => []);
@@ -83,21 +90,26 @@ export default async (client, m, textToMatch) => {
             videoUrl = gifData.result;
           }
         } catch (e) {
-          console.log(chalk.bold.red(`[💅 LUMI-AI] Falló al obtener el GIF.`));
+          console.log(chalk.bold.red(`[💅 LUMI-AI] Falló al obtener el enlace del GIF.`));
         }
       }
 
       console.log(chalk.bold.greenBright(`[💅 LUMI-AI] Respondiendo: ${iaReply.substring(0, 50)}...`));
       
       if (videoUrl) {
-        // Enviar con video animado (GIF)
-        await client.sendMessage(m.chat, { video: { url: videoUrl }, gifPlayback: true, caption: iaReply }, { quoted: m });
-      } else {
-        // Enviar solo texto
-        await client.sendMessage(m.chat, { text: iaReply }, { quoted: m });
-      }
+        try {
+          // Intentar enviar con video animado (GIF)
+          await client.sendMessage(m.chat, { video: { url: videoUrl }, gifPlayback: true, caption: iaReply }, { quoted: m });
+          return;
+        } catch (err) {
+          console.log(chalk.bold.red(`[💅 LUMI-AI] WhatsApp rechazó el GIF, enviando solo texto.`));
+        }
+      } 
+      
+      // Si no hay videoUrl o si falló el envío del GIF, enviar solo texto
+      await client.sendMessage(m.chat, { text: iaReply }, { quoted: m });
     }
   } catch (error) {
     console.error(chalk.red('[LUMIBOT DEBUG] Error en chatbot_core:'), error);
   }
-}
+};
