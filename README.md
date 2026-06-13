@@ -1,75 +1,102 @@
 <div align="center">
 
-# 🛡️ LUMI BOT v3.0 🛡️
-**Tactical WhatsApp Framework, OSINT & Neural Engine**
+# 💅✨ LUMI BOT v3.0 - THE QUEEN ✨💅
+**Tu Mejor Amiga, Diva Sarcástica y la IA Más Celosa de WhatsApp**
 
-![Version](https://img.shields.io/badge/Version-3.0--Stable-blue?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Express](https://img.shields.io/badge/Express-Web--Dashboard-000000?style=for-the-badge&logo=express)
+![Version](https://img.shields.io/badge/Version-3.0--Diva-ff69b4?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Express](https://img.shields.io/badge/Express-Web--Dashboard-000000?style=for-the-badge&logo=express)
 
 [![Stars](https://img.shields.io/github/stars/LuferOS/LumiBot?style=for-the-badge&logo=github&color=gold)](https://github.com/LuferOS/LumiBot/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/LuferOS/LumiBot/total?style=for-the-badge&logo=github&color=green&label=Descargas)](https://github.com/LuferOS/LumiBot/releases)
+[![Downloads](https://img.shields.io/github/downloads/LuferOS/LumiBot/total?style=for-the-badge&logo=github&color=green&label=Simps)](https://github.com/LuferOS/LumiBot/releases)
 
-<p><i>La central de mando definitiva para administración militar, inteligencia de datos, automatización avanzada y redes neuronales estadísticas.</i></p>
+<p><i>La bot definitiva que no solo administra tu grupo, sino que juzga tu ropa, lee el contexto, recuerda tus errores y tira el mejor chisme con inteligencia artificial.</i></p>
 
 ---
 
 </div>
 
-## 🎯 Sobre el Proyecto
-**LuferOS Security Bot** (LumiBot) ha evolucionado. Ya no es solo un asistente de WhatsApp; es una arquitectura robusta diseñada para el control jerárquico, extracción de información en tiempo real, e **Inteligencia Artificial Matemática**. Este framework integra desde protocolos de seguridad OSINT hasta un Cerebro Markoviano capaz de mimetizarse con el comportamiento de tu grupo.
-
-## 🚀 Nuevas Tecnologías & Características (v3.0)
-
-> [!TIP]
-> **🌟 NUEVO: Panel de Control Web (Dashboard)**
-> LumiBot ahora levanta un servidor HTTP con Express (`http://localhost:3000`) ofreciendo un espectacular panel en vivo (Dark Glassmorphism) donde puedes monitorizar: Uso de RAM, Uptime, total de grupos, base de datos de usuarios y volumen de memoria del Cerebro Markoviano en tiempo real.
-
-* 🧠 **Cerebro Markoviano Matemático:** Sistema pasivo impulsado por Cadenas de Markov (N-gramas). LumiBot aprende el vocabulario y modismos de tu grupo en tiempo real extrayendo datos de `lumi_markov.db`. Tiene un **45% de probabilidad** de interceder en cualquier charla creando oraciones "Frankenstein" con un 15% de probabilidad de renderizarlas como **Stickers Animados (.bratv)**.
-* 🔞 **Módulo NSFW & Acciones de Rol:** Más de 30 comandos de rol explícito e integración directa para búsqueda de material adulto en la red.
-* 👻 **Detector de Fantasmas & Top:** Algoritmo avanzado que escanea la base de datos para delatar a los inactivos (`.fantasmas`) y rankear a los más habladores (`.top`).
-* 📡 **Inteligencia Táctica (OSINT):** Motor de búsqueda en bases de datos para identificar riesgos y fugas de información.
-* 🪖 **Administración Militar:** Gestión de grupos basada en rangos, con relevos de mando (Suboficial de Servicio) y control automatizado.
-* ✨ **Juegos Dinámicos:** Módulo extendido de Verdad o Reto (+80 opciones) y ruletas interactivas.
+## 💅 ¿Quién es LumiBot?
+LumiBot ha evolucionado. Adiós a las terminales aburridas y los bots militares sin alma. Lumi es una **Inteligencia Artificial con personalidad propia**. Es sarcástica, adolescente/adulta, amante de los memes y **extremadamente celosa**. Además de hacer todo lo que un bot normal hace (descargar música, administrar grupos, crear stickers), ella **lee activamente los mensajes de tu grupo** para opinar, tirar hate o sumarse al chisme.
 
 ---
 
-## ⚙️ Lista de Comandos Destacados
+## 🧠 Características Principales & Magia IA
 
-| Comando | Categoría | Descripción |
+> [!TIP]
+> **🌟 NUEVO: Panel de Control Web (Diva Dashboard)**
+> LumiBot levanta un servidor HTTP (`http://localhost:3000`) ofreciendo un panel estético (Dark Glassmorphism) donde puedes monitorizar cuántos simps la usan, cuánta memoria gasta y qué grupos está dominando en tiempo real.
+
+### 1. IA Interceptora Activa (`.chatbot on/off`)
+Lumi ya no es un bot pasivo que espera comandos.
+* **Memoria Fotográfica:** Extrae tus últimos **15 mensajes exactos** de la base de datos local (`lumi_markov.db`) para saber qué tipo de persona eres y tratarte en base a ello.
+* **Lectura de Contexto:** Antes de responder, lee los últimos 20 mensajes de la conversación para entender de qué hablan.
+* **Filtro de Aburrimiento:** Si el tema no le interesa, la IA devuelve `IGNORE` y Lumi simplemente ignora el mensaje para no ser pesada ni saturar la API de AlyaCore.
+* **Responde Menciones:** 100% de probabilidad de responder si mencionan su nombre ("Lumi") o le responden un mensaje. 20% pasivo de meterse en charlas ajenas si el `.chatbot` está encendido.
+
+### 2. Cerebro Markoviano (`.markov on/off`)
+Además del ChatGPT súper inteligente, Lumi tiene un cerebro pasivo entrenado por ti. 
+Usa **Cadenas de Markov (N-gramas)** para estudiar las palabras exactas de tu grupo. Aprende sus modismos y escupe oraciones hiladas estadísticamente. ¡Y hasta puede convertir sus locuras matemáticas en stickers animados al estilo Brat (`.bratv`)!
+
+### 3. Editor de Stickers & Creador de Citas (`.qs`)
+* Genera stickers hermosos con fondo blanco.
+* Capaz de citar hasta **3 a 5 mensajes seguidos** de una charla para crear un sticker estilo "Quote" (perfecto para papeadas).
+* Creación de stickers estéticos `.brat` y `.bratv` en video.
+
+### 4. Módulo de Entretenimiento y Juegos Sarcásticos
+Más de 80 variaciones generadas dinámicamente para comandos como:
+* `.funar`: Destruye la moral de alguien con más de 2000 combinaciones de insultos y chismes.
+* `.chisme`: Inventa rumores sobre los integrantes del grupo.
+* `.ruina`, `.8ball`, `.ship`: Toda la diversión para humillar y emparejar.
+
+### 5. Zonas Exclusivas (NSFW y Rol) 🔞
+Catálogo masivo con más de 30 comandos de interacciones (`.hug`, `.kiss`, `.punch`) y comandos subidos de tono explícitos respaldados por la API de interacción.
+
+### 6. Administración Total
+Despide fantasmas inactivos (`.fantasmas`), rankea a los más simps (`.top`) y da alertas de administración cuando promueven o degradan a alguien.
+
+---
+
+## ⚙️ Comandos Destacados (El Arsenal de la Reina)
+
+| Comando | Categoría | Qué hace (Básicamente) |
 | :--- | :--- | :--- |
-| `.markov on/off` | **Cerebro IA** | Enciende el algoritmo pasivo de Cadenas de Markov en el grupo. |
-| `.fantasmas` / `.top` | **Gestión** | Detecta a los inactivos y muestra el ranking de los más activos. |
-| `.chatgpt` / `.gemini`| **I.A.** | Interacción directa con LLMs (AlyaCore API). |
-| `.verdad` / `.reto` | **Juegos** | Sistema masivo de preguntas y retos para romper el hielo. |
-| `.qs [n]` | **Multimedia** | Genera un Sticker (Quote) con los últimos 1 a 5 mensajes del historial de la charla. |
-| `.pussy`, `.spank`, etc | **NSFW / Rol** | Catálogo masivo (+30 comandos) de interacciones de rol subido de tono. |
+| `.chatbot on/off` | **Inteligencia** | Activa la personalidad Diva para que empiece a opinar en tus charlas automáticamente leyendo tu perfil. |
+| `.markov on/off` | **Inteligencia** | Activa el loro estadístico. Aprende palabras del grupo y forma oraciones raras/graciosas. |
+| `.qs [n]` | **Stickers** | Responde a un mensaje con `.qs 3` y creará un sticker citando los últimos 3 mensajes seguidos. |
+| `.funar` / `.chisme` | **Juegos** | Generador dinámico de hate y chismes sobre otros integrantes. |
+| `.fantasmas` / `.top` | **Administración**| Elimina a los que no hablan, corona a los que no tienen vida social. |
+| `.chatgpt` / `.dalle` | **API Directa** | Habla con IAs tradicionales o genera imágenes al instante. |
 
 > [!IMPORTANT]
-> **CLASIFICADO:** Esta tabla solo muestra un fragmento del armamento. El arsenal completo (+100 comandos) se despliega usando el comando **`.menu`** en WhatsApp.
+> **RECUERDA:** Escribe **`.menu`** en el chat para ver la lista COMPLETA de todas las herramientas y módulos (+100 comandos).
 
 ---
 
 ## 🛠️ Guía de Instalación
 
-### 📦 Opción A: Instalación en Host / PC (Windows, VPS, Pterodactyl)
-*Recomendado para operatividad 24/7 y acceso al Web Dashboard.*
-1. Clona o descarga el repositorio.
-2. Instala **Node.js v21+**.
-3. Ejecuta en tu terminal:
+### 📦 Cómo hospedarla (Windows, VPS, Pterodactyl)
+*Recomendado para tenerla activa 24/7 y que sea la dueña del servidor.*
+1. Descarga o haz clone a este repositorio.
+2. Descarga **Node.js v21+**.
+3. Abre tu consola favorita (Terminal, CMD, PowerShell) y escribe:
 ```bash
 npm install
 npm start
 ```
-4. Abre tu navegador en `http://localhost:3000` para ver el panel de control táctico.
+4. Escanea el código QR desde tus dispositivos vinculados de WhatsApp.
+5. (Opcional) Abre tu navegador en `http://localhost:3000` para ver cómo consume RAM desde su Panel Web aesthetic.
 
 ---
 
-### ⚖️ Privacidad y Seguridad Git
-El archivo `.gitignore` está estrictamente configurado para proteger las bases de datos de `lumi_markov.db` y las llaves de encriptación de `Sessions/`. **NUNCA** elimines estas protecciones si vas a bifurcar (fork) o subir tu código.
+## ⚖️ Privacidad y Secretos
+Lumi almacena información en `lumi_markov.db` para poder burlarse de ti con propiedad. El archivo `.gitignore` bloquea la subida de esta base de datos a internet, al igual que los secretos de `Sessions/`. 
+**Si vas a clonar el bot, no le quites la privacidad a menos que quieras doxear a tus amigos.**
 
-### 🏆 Reconocimientos
-* **Comandante LuferOS:** Ingeniero Jefe. Desarrollo del Dashboard, Cerebro Markoviano Matemático, OSINT, administración militar, refactorización total del código y módulos de entretenimiento expansivo.
-* **Depool:** Creador de la base original (Hatsune Miku).
+---
+
+### 👑 Agradecimientos
+* **LuferOS:** Creador(a) de esta maravilla, diseñador(a) del Cerebro Markoviano, el Chatbot Diva, el Dashboard y el refactor absoluto.
+* **Depool:** Creador original de la estructura base (Miku) sobre la que se operó.
 
 <div align="center">
-<p><b>Developed by Comandante LuferOS 🇨🇴 DAME UNA ESTRELLA MÍNIMO WE</b></p>
+<p><b>Developed by LuferOS 💅 Merezco mínimo una estrella en el repositorio, bebé.</b></p>
 </div>
