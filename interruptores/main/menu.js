@@ -221,7 +221,7 @@ export default {
       const input = normalize(args[0] || '');
       const cat = Object.keys(alias).find(k => alias[k].map(normalize).includes(input));
       
-      const category = cat ? `[ Chisme de: ${cat.toUpperCase()} ]` : '[ STATUS: DIVA INALCANZABLE ]';
+const category = cat ? `[ Chisme de: ${cat.toUpperCase()} ]` : '[ STATUS: DIVA INALCANZABLE ]';
       
       if (args[0] && !cat) {      
         return m.reply(`🙄 *Bruh*... literal ese módulo *${args[0]}* ni existe o te lo inventaste.\n> 💅 Módulos reales: *${Object.keys(alias).join(', ')}*`);
@@ -229,7 +229,16 @@ export default {
       
       const sections = menuObject || {};
       const content = cat ? String(sections[cat] || '') : Object.values(sections).map(s => String(s || '')).join('\n\n');
-      let menu = bodyMenu + '\n\n' + content;
+      
+      // Añadir la sección especial de comandos principales al inicio de todo el contenido
+      const comandosPrincipales = `💅 ✨ **PRINCIPALES 👑** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .menu - Literal lo que estás viendo 💅
+┣ ⊳ .infobot - Chisme sobre mi cuerpo y sistema
+┣ ⊳ .version - Novedades, arreglos y actualizaciones
+┗ ⊳ .ping - Mira qué tan rápida soy ⚡\n\n`;
+
+      let menu = bodyMenu + '\n\n' + comandosPrincipales + content;
       
       const replacements = {
         $owner: owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? db.users?.[owner]?.name || owner.split('@')[0] : owner) : 'LuferOS',
