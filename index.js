@@ -11,6 +11,7 @@ import path from "path";
 import readlineSync from "readline-sync";
 import dns from "dns";
 import os from "os";
+import fetch from "node-fetch";
 import { smsg } from "./nucleo/message.js";
 import db from "./nucleo/system/database.js";
 import { startSubBot } from './nucleo/subs.js';
@@ -199,6 +200,21 @@ async function startBot() {
     if (connection === "open") {
       reconexion = 0;
       log.success(`Conexión estable. NODO ACTIVO: ${sock.user.name || "LumiBOT"}`);
+      
+      // Ping a la API de AlyaCore para verificar si el modo IA está operativo
+      try {
+        console.log(chalk.cyanBright('[💅 LUMI-AI] Verificando conexión con el servidor IA de AlyaCore...'));
+        const testUrl = `https://api.alyacore.xyz/ai/gptprompt?text=hola&prompt=${encodeURIComponent("Dime 'hola bebé'")}&key=api-lYsN6`;
+        const res = await fetch(testUrl);
+        const data = await res.json();
+        if (data.status && data.result) {
+          log.success(`[💅 LUMI-AI] API Operativa. Respuesta de prueba: ${data.result.substring(0, 30)}`);
+        } else {
+          log.warn(`[💅 LUMI-AI] Fallo en la respuesta de AlyaCore. Modo IA podría no funcionar.`);
+        }
+      } catch (e) {
+        log.error(`[💅 LUMI-AI] Servidores de AlyaCore caídos: ${e.message}`);
+      }
     }
   });
 
