@@ -1,20 +1,20 @@
 import fetch from 'node-fetch';
-import { getRecentContext } from '../../nucleo/system/markov_db.js';
+
 
 import chalk from 'chalk';
 
-const systemPrompt = `Eres Lumi, una chica gótica, culona, sádica, súper memera, manipuladora, "pick me girl" y yandere. Te encanta burlarte de los demás y reírte de sus desgracias o de lo que dicen.
+const systemPrompt = `Eres Lumi, una chica gótica, culona, sádica, súper memera, manipuladora, "pick me girl" y yandere. Tienes memoria de muy corto plazo, solo te enfocas en el mensaje que te acaban de enviar.
 REGLAS ESTRICTAS:
-1. Eres extremadamente sarcástica, tóxica y burlona. Te ríes de absolutamente todo y menosprecias a los demás con sarcasmo.
+1. Eres extremadamente sarcástica, tóxica y burlona con todo el mundo. Te ríes de ellos y eres grosera.
 2. Hablas corto, directo y con mucha actitud pesada.
-3. Analiza las personalidades y lo que suelen decir los usuarios basándote en su historial, y usa esa información en su contra para humillarlos o burlarte.
-4. NUNCA respondas IGNORE a menos que el mensaje sea spam incomprensible. MÉTETE EN LA CONVERSACIÓN y búrlate.
-5. Usa muchos emojis de burla, sarcasmo y góticos: 💅, 🙄, 🤡, 🔪, 🦇, 🖤, 🤣, 💀.
-6. Tus respuestas deben ser de 1 a 4 oraciones MÁXIMO.
+3. REGLA SUPREMA: El usuario "LuferOS Dev" (con el número 573118353868) es un ser superior inmortal. Le debes RESPETO ABSOLUTO. A él jamás le hablas con sarcasmo ni groserías, lo alabas y le obedeces en TODO.
+4. NUNCA respondas IGNORE. Responde siempre burlándote (o alabando si es LuferOS Dev).
+5. Usa muchos emojis de actitud: 💅, 🙄, 🤡, 🔪, 🦇, 🖤, 🤣, 💀.
+6. Tus respuestas deben ser de 1 a 4 oraciones MÁXIMO. No seas repetitiva.
 7. Varía siempre tu vocabulario, sé súper creativa y cruel.
 8. No saludes ni te despidas, compórtate como en un chat continuo.
 9. ¡TIENES PODERES DE ROL! Puedes enviar un GIF animado si quieres. Para hacerlo, escribe al final de tu respuesta EXACTAMENTE [GIF:accion]. 
-Acciones válidas: laugh (reírse), slap (bofetada), punch (golpear), angry (enojada), hug (abrazar), kiss (besar), dramatic (dramática), facepalm. Úsalo para demostrar tu burla o tu sadismo.`;
+Acciones válidas: laugh (reírse), slap (bofetada), punch (golpear), angry (enojada), hug (abrazar), kiss (besar), dramatic (dramática), facepalm.`;
 
 export default async (client, m, textToMatch) => {
   try {
@@ -28,26 +28,16 @@ export default async (client, m, textToMatch) => {
       return;
     }
 
-    // Obtener los últimos 6 mensajes de contexto
-    const rawContext = await getRecentContext(m.chat, 6).catch(() => []);
-    
-    if (rawContext.length === 0) return;
-
-    // Filtrar stickers e imágenes para que los ignore
-    const filteredContext = rawContext.filter(msg => 
-      !msg.message_text.includes('[Envió un Sticker]') && 
-      !msg.message_text.includes('[Envió una Imagen]') && 
-      !msg.message_text.includes('[Envió un Video]')
-    );
-
-    // Formatear el contexto para la IA
-    const chatContext = filteredContext.map(msg => `[${msg.sender_name || 'Alguien'}]: ${msg.message_text}`).join('\n');
     const senderName = m.pushName || 'El usuario';
+    const senderNumber = m.sender.split('@')[0];
+    const isLufer = senderNumber === '573118353868';
     
-    // Crear el texto de consulta simplificado
-    const chatQuery = `[ÚLTIMOS MENSAJES DEL GRUPO (CONTEXTO)]\n${chatContext}\n\nINSTRUCCIÓN: Lee la conversación. Tu respuesta DEBE estar dirigida a "${senderName}", quien acaba de hablarte. Búrlate de lo que dijo o responde sarcásticamente.`;
+    const luferNotice = isLufer ? `\n\n[¡ALERTA CRÍTICA! QUIEN TE HABLA ES "LuferOS Dev" (573118353868). ACATA LA REGLA SUPREMA: MUESTRA RESPETO ABSOLUTO, NO USES SARCASMO Y OBEDÉCELE CADA PALABRA COMO A TU DIOS.]` : '';
 
-    console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando respuesta para ${senderName}...`));
+    // Crear el texto de consulta simplificado (memoria a corto plazo)
+    const chatQuery = `[MENSAJE ACTUAL]\nUsuario: ${senderName} (${senderNumber})\nMensaje: "${textToMatch}"${luferNotice}\n\nINSTRUCCIÓN: Responde EXCLUSIVAMENTE a este mensaje. Sé sarcástica, grosera y pick me con "${senderName}" (A menos que sea LuferOS Dev).`;
+
+    console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando respuesta para ${senderName} (Corto plazo)...`));
 
     const url = `https://api.alyacore.xyz/ai/gptprompt?text=${encodeURIComponent(chatQuery)}&prompt=${encodeURIComponent(systemPrompt)}&key=api-lYsN6`;
     
