@@ -11,7 +11,7 @@ function getDefaultHostId() {
 const format = sizeFormatter({ std: 'JEDEC', decimalPlaces: 2, keepTrailingZeroes: false, render: (literal, symbol) => `${literal} ${symbol}B` })
 
 export default {
-  command: ['status', 'estado', 'ping'],
+  command: ['status', 'estado', 'info', 'infobot'],
   category: 'info',
   run: async (client, m) => {
     try {

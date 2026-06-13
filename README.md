@@ -40,6 +40,7 @@
 | `.fantasmas` / `.top` | **Gestión** | Detecta a los inactivos y muestra el ranking de los más activos. |
 | `.chatgpt` / `.gemini`| **I.A.** | Interacción directa con LLMs (AlyaCore API). |
 | `.verdad` / `.reto` | **Juegos** | Sistema masivo de preguntas y retos para romper el hielo. |
+| `.qs [n]` | **Multimedia** | Genera un Sticker (Quote) con los últimos 1 a 5 mensajes del historial de la charla. |
 | `.pussy`, `.spank`, etc | **NSFW / Rol** | Catálogo masivo (+30 comandos) de interacciones de rol subido de tono. |
 
 > [!IMPORTANT]

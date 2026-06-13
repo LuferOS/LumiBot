@@ -79,15 +79,69 @@ export default {
 
       console.log(chalk.green(`┊ Resultado Frankenstein: "${chalk.whiteBright(responseText)}"`));
 
-      // Probabilidad de respuesta: 15% Sticker Animado (Brat) al azar
-      let isBrat = Math.random() < 0.15;
-      
+      const isQuote = Math.random() < 0.30; // 30% chance of random Quote
+      const isBrat = !isQuote && Math.random() < 0.15; // If not Quote, 15% chance of Brat
+
+      if (isQuote) {
+        console.log(chalk.yellow(`┊ Formato: 🖼️ Random Quote Sticker [30% CHANCE]`));
+        console.log(chalk.bold.cyan('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n'));
+
+        try {
+          const cache = global.msgCache?.[m.chat] || [];
+          if (cache.length > 2) {
+            // Pick a random chunk of 1 to 3 messages from cache
+            const numMessages = Math.floor(Math.random() * 3) + 1;
+            const maxStartIndex = cache.length - numMessages;
+            const startIndex = Math.floor(Math.random() * (maxStartIndex + 1));
+            const selectedMessages = cache.slice(startIndex, startIndex + numMessages);
+
+            const quoteMessages = [];
+            for (const msg of selectedMessages) {
+              let pfp = msg.pfp;
+              if (!pfp) {
+                try {
+                  pfp = await client.profilePictureUrl(msg.sender, 'image');
+                } catch {
+                  pfp = 'https://i.imgur.com/8Q9N49Q.jpeg';
+                }
+                msg.pfp = pfp;
+              }
+              quoteMessages.push({
+                entities: [], avatar: true,
+                from: { id: msg.sender, name: msg.pushName || msg.sender.split('@')[0], photo: { url: pfp } },
+                text: msg.text || '[Multimedia]', replyMessage: {}
+              });
+            }
+
+            const quoteObj = { 
+              type: 'quote', format: 'png', backgroundColor: '#0a0a0a', 
+              width: 512, height: 768, scale: 2, messages: quoteMessages 
+            };
+
+            const axios = (await import('axios')).default;
+            const { data } = await axios.post('https://bot.lyo.su/quote/generate', quoteObj, { headers: { 'Content-Type': 'application/json' } });
+            const buffer = Buffer.from(data.result.image, 'base64');
+
+            const tmpFile = `./tmp/markov-qs-${Date.now()}.webp`;
+            fs.writeFileSync(tmpFile, buffer);
+            await client.sendImageAsSticker(m.chat, tmpFile, m, { packname: 'LumiBOT', author: 'Memoria Markov' });
+            fs.unlinkSync(tmpFile);
+            return;
+          }
+        } catch (e) {
+          console.error(chalk.red(`[🧠 MARKOV-CORE] Falló Quote Sticker aleatorio, usando texto plano:`), e.message);
+        }
+      }
+
       if (isBrat) {
         console.log(chalk.yellow(`┊ Formato: 🎬 Sticker Animado (.bratv) [15% CHANCE]`));
-      } else {
+      } else if (!isQuote) {
         console.log(chalk.yellow(`┊ Formato: 📝 Texto Plano`));
       }
-      console.log(chalk.bold.cyan('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n'));
+      
+      if (!isQuote) {
+        console.log(chalk.bold.cyan('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n'));
+      }
       
       if (isBrat && responseText.length < 50) { 
         try {
@@ -103,7 +157,7 @@ export default {
           console.error(chalk.red(`[🧠 MARKOV-CORE] Falló generación Brat, enviando texto plano: ${e.message}`));
           await client.sendMessage(m.chat, { text: responseText }, { quoted: m });
         }
-      } else {
+      } else if (!isQuote) {
         await client.sendMessage(m.chat, { text: responseText }, { quoted: m });
       }
 
