@@ -69,7 +69,26 @@ header {
   align-items: center;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+.btn-action {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  padding: 8px 15px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-action.red:hover { background: rgba(255, 51, 102, 0.2); border-color: var(--error); color: var(--error); }
+.btn-action.orange:hover { background: rgba(255, 165, 0, 0.2); border-color: orange; color: orange; }
 
 .logo {
   display: flex;

@@ -42,10 +42,19 @@ export function startServer() {
   // Global socket io for traffic emitting from index.js
   global.dashboardIo = io;
 
-  // Servir archivos estáticos del panel web
   const publicPath = path.join(__dirname, '../../public');
   app.use(express.static(publicPath));
   app.use(express.json());
+
+  // === INTERCEPTOR DE LOGS ===
+  const originalStdout = process.stdout.write;
+  process.stdout.write = function (chunk, encoding, callback) {
+    if (global.dashboardIo) {
+      const text = (typeof chunk === 'string') ? chunk : chunk.toString('utf8');
+      global.dashboardIo.emit('sys_log', text);
+    }
+    return originalStdout.apply(process.stdout, arguments);
+  };
 
   // === ENDPOINTS DE ESTADÍSTICAS ===
   app.get('/api/stats', async (req, res) => {
@@ -118,6 +127,27 @@ export function startServer() {
     try {
       fs.writeFileSync(targetPath, req.body.content, 'utf8');
       res.json({ success: true });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // === ENDPOINTS DE CONTROL TÁCTICO ===
+  app.post('/api/action/restart', (req, res) => {
+    res.json({ success: true, message: 'Reiniciando...' });
+    setTimeout(() => process.exit(0), 1000); // PM2 o Nodemon lo reiniciará
+  });
+
+  app.post('/api/action/shutdown', (req, res) => {
+    res.json({ success: true, message: 'Apagando servidor...' });
+    setTimeout(() => process.exit(1), 1000);
+  });
+
+  app.post('/api/action/clearmarkov', (req, res) => {
+    try {
+      const dbPath = path.resolve(__dirname, '../../lumi_markov.db');
+      if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
+      res.json({ success: true, message: 'Cerebro Markov Purificado.' });
     } catch (e) {
       res.status(500).json({ error: e.message });
     }

@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LumiBOT - Web OS</title>
+  <title>LumiBOT - Web OS Nivel Dios</title>
   
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
   
   <!-- Leaflet CSS para el Mapa -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <!-- Chart.js para Gráficos en Vivo -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Monaco Editor Loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"></script>
 </head>
 <body>
   <div class="background-animation"></div>
@@ -18,7 +22,12 @@
     <header>
       <div class="logo">
         <div class="orb" id="status-orb"></div>
-        <h1>LumiBOT <span>Web OS</span></h1>
+        <h1>LumiBOT <span>Web OS v5.0</span></h1>
+      </div>
+      <div class="header-actions">
+        <button class="btn-action red" onclick="actionBtn('restart')">REINICIAR BOT</button>
+        <button class="btn-action red" onclick="actionBtn('shutdown')">APAGAR HOST</button>
+        <button class="btn-action orange" onclick="actionBtn('clearmarkov')">PURGAR MARKOV</button>
       </div>
       <div class="status-badge online" id="status-badge">
         <span class="dot"></span> <span id="status-text">SISTEMA EN LÍNEA</span>
@@ -27,35 +36,34 @@
 
     <!-- BARRA DE NAVEGACIÓN (TABS) -->
     <nav class="tabs">
-      <button class="tab-btn active" data-tab="tab-overview">📊 Vista General</button>
+      <button class="tab-btn active" data-tab="tab-overview">📊 Monitor de Rendimiento</button>
       <button class="tab-btn" data-tab="tab-map">🌍 Cyber Mapa</button>
-      <button class="tab-btn" data-tab="tab-editor">📁 Editor de Archivos</button>
+      <button class="tab-btn" data-tab="tab-editor">📁 VS Code (Monaco)</button>
+      <button class="tab-btn" data-tab="tab-logs">📜 Live Logs</button>
       <button class="tab-btn" data-tab="tab-terminal">💻 Terminal Táctica</button>
     </nav>
 
     <main class="dashboard">
       
       <!-- ======================================= -->
-      <!-- PESTAÑA: VISTA GENERAL -->
+      <!-- PESTAÑA: VISTA GENERAL (RENDIMIENTO) -->
       <!-- ======================================= -->
       <div id="tab-overview" class="tab-content active">
-        <!-- FILA 1: ESTADO DEL SISTEMA (HOST) -->
+        <!-- FILA 1: ESTADO DEL SISTEMA (HOST) CON GRÁFICO -->
         <section class="grid-section">
-          <h2 class="section-title">🖥️ Hardware del Host</h2>
-          <div class="grid-row">
+          <h2 class="section-title">🖥️ Telemetría del Hardware (ECG en vivo)</h2>
+          <div class="grid-row" style="grid-template-columns: 1fr 1fr;">
+            <!-- Panel Izquierdo: Info de HW -->
             <div class="card glass">
-              <h3>Procesador (CPU)</h3>
-              <p class="data-small" id="val-cpu-model">Cargando...</p>
+              <h3>CPU: <span id="val-cpu-model">Cargando...</span></h3>
               <div class="flex-between">
                 <span class="subtitle">Carga Actual</span>
                 <span class="subtitle-bold"><span id="val-cpu-load">0</span>%</span>
               </div>
-              <div class="progress-bar">
+              <div class="progress-bar mb-3">
                 <div class="progress-fill" id="bar-cpu" style="width: 0%"></div>
               </div>
-            </div>
 
-            <div class="card glass">
               <h3>Memoria RAM</h3>
               <div class="flex-between">
                 <span class="data-small" id="val-ram-gb">0 GB / 0 GB</span>
@@ -64,37 +72,40 @@
               <div class="progress-bar">
                 <div class="progress-fill" id="bar-ram" style="width: 0%"></div>
               </div>
-              <div class="subtitle mt-2">Plataforma: <span id="val-os">...</span></div>
-              <div class="subtitle">Node.js: <span id="val-node">...</span></div>
+              
+              <div class="flex-between mt-2">
+                <span class="subtitle">Plataforma: <span id="val-os">...</span></span>
+                <span class="subtitle">Node.js: <span id="val-node">...</span></span>
+              </div>
+            </div>
+
+            <!-- Panel Derecho: Gráfico Chart.js -->
+            <div class="card glass">
+              <canvas id="performanceChart" style="width:100%; height:150px;"></canvas>
             </div>
           </div>
         </section>
 
         <!-- FILA 2: NÚCLEO LUMIBOT -->
         <section class="grid-section">
-          <h2 class="section-title">🟢 Núcleo del Bot</h2>
+          <h2 class="section-title">🟢 Núcleo de LumiBOT</h2>
           <div class="grid-row">
             <div class="card glass">
               <h3>Tiempo Activo (Uptime)</h3>
               <p class="data" id="val-uptime">00:00:00</p>
-              <div class="subtitle">Sesión continua de WhatsApp</div>
             </div>
-
             <div class="card glass">
               <h3>Grupos Activos</h3>
               <p class="data" id="val-chats">0</p>
-              <div class="subtitle">Chats Administrados</div>
             </div>
-            
             <div class="card glass">
-              <h3>Usuarios Registrados</h3>
+              <h3>Usuarios Base</h3>
               <p class="data" id="val-users">0</p>
-              <div class="subtitle">En Base de Datos Global</div>
             </div>
           </div>
         </section>
 
-        <!-- FILA 3: CEREBRO MARKOVIANO -->
+        <!-- FILA 3: MARKOV -->
         <section class="grid-section">
           <h2 class="section-title">🧠 Red Neuronal (Markov)</h2>
           <div class="grid-row">
@@ -107,7 +118,7 @@
                 </div>
                 <div class="text-right">
                   <p class="data-medium"><span id="val-markov-size">0</span> MB</p>
-                  <div class="subtitle">Peso en Disco</div>
+                  <div class="subtitle">Peso en Disco (lumi_markov.db)</div>
                 </div>
               </div>
               <div class="glow-effect"></div>
@@ -121,38 +132,53 @@
       <!-- ======================================= -->
       <div id="tab-map" class="tab-content" style="display: none;">
         <section class="grid-section">
-          <h2 class="section-title">🌍 Monitoreo de Tráfico Mundial</h2>
+          <h2 class="section-title">🌍 Radar Global de Tráfico (E2E)</h2>
           <div class="card glass map-container">
             <div id="cyber-map"></div>
             <div class="map-overlay">
-              <h3 id="last-ping-country">Esperando conexiones...</h3>
-              <p id="ping-details">Interceptando encriptación E2E.</p>
+              <h3 id="last-ping-country">Esperando tráfico...</h3>
+              <p id="ping-details">Señal Encriptada.</p>
             </div>
           </div>
         </section>
       </div>
 
       <!-- ======================================= -->
-      <!-- PESTAÑA: EDITOR DE ARCHIVOS -->
+      <!-- PESTAÑA: EDITOR DE ARCHIVOS (MONACO) -->
       <!-- ======================================= -->
       <div id="tab-editor" class="tab-content" style="display: none;">
         <section class="grid-section">
-          <h2 class="section-title">📁 Gestor de Archivos (Web OS)</h2>
+          <h2 class="section-title">📁 Visual Studio Code Interno</h2>
           <div class="editor-container glass">
             <!-- Barra lateral: Árbol de archivos -->
             <div class="file-tree" id="file-tree">
-              <div class="tree-header">📦 root/</div>
+              <div class="tree-header">📦 C:\LumiBot</div>
               <div id="tree-items">Cargando archivos...</div>
             </div>
             
-            <!-- Zona de edición -->
+            <!-- Zona de edición Monaco -->
             <div class="code-area">
               <div class="editor-header">
-                <span id="current-file-name">Ningún archivo seleccionado</span>
-                <button class="save-btn" id="save-file-btn" disabled>💾 Guardar Cambios</button>
+                <span id="current-file-name">Selecciona un archivo JS o JSON</span>
+                <button class="save-btn" id="save-file-btn" disabled>💾 Guardar (Ctrl+S)</button>
               </div>
-              <textarea id="code-editor" class="code-font" spellcheck="false" disabled></textarea>
+              <div id="monaco-container" style="flex:1; width:100%; height:100%;"></div>
             </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ======================================= -->
+      <!-- PESTAÑA: LIVE LOGS -->
+      <!-- ======================================= -->
+      <div id="tab-logs" class="tab-content" style="display: none;">
+        <section class="grid-section">
+          <h2 class="section-title">📜 Registro del Sistema (Live Logs)</h2>
+          <div class="terminal-container glass" style="height: 600px;">
+            <div class="terminal-output code-font" id="live-logs-out" style="color: #bbb; white-space: pre-wrap;">
+[LumiBOT Logs] Espejo de consola de Windows conectado. Esperando logs...
+-------------------------------------------------------------------------
+</div>
           </div>
         </section>
       </div>
@@ -162,16 +188,15 @@
       <!-- ======================================= -->
       <div id="tab-terminal" class="tab-content" style="display: none;">
         <section class="grid-section">
-          <h2 class="section-title">💻 Consola de Comandos (Shell)</h2>
+          <h2 class="section-title">💻 Shell Remoto Interactivo</h2>
           <div class="terminal-container glass">
             <div class="terminal-output code-font" id="term-out">
-[LumiBOT OS] Shell remoto iniciado.
-Escriba comandos bash/cmd para interactuar con el host.
+[LumiBOT OS] Shell conectado. Escriba "clear" para limpiar.
 ------------------------------------------------------
 </div>
             <div class="terminal-input-line code-font">
               <span class="prompt">root@lumibot:~#</span>
-              <input type="text" id="term-in" autocomplete="off" spellcheck="false" autofocus>
+              <input type="text" id="term-in" autocomplete="off" spellcheck="false">
             </div>
           </div>
         </section>
@@ -180,7 +205,7 @@ Escriba comandos bash/cmd para interactuar con el host.
     </main>
 
     <footer>
-      <p>Centro de Comando Militar &copy; 2026. Designed for LuferOS Security.</p>
+      <p>Centro de Comando Militar Nivel Dios &copy; 2026. Designed for LuferOS Security.</p>
     </footer>
   </div>
 
@@ -188,7 +213,7 @@ Escriba comandos bash/cmd para interactuar con el host.
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
-  <!-- Lógica Principal del Web OS -->
+  <!-- Lógica Principal del Web OS Nivel Dios -->
   <script src="app.js"></script>
 </body>
 </html>
