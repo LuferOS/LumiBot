@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { getRecentContext, getUserContext } from '../../nucleo/system/markov_db.js';
+import { getRecentContext } from '../../nucleo/system/markov_db.js';
 
 import chalk from 'chalk';
 
@@ -33,19 +33,19 @@ export default async (client, m, textToMatch) => {
     
     if (rawContext.length === 0) return;
 
+    // Filtrar stickers e imágenes para que los ignore
+    const filteredContext = rawContext.filter(msg => 
+      !msg.message_text.includes('[Envió un Sticker]') && 
+      !msg.message_text.includes('[Envió una Imagen]') && 
+      !msg.message_text.includes('[Envió un Video]')
+    );
+
     // Formatear el contexto para la IA
-    const chatContext = rawContext.map(msg => `[${msg.sender_name || 'Alguien'}]: ${msg.message_text}`).join('\n');
-    
-    // Obtener contexto de la persona que mandó el último mensaje
-    const userHistory = await getUserContext(m.chat, m.sender, 15).catch(() => []);
+    const chatContext = filteredContext.map(msg => `[${msg.sender_name || 'Alguien'}]: ${msg.message_text}`).join('\n');
     const senderName = m.pushName || 'El usuario';
-    let userInfo = '';
-    if (userHistory.length > 0) {
-      userInfo = `\n\n[INFO DE QUIEN TE ACABA DE HABLAR (${senderName})]\nSuele decir cosas como: "${userHistory.join('", "')}". Aprende su personalidad con esto para humillarlo.`;
-    }
     
-    // Crear el texto de consulta (los mensajes del chat)
-    const chatQuery = `[ÚLTIMOS MENSAJES DEL GRUPO (CONTEXTO)]\n${chatContext}${userInfo}\n\nINSTRUCCIÓN: Lee el contexto para entender de qué hablan, pero TU RESPUESTA DEBE ESTAR DIRIGIDA EXPLÍCITAMENTE A "${senderName}", quien acaba de mencionarte o responderte. Búrlate de lo que dijo o de su forma de ser.`;
+    // Crear el texto de consulta simplificado
+    const chatQuery = `[ÚLTIMOS MENSAJES DEL GRUPO (CONTEXTO)]\n${chatContext}\n\nINSTRUCCIÓN: Lee la conversación. Tu respuesta DEBE estar dirigida a "${senderName}", quien acaba de hablarte. Búrlate de lo que dijo o responde sarcásticamente.`;
 
     console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando respuesta para ${senderName}...`));
 
