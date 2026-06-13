@@ -1,9 +1,8 @@
 export default {
-  name: "password",
-  alias: ["clave", "pass", "generar"],
+  command: ["password", "clave", "pass", "generar"],
   category: "utilidad",
   desc: "Generador de contraseñas de seguridad militar.",
-  run: async ({ sock, m, args }) => {
+  run: async (sock, m, args) => {
     let length = 16;
     if (args[0] && !isNaN(args[0])) {
       length = parseInt(args[0]);

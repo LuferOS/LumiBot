@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 export default {
-  name: "clima",
-  alias: ["weather", "tiempo"],
+  command: ["clima", "weather", "tiempo"],
   category: "utilidad",
   desc: "Extrae el reporte meteorológico OSINT de una ciudad.",
-  run: async ({ sock, m, args }) => {
+  run: async (sock, m, args) => {
     if (!args[0]) return m.reply("❌ Error: Debes especificar una ciudad. Ejemplo: *.clima Bogota*");
     
     const ciudad = args.join(' ');

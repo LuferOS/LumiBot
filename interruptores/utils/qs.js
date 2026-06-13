@@ -1,12 +1,12 @@
 import axios from 'axios';
 import fs from 'fs';
+import { getRecentMessages, getMessagesBeforeId } from '../../nucleo/system/markov_db.js';
 
 export default {
-  name: "qs",
-  alias: ["quote_sticker", "qs"],
+  command: ["qs", "quote_sticker"],
   category: "utilidad",
   desc: "Crea un sticker citando hasta los últimos 5 mensajes del historial.",
-  run: async ({ sock, m, args }) => {
+  run: async (sock, m, args) => {
     try {
       let num = 2; // Por defecto 2 mensajes
       if (args[0] && !isNaN(args[0])) {
@@ -16,30 +16,21 @@ export default {
       if (num > 5) num = 5;
       if (num < 1) num = 1;
 
-      const cache = global.msgCache?.[m.chat] || [];
-      if (cache.length === 0) {
-        return m.reply("❌ El historial está vacío. Debes esperar a que haya mensajes.");
-      }
+      let selectedMessages = [];
 
-      let endIndex = cache.length - 1;
-
-      // Si respondió a un mensaje, buscamos ese mensaje en el caché
-      if (m.quoted) {
-        const quotedId = m.quoted.id;
-        const index = cache.findIndex(msg => msg.id === quotedId);
-        if (index !== -1) {
-          endIndex = index;
-        } else {
-          return m.reply("❌ El mensaje citado es muy antiguo y ya no está en el caché (Solo recuerdo los últimos 300).");
+      // Si respondió a un mensaje, buscamos ese mensaje y los anteriores en la BD
+      if (m.quoted && m.quoted.id) {
+        selectedMessages = await getMessagesBeforeId(m.chat, m.quoted.id, num);
+        if (selectedMessages.length === 0) {
+          return m.reply("❌ El mensaje citado es muy antiguo y ya no está en la Base de Datos.");
+        }
+      } else {
+        // Traemos los últimos N mensajes recientes de la BD
+        selectedMessages = await getRecentMessages(m.chat, num);
+        if (selectedMessages.length === 0) {
+          return m.reply("❌ El historial está vacío. Debes esperar a que haya mensajes.");
         }
       }
-
-      let startIndex = endIndex - num + 1;
-      if (startIndex < 0) startIndex = 0;
-
-      const selectedMessages = cache.slice(startIndex, endIndex + 1);
-      
-      if (selectedMessages.length === 0) return m.reply("❌ No se pudieron obtener mensajes.");
 
       await m.react('🕒');
 
@@ -48,28 +39,25 @@ export default {
       
       const quoteMessages = [];
       for (const msg of selectedMessages) {
-        let pfp = msg.pfp;
-        if (!pfp) {
-          if (!pfpCache[msg.sender]) {
-            try {
-              pfpCache[msg.sender] = await sock.profilePictureUrl(msg.sender, 'image');
-            } catch (e) {
-              pfpCache[msg.sender] = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Default táctico
-            }
+        let pfp = null;
+        if (!pfpCache[msg.sender_jid]) {
+          try {
+            pfpCache[msg.sender_jid] = await sock.profilePictureUrl(msg.sender_jid, 'image');
+          } catch (e) {
+            pfpCache[msg.sender_jid] = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Default táctico
           }
-          pfp = pfpCache[msg.sender];
-          msg.pfp = pfp; // Guardamos en caché para futuro
         }
+        pfp = pfpCache[msg.sender_jid];
 
         quoteMessages.push({
           entities: [],
           avatar: true,
           from: { 
-            id: msg.sender, 
-            name: msg.pushName || msg.sender.split('@')[0], 
+            id: msg.sender_jid, 
+            name: msg.sender_name || msg.sender_jid.split('@')[0], 
             photo: { url: pfp } 
           },
-          text: msg.text || '[Multimedia]',
+          text: msg.message_text || '[Multimedia]',
           replyMessage: {}
         });
       }

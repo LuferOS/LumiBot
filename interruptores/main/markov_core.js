@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import fetch from 'node-fetch';
-import { getMassiveCorpus } from '../../nucleo/system/markov_db.js';
+import { getMassiveCorpus, getRandomConsecutiveMessages } from '../../nucleo/system/markov_db.js';
 
 const fetchStickerVideo = async (text) => {
+  const fetch = (await import('node-fetch')).default;
   const response = await fetch(`https://skyzxu-brat.hf.space/brat-animated?text=${encodeURIComponent(text)}`);
   if (!response.ok) throw new Error('Error al obtener el video brat');
   const buffer = await response.arrayBuffer();
@@ -87,29 +87,23 @@ export default {
         console.log(chalk.bold.cyan('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n'));
 
         try {
-          const cache = global.msgCache?.[m.chat] || [];
-          if (cache.length > 2) {
-            // Pick a random chunk of 1 to 3 messages from cache
-            const numMessages = Math.floor(Math.random() * 3) + 1;
-            const maxStartIndex = cache.length - numMessages;
-            const startIndex = Math.floor(Math.random() * (maxStartIndex + 1));
-            const selectedMessages = cache.slice(startIndex, startIndex + numMessages);
-
+          const numMessages = Math.floor(Math.random() * 3) + 1;
+          const selectedMessages = await getRandomConsecutiveMessages(m.chat, numMessages);
+          
+          if (selectedMessages.length > 0) {
             const quoteMessages = [];
             for (const msg of selectedMessages) {
-              let pfp = msg.pfp;
-              if (!pfp) {
-                try {
-                  pfp = await client.profilePictureUrl(msg.sender, 'image');
-                } catch {
-                  pfp = 'https://i.imgur.com/8Q9N49Q.jpeg';
-                }
-                msg.pfp = pfp;
+              let pfp = null;
+              try {
+                pfp = await client.profilePictureUrl(msg.sender_jid, 'image');
+              } catch {
+                pfp = 'https://i.imgur.com/8Q9N49Q.jpeg';
               }
+              
               quoteMessages.push({
                 entities: [], avatar: true,
-                from: { id: msg.sender, name: msg.pushName || msg.sender.split('@')[0], photo: { url: pfp } },
-                text: msg.text || '[Multimedia]', replyMessage: {}
+                from: { id: msg.sender_jid, name: msg.sender_name || msg.sender_jid.split('@')[0], photo: { url: pfp } },
+                text: msg.message_text || '[Multimedia]', replyMessage: {}
               });
             }
 

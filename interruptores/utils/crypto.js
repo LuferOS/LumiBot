@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 export default {
-  name: "crypto",
-  alias: ["bitcoin", "eth", "solana"],
+  command: ["crypto", "bitcoin", "eth", "solana"],
   category: "utilidad",
   desc: "Muestra la cotización en vivo de criptomonedas base.",
-  run: async ({ sock, m }) => {
+  run: async (sock, m) => {
     m.reply("Extrayendo cotizaciones de la cadena de bloques...");
     
     try {

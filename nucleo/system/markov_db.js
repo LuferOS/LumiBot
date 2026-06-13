@@ -20,24 +20,31 @@ db.serialize(() => {
     sender_jid TEXT NOT NULL,
     sender_name TEXT,
     message_text TEXT NOT NULL,
-    timestamp INTEGER NOT NULL
+    timestamp INTEGER NOT NULL,
+    message_id TEXT
   )`);
   
+  // Añadir columna si venimos de la versión antigua (sin romper la BD)
+  db.run(`ALTER TABLE messages ADD COLUMN message_id TEXT`, (err) => {
+    // Si da error es porque la columna ya existe, lo cual está perfecto.
+  });
+
   // Índices para búsquedas más rápidas
   db.run(`CREATE INDEX IF NOT EXISTS idx_chat ON messages(chat_id)`);
+  db.run(`CREATE INDEX IF NOT EXISTS idx_message_id ON messages(message_id)`);
 });
 
 /**
  * Inserta un nuevo mensaje en la base de datos de aprendizaje.
  */
-export function insertMessage(chatId, senderJid, senderName, messageText, timestamp) {
+export function insertMessage(chatId, senderJid, senderName, messageText, timestamp, messageId = null) {
   return new Promise((resolve, reject) => {
     // Evitar textos vacíos o puros comandos
     if (!messageText || messageText.startsWith('.')) return resolve();
     
     db.run(
-      `INSERT INTO messages (chat_id, sender_jid, sender_name, message_text, timestamp) VALUES (?, ?, ?, ?, ?)`,
-      [chatId, senderJid, senderName, messageText, timestamp],
+      `INSERT INTO messages (chat_id, sender_jid, sender_name, message_text, timestamp, message_id) VALUES (?, ?, ?, ?, ?, ?)`,
+      [chatId, senderJid, senderName, messageText, timestamp, messageId],
       function (err) {
         if (err) {
           reject(err);
@@ -49,6 +56,66 @@ export function insertMessage(chatId, senderJid, senderName, messageText, timest
         }
       }
     );
+  });
+}
+
+/**
+ * Obtiene los N mensajes más recientes de un chat.
+ */
+export function getRecentMessages(chatId, limit = 5) {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT sender_jid, sender_name, message_text, message_id FROM messages WHERE chat_id = ? ORDER BY id DESC LIMIT ?`,
+      [chatId, limit],
+      (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows.reverse()); // De más antiguo a más reciente
+      }
+    );
+  });
+}
+
+/**
+ * Obtiene hasta N mensajes anteriores a un message_id específico, incluyendo el citado.
+ */
+export function getMessagesBeforeId(chatId, messageId, limit = 5) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT id FROM messages WHERE message_id = ? AND chat_id = ?`, [messageId, chatId], (err, row) => {
+      if (err) return reject(err);
+      if (!row) return resolve([]); // Mensaje no encontrado
+      
+      const targetId = row.id;
+      db.all(
+        `SELECT sender_jid, sender_name, message_text, message_id FROM messages WHERE chat_id = ? AND id <= ? ORDER BY id DESC LIMIT ?`,
+        [chatId, targetId, limit],
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows.reverse());
+        }
+      );
+    });
+  });
+}
+
+/**
+ * Obtiene una secuencia de N mensajes consecutivos de una posición aleatoria en el chat.
+ */
+export function getRandomConsecutiveMessages(chatId, numMessages = 3) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT id FROM messages WHERE chat_id = ? ORDER BY RANDOM() LIMIT 1`, [chatId], (err, row) => {
+      if (err) return reject(err);
+      if (!row) return resolve([]);
+      
+      const targetId = row.id;
+      db.all(
+        `SELECT sender_jid, sender_name, message_text FROM messages WHERE chat_id = ? AND id >= ? ORDER BY id ASC LIMIT ?`,
+        [chatId, targetId, numMessages],
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
   });
 }
 

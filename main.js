@@ -17,19 +17,6 @@ export default async (client, m) => {
   const sender = m.sender;
   let body = m.message?.conversation || m.message?.extendedTextMessage?.text || m.message?.imageMessage?.caption || m.message?.videoMessage?.caption || m.message?.buttonsResponseMessage?.selectedButtonId || m.message?.listResponseMessage?.singleSelectReply?.selectedRowId || m.message?.templateButtonReplyMessage?.selectedId || m.message?.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson || '';
 
-  // Caché Ligero para comandos Quote (.qs)
-  global.msgCache = global.msgCache || {};
-  if (!global.msgCache[m.chat]) global.msgCache[m.chat] = [];
-  global.msgCache[m.chat].push({
-    id: m.key.id,
-    sender: sender,
-    pushName: m.pushName || 'Usuario',
-    text: body || '',
-    color: '#' + Math.floor(Math.random()*16777215).toString(16),
-    pfp: '' // Será llenado bajo demanda
-  });
-  if (global.msgCache[m.chat].length > 300) global.msgCache[m.chat].shift();
-
   let buttonId = m.body || m.text || null
   if (m.message?.buttonsResponseMessage?.selectedButtonId) {
     buttonId = m.message.buttonsResponseMessage.selectedButtonId
@@ -265,7 +252,7 @@ export default async (client, m) => {
       }
 
       if (markovText) {
-        insertMessage(m.chat, sender, pushname, markovText, Date.now()).catch(() => {});
+        insertMessage(m.chat, sender, pushname, markovText, Date.now(), m.key.id).catch(() => {});
         
         // Probabilidad de respuesta pasiva (25%)
         if (Math.random() < 0.25) {

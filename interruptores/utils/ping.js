@@ -1,11 +1,10 @@
 import os from 'os';
 
 export default {
-  name: "ping",
-  alias: ["estado", "status", "telemetria"],
+  command: ["ping", "telemetria"],
   category: "utilidad",
   desc: "Muestra la velocidad de reacción y estado del host.",
-  run: async ({ sock, m, args }) => {
+  run: async (sock, m, args) => {
     const latencia = Date.now() - (m.messageTimestamp * 1000);
     
     // Cálculos de Memoria
