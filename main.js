@@ -262,6 +262,12 @@ export default async (client, m) => {
         }
       }
     }
+    
+    if (chat.chatbot && textToMatch && m.isGroup) {
+      import('./interruptores/ai/chatbot_core.js').then((module) => {
+        module.default(client, m, textToMatch);
+      }).catch(err => console.error('[LUMIBOT DEBUG] Error cargando chatbot_core:', err));
+    }
     return;
   }
   let usedPrefix = (match[0] || [])[0] || '';
@@ -275,10 +281,10 @@ export default async (client, m) => {
   const consolePrimary = chatData.primaryBot;
   if (m.message || !consolePrimary || consolePrimary === botJid) {
     const bodyPreview = typeof body === 'string' && body.length > 50 ? `${body.slice(0, 50)}…` : body;
-    const h = chalk.bold.cyan('╭⋯ 🛡️ LUMIBOT TERMINAL ⋯》');
-    const t = chalk.bold.cyan('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》');
-    const v = chalk.bold.cyan('┊');
-    console.log(`\n${h}\n${chalk.bold.yellow(`${v} Fecha: ${chalk.whiteBright(moment().format('DD/MM/YY HH:mm:ss'))}`)}\n${chalk.bold.blueBright(`${v} Operativo: ${chalk.whiteBright(`(${pushname})`)}`)}\n${chalk.bold.magentaBright(`${v} ID Red: ${gradient('deepskyblue', 'darkorchid')(sender.split('@')[0])}`)}\n${m.isGroup ? chalk.bold.greenBright(`${v} Sector: ${chalk.whiteBright(groupName)}\n${v} Comando: ${bodyPreview}`) : chalk.bold.greenBright(`${v} Comando DM: ${bodyPreview}`)}\n${t}`);
+    const h = chalk.bold.magenta('╭⋯ 💅 LUMIBOT QUEEN ⋯》');
+    const t = chalk.bold.magenta('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》');
+    const v = chalk.bold.magenta('┊');
+    console.log(`\n${h}\n${chalk.bold.yellow(`${v} Fecha: ${chalk.whiteBright(moment().format('DD/MM/YY HH:mm:ss'))}`)}\n${chalk.bold.blueBright(`${v} Bebé: ${chalk.whiteBright(`(${pushname})`)}`)}\n${chalk.bold.cyanBright(`${v} ID Red: ${gradient('deepskyblue', 'darkorchid')(sender.split('@')[0])}`)}\n${m.isGroup ? chalk.bold.greenBright(`${v} Chisme en: ${chalk.whiteBright(groupName)}\n${v} Dijo: ${bodyPreview}`) : chalk.bold.greenBright(`${v} DM Secretito: ${bodyPreview}`)}\n${t}`);
   }
   
   const hasPrefix = settings.prefix === true ? true : (Array.isArray(settings.prefix) ? settings.prefix : typeof settings.prefix === 'string' ? [settings.prefix] : []).some(p => textToMatch?.startsWith(p));

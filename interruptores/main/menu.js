@@ -142,26 +142,28 @@ nsfw: `💅 ✨ **ZONA +18 (BAJO TU PROPIO RIESGO 😈)** ✨ 💅
 ┣ ⊳ .footjob - paja con los pies 🦶
 ┗ ⊳ .squirting - Lluvia 🌧️`,
 
-ai: `💅 ✨ **INTELIGENCIA ARTIFICIAL 🧠** ✨ 💅
+ai: `💅 ✨ **MI CEREBRO ARTIFICIAL (INTELIGENTE COMO YO 🧠)** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┣ ⊳ .chatgpt / .ia / .lumi - Habla con ChatGPT 🤖
-┣ ⊳ .gemini / .g - Habla con Gemini ✨
-┣ ⊳ .copilot / .c - Habla con Copilot 💻
+┣ ⊳ .chatgpt - Pregúntale al ChatGPT 💬
+┣ ⊳ .gemini - Pregúntale a Gemini 🤖
+┣ ⊳ .copilot - Pregúntale a Copilot 🖥️
+┣ ⊳ .dalle - Crea imágenes loquísimas 🎨
+┣ ⊳ .chatbot on/off - LumiBot interactúa en el chat 💅✨
 ┗ ⊳ .markov on/off - IA Pasiva de Grupo 🧠`,
 
-stickers: `💅 ✨ **STICKERS Y EDICIÓN 🎨** ✨ 💅
+stickers: `💅 ✨ **STICKERS Y EDICIÓN A MI ESTILO 🎨** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┣ ⊳ .brat - Crea un sticker estilo Brat 🟩
 ┗ ⊳ .bratv - Crea un sticker animado Brat 🟩🎬`
 };
 
 const bodyMenu = `
-╭⋯ ✧ $botname ✧ ⋯》
-┊ ⊳ *Operativo:* $sender
-┊ ⊳ *Módulo:* $cat
-┊ ⊳ *Hora:* $tempo
-┊ ⊳ *Uptime:* $uptime
-┊ ⊳ *Usuarios:* $users
+╭⋯ ✨ $botname ✨ ⋯》
+┊ 💕 *Bebé:* $sender
+┊ 💅 *Chisme:* $cat
+┊ ⏰ *Hora:* $tempo
+┊ 🔋 *Uptime:* $uptime
+┊ 👯‍♀️ *Público:* $users
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
 
 function normalize(text = '') {
@@ -188,13 +190,13 @@ export default {
       const banner = botSettings.banner || 'https://i.imgur.com/8Q9N49Q.jpeg';
       const owner = botSettings.owner || '573118353868@s.whatsapp.net';
       const canalId = botSettings.id || '120363169294281316@newsletter';
-      const canalName = botSettings.nameid || '🛡️ LUMIBOT SECURITY 🛡️';
+      const canalName = botSettings.nameid || '💅 LUMIBOT GOSSIP 💅';
       
       // ⚡ LUMIBOT OVERRIDE: Enlace corregido sin errores de sintaxis
       const link = botSettings.link || 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G';
       
       const isOficialBot = botId === global.client?.user?.id?.split(':')[0] + '@s.whatsapp.net';
-      const botType = isOficialBot ? 'Núcleo Principal' : 'Sub-Nodo';
+      const botType = isOficialBot ? 'Reina Suprema' : 'Bebé Clon';
       const users = db.users ? Object.keys(db.users).length : 0;
       const device = getDevice(m.key.id);
       const sender = db.users?.[m.sender]?.name || m.pushName || 'Usuario';
@@ -216,7 +218,7 @@ export default {
       const input = normalize(args[0] || '');
       const cat = Object.keys(alias).find(k => alias[k].map(normalize).includes(input));
       
-      const category = cat ? `[ Módulo: ${cat.toUpperCase()} ]` : '[ SISTEMA CENTRAL LUMIBOT ]';
+      const category = cat ? `[ Chisme de: ${cat.toUpperCase()} ]` : '[ STATUS: DIVA INALCANZABLE ]';
       
       if (args[0] && !cat) {      
         return m.reply(`🙄 *Bruh*... literal ese módulo *${args[0]}* ni existe o te lo inventaste.\n> 💅 Módulos reales: *${Object.keys(alias).join(', ')}*`);
@@ -249,9 +251,7 @@ export default {
       
       let msgPayload = {
         contextInfo: {
-          mentionedJid: [m.sender],
-          isForwarded: true,
-          forwardingScore: 999
+          mentionedJid: [m.sender]
         }
       };
 

@@ -37,31 +37,31 @@ export default {
       const heapUsed = format(process.memoryUsage().heapUsed)
 
       const textoEstado = `╭⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》
-┊ 🤖 *DIAGNÓSTICO DEL SISTEMA by LuferOS*
+┊ 💅 ✨ *STATUS DE LA REINA* ✨ 💅
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ 📊 *ESTADÍSTICAS DEL NÚCLEO*
+┊ 📊 *MI POPULARIDAD*
 ┊ ⊳ *Identidad:* ${botname}
-┊ ⊳ *Usuarios:* ${userCount.toLocaleString()}
-┊ ⊳ *Grupos:* ${registeredGroups.toLocaleString()}
-┊ ⊳ *Ejecuciones:* ${toNum(totalCommands)}
+┊ ⊳ *Simps (Usuarios):* ${userCount.toLocaleString()}
+┊ ⊳ *Grupos de Chisme:* ${registeredGroups.toLocaleString()}
+┊ ⊳ *Órdenes dadas:* ${toNum(totalCommands)}
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ ⚙️ *HARDWARE DEL SERVIDOR*
-┊ ⊳ *Plataforma:* ${sistema} (${arquitectura})
-┊ ⊳ *Núcleos CPU:* ${cpu} Cores
-┊ ⊳ *RAM Total:* ${ramTotal}
-┊ ⊳ *RAM en Uso:* ${ramUsada}
-┊ ⊳ *Host ID:* ${hostId}
+┊ ⚙️ *MI CUERPAZO (SERVIDOR)*
+┊ ⊳ *Sistema:* ${sistema} (${arquitectura})
+┊ ⊳ *Cerebros:* ${cpu} Cores
+┊ ⊳ *Energía Total:* ${ramTotal}
+┊ ⊳ *Energía Gastada:* ${ramUsada}
+┊ ⊳ *Casa:* ${hostId}
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ 🧠 *MEMORIA NODE.JS*
-┊ ⊳ *RAM del Proceso:* ${rss}
-┊ ⊳ *Heap Usado:* ${heapUsed} / ${heapTotal}
+┊ 🧠 *MI SALUD MENTAL (NODE.JS)*
+┊ ⊳ *Estrés:* ${rss}
+┊ ⊳ *Memoria ocupada:* ${heapUsed} / ${heapTotal}
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
 
       await client.reply(m.chat, textoEstado, m)
       
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en comando status:", e)
-      await client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - ERROR* ⋯》\n┊ Fallo al leer los sensores del sistema.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m)
+      await client.reply(m.chat, `╭⋯ ❌ *AY POR FAVOR* ⋯》\n┊ Me dio amnesia y no pude ver mi estado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m)
     }
   }
 }

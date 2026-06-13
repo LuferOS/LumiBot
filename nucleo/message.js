@@ -537,7 +537,7 @@ export async function smsg(client, m, store) {
   }, [])
   
   const canalSeleccionado = canales.length > 0 ? canales[Math.floor(Math.random() * canales.length)] : null
-    const dynamicButtons = buttons.map((btn) => ({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: btn[0], id: btn[1] }), contextInfo: { mentionedJid: null, forwardingScore: 1, isForwarded: true, externalAdReply: { title: botname, body: dev, mediaType: 1, renderLargerThumbnail: false, previewType: `PHOTO`, thumbnailUrl: icon, sourceUrl: redes, }}}))
+    const dynamicButtons = buttons.map((btn) => ({ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: btn[0], id: btn[1] }), contextInfo: { mentionedJid: null, externalAdReply: { title: botname, body: dev, mediaType: 1, renderLargerThumbnail: false, previewType: `PHOTO`, thumbnailUrl: icon, sourceUrl: redes, }}}))
     if (copy && (typeof copy === 'string' || typeof copy === 'number')) { dynamicButtons.push({ name: 'cta_copy', buttonParamsJson: JSON.stringify({ display_text: 'Copy', copy_code: copy, })}) }
     if (urls && Array.isArray(urls)) { urls.forEach((url) => { dynamicButtons.push({ name: 'cta_url', buttonParamsJson: JSON.stringify({ display_text: url[0], url: url[1], merchant_url: url[1] })}) })}
     const interactiveMessage = { body: { text: text }, footer: { text: footer }, header: { hasMediaAttachment: false, imageMessage: img ? img.imageMessage : null, videoMessage: video ? video.videoMessage : null, }, nativeFlowMessage: { buttons: dynamicButtons, messageParamsJson: '' }}
@@ -584,7 +584,7 @@ export async function smsg(client, m, store) {
   const canalNam = botSetting.nameid || ''
   const link = botSetting.link || ''
   client.sendContextInfo = async (jid, text = '', options, quoted) => {
-    let prep = generateWAMessageFromContent(jid, { extendedTextMessage: { text: text, contextInfo: { mentionedJid: null, forwardingScore: 1, isForwarded: true, externalAdReply: { title: namebugsito, body: dev, mediaType: 1, renderLargerThumbnail: false, previewType: `PHOTO`, thumbnailUrl: pfp, sourceUrl: link }}}}, { quoted: m })
+    let prep = generateWAMessageFromContent(jid, { extendedTextMessage: { text: text, contextInfo: { mentionedJid: null, externalAdReply: { title: namebugsito, body: dev, mediaType: 1, renderLargerThumbnail: false, previewType: `PHOTO`, thumbnailUrl: pfp, sourceUrl: link }}}}, { quoted: m })
     return client.relayMessage(jid, prep.message, { messageId: prep.key.id })
   }
 
@@ -599,7 +599,7 @@ export async function smsg(client, m, store) {
     const sourceUrl = typeof config.redes === 'string' ? config.redes : typeof settings.link === 'string' ? settings.link : 'https://github.com/Brauliovh3/HATSUNE-MIKU'
     const normalizeJid = (jid) => (jid.includes('@') ? jid : jid + '@s.whatsapp.net')
     const mentions = Array.isArray(mentionedJid) ? mentionedJid.map(normalizeJid) : null
-    const content = { extendedTextMessage: { text, contextInfo: { mentionedJid: mentions, forwardingScore: 999, isForwarded: true, externalAdReply: { title: botnam, body: dev, mediaType: 1, renderLargerThumbnail: false, previewType: 'PHOTO', thumbnailUrl: banner, sourceUrl }}}}
+    const content = { extendedTextMessage: { text, contextInfo: { mentionedJid: mentions, externalAdReply: { title: botnam, body: dev, mediaType: 1, renderLargerThumbnail: false, previewType: 'PHOTO', thumbnailUrl: banner, sourceUrl }}}}
     const prep = generateWAMessageFromContent(jid, content, useQuoted ? { quoted } : {})
     return client.relayMessage(jid, prep.message, { quoted: useQuoted ? prep.key.quoted : undefined, messageId: prep.key.id })
   }

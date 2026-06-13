@@ -33,14 +33,13 @@ global.links = {
 // Mantenemos la variable 'miku' para no romper dependencias, pero el contenido es nuestro.
 global.miku = { 
   contextInfo: { 
-    isForwarded: true, 
     externalAdReply: {
       title: "LumiBOT",
       body: global.dev,
       mediaUrl: null,
       description: null,
       previewType: "PHOTO",
-      thumbnailUrl: global.banner || 'https://i.imgur.com/8Q9N49Q.jpeg', // Logo genérico de terminal, cámbialo si quieres
+      thumbnailUrl: global.banner || 'https://i.imgur.com/8Q9N49Q.jpeg', // Logo 💅
       sourceUrl: global.links?.channel || 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G',
       mediaType: 1,
       renderLargerThumbnail: false
@@ -48,11 +47,11 @@ global.miku = {
   }
 }
 
-// Mensajes del sistema con estética LumiBOT
+// Mensajes del sistema con estética LumiBOT Diva
 global.mess = {
-  socket: '╭⋯ ❌ *LUMIBOT - ERROR* ⋯》\n┊ Este comando solo puede ser ejecutado por un Socket.',
-  admin: '╭⋯ ❌ *LUMIBOT - DENEGADO* ⋯》\n┊ Comando exclusivo para Administradores del Grupo.',
-  botAdmin: '╭⋯ ❌ *LUMIBOT - ERROR* ⋯》\n┊ Necesito ser Administrador del Grupo para ejecutar esto.'
+  socket: '╭⋯ ❌ *AY POR FAVOR* ⋯》\n┊ Este comando es solo para mis Sockets, no para mortales.',
+  admin: '╭⋯ ❌ *QUÉ ATREVIDO* ⋯》\n┊ Comando exclusivo para Administradores del Grupo. Ni lo intentes.',
+  botAdmin: '╭⋯ ❌ *O SEA, HELLO* ⋯》\n┊ Necesito ser Administradora del Grupo para hacer eso, date cuenta.'
 }
 
 // Intactas, bajo tus órdenes directas.

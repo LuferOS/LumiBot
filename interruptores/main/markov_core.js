@@ -102,13 +102,19 @@ export default {
               
               quoteMessages.push({
                 entities: [], avatar: true,
-                from: { id: msg.sender_jid, name: msg.sender_name || msg.sender_jid.split('@')[0], photo: { url: pfp } },
+                from: { 
+                  id: msg.sender_jid, 
+                  name: msg.sender_name || msg.sender_jid.split('@')[0], 
+                  photo: { url: pfp }, 
+                  nameColor: '#ffffff',
+                  color: '#ffffff'
+                },
                 text: msg.message_text || '[Multimedia]', replyMessage: {}
               });
             }
 
             const quoteObj = { 
-              type: 'quote', format: 'png', backgroundColor: '#0a0a0a', 
+              type: 'quote', format: 'png', backgroundColor: '#ffffff', 
               width: 512, height: 768, scale: 2, messages: quoteMessages 
             };
 

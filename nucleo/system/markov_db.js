@@ -39,8 +39,8 @@ db.serialize(() => {
  */
 export function insertMessage(chatId, senderJid, senderName, messageText, timestamp, messageId = null) {
   return new Promise((resolve, reject) => {
-    // Evitar textos vacíos o puros comandos
-    if (!messageText || messageText.startsWith('.')) return resolve();
+    // Evitar textos vacíos, puros comandos o placeholders multimedia
+    if (!messageText || messageText.startsWith('.') || messageText.startsWith('[')) return resolve();
     
     db.run(
       `INSERT INTO messages (chat_id, sender_jid, sender_name, message_text, timestamp, message_id) VALUES (?, ?, ?, ?, ?, ?)`,

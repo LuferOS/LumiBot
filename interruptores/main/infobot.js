@@ -30,7 +30,7 @@ export default {
       const owner = botSettings.owner || global.owner?.[0] + '@s.whatsapp.net' || '573118353868@s.whatsapp.net'
       
       const canalId = botSettings.id || '120363169294281316@newsletter'
-      const canalName = botSettings.nameid || '🛡️ LUMIBOT SECURITY 🛡️'
+      const canalName = botSettings.nameid || '💅 LUMIBOT GOSSIP 💅'
       const link = botSettings.link || global.links?.github || 'https://github.com/LuferOS'
 
       let desar = 'Oculto'
@@ -52,34 +52,33 @@ export default {
       }).replace(/^./, str => str.toUpperCase())
 
       const isOficialBot = botId === (global.client?.user?.id?.split(':')[0] + "@s.whatsapp.net")
-      const botType = isOficialBot ? 'Núcleo Principal' : 'Sub-Nodo'
+      const botType = isOficialBot ? 'Reina Suprema' : 'Bebé Clon'
       
       const tituloDesarrollador = desar === 'Hombre' ? 'Creador' : desar === 'Mujer' ? 'Creadora' : 'Creador(a)'
       const ownerDisplay = owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? `@${owner.split('@')[0]}` : owner) : "LuferOS"
 
       const message = `╭⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》
-┊ 🤖 *DATOS DEL SISTEMA*
+┊ 💅 ✨ *CHISME SOBRE MÍ*
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ ⊳ *Identidad ›* ${botname} (${namebot})
-┊ ⊳ *Divisa ›* ${monedas}
-┊ ⊳ *Prefijo(s) ›* ${prefijo === true ? '`Multiprefijo`' : (Array.isArray(prefijo) ? prefijo : [prefijo || '/']).map(p => `\`${p}\``).join(', ')}
-┊ ⊳ *Clasificación ›* ${botType}
+┊ ⊳ *Mi nombre ›* ${botname} (${namebot})
+┊ ⊳ *Dinero ›* ${monedas}
+┊ ⊳ *Mis prefijos ›* ${prefijo === true ? '`Multiprefijo`' : (Array.isArray(prefijo) ? prefijo : [prefijo || '/']).map(p => `\`${p}\``).join(', ')}
+┊ ⊳ *Nivel de Diosa ›* ${botType}
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ ⚙️ *HARDWARE & SOFTWARE*
-┊ ⊳ *SO Base ›* ${platform}
-┊ ⊳ *Entorno ›* NodeJS ${nodeVersion}
-┊ ⊳ *Inicio Sistema ›* ${formattedUptimeDate}
-┊ ⊳ *Tiempo Activo ›* ${sistemaUptime}
+┊ ⚙️ *MI CUERPAZO DIGITAL*
+┊ ⊳ *Cuerpo ›* ${platform}
+┊ ⊳ *Cerebro ›* NodeJS ${nodeVersion}
+┊ ⊳ *Desperté ›* ${formattedUptimeDate}
+┊ ⊳ *Despierta por ›* ${sistemaUptime}
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ 👑 *PROPIEDAD*
+┊ 👑 *MI SUGAR DADDY / MOMMY*
 ┊ ⊳ *${tituloDesarrollador} ›* ${ownerDisplay}
-┊ ⊳ *Enlace ›* ${link}
+┊ ⊳ *Síguenos ›* ${link}
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`.trim()
 
       let msgPayload = {
         contextInfo: {
-          mentionedJid: [owner, m.sender].filter(Boolean),
-          isForwarded: true
+          mentionedJid: [owner, m.sender].filter(Boolean)
         }
       }
 
@@ -91,7 +90,7 @@ export default {
         msgPayload.text = message
         msgPayload.contextInfo.externalAdReply = {
           title: botname,
-          body: `© Powered by LuferOS Security`,
+          body: `💅 Siéntate y toma nota, mi amor.`,
           showAdAttribution: false,
           thumbnailUrl: banner,
           mediaType: 1,
@@ -105,7 +104,7 @@ export default {
       
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en infobot:", e);
-      return m.reply(`╭⋯ ❌ *LUMIBOT - ERROR* ⋯》\n┊ Fallo al recuperar la información del sistema.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+      return m.reply(`╭⋯ ❌ *AY POR FAVOR* ⋯》\n┊ Me dio dolor de cabeza recordando quién soy.\n┊ Detox: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     }
   }
 };

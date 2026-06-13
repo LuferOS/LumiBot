@@ -98,7 +98,6 @@ export default async (client, m) => {
         }
         
         const contextInfo = {
-          isForwarded: true,
           externalAdReply: {
             title: botSettings.namebot || 'SISTEMA LUMIBOT',
             body: global.dev || '© Powered by LuferOS Security',

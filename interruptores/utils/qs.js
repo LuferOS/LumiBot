@@ -36,6 +36,7 @@ export default {
 
       // Obtener avatares bajo demanda
       const pfpCache = {};
+      const userColors = {};
       
       const quoteMessages = [];
       for (const msg of selectedMessages) {
@@ -49,23 +50,31 @@ export default {
         }
         pfp = pfpCache[msg.sender_jid];
 
+        if (!userColors[msg.sender_jid]) {
+          userColors[msg.sender_jid] = colors[Math.floor(Math.random() * colors.length)];
+        }
+
         quoteMessages.push({
           entities: [],
           avatar: true,
           from: { 
             id: msg.sender_jid, 
             name: msg.sender_name || msg.sender_jid.split('@')[0], 
-            photo: { url: pfp } 
+            photo: { url: pfp }
           },
           text: msg.message_text || '[Multimedia]',
           replyMessage: {}
         });
+        
+        // Asignar el color usando ambas propiedades comunes en APIs de citas
+        quoteMessages[quoteMessages.length - 1].from.nameColor = '#ffffff';
+        quoteMessages[quoteMessages.length - 1].from.color = '#ffffff';
       }
 
       const quoteObj = { 
         type: 'quote', 
         format: 'png', 
-        backgroundColor: '#0a0a0a', 
+        backgroundColor: '#ffffff', 
         width: 512, 
         height: 768, 
         scale: 2, 
