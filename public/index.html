@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LumiBOT - Neural Dashboard</title>
+  <title>LumiBOT - Neural Datacenter</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
@@ -13,51 +13,94 @@
   <div class="container">
     <header>
       <div class="logo">
-        <div class="orb"></div>
-        <h1>LumiBOT <span>Security</span></h1>
+        <div class="orb" id="status-orb"></div>
+        <h1>LumiBOT <span>Datacenter</span></h1>
       </div>
-      <div class="status-badge online">
-        <span class="dot"></span> SISTEMA EN LÍNEA
+      <div class="status-badge online" id="status-badge">
+        <span class="dot"></span> <span id="status-text">SISTEMA EN LÍNEA</span>
       </div>
     </header>
 
     <main class="dashboard">
-      <div class="card glass">
-        <h3>Tiempo Activo</h3>
-        <p class="data" id="val-uptime">00:00:00</p>
-        <div class="subtitle">Horas : Minutos : Segundos</div>
-      </div>
+      <!-- FILA 1: ESTADO DEL SISTEMA (HOST) -->
+      <section class="grid-section">
+        <h2 class="section-title">🖥️ Hardware del Host</h2>
+        <div class="grid-row">
+          <div class="card glass">
+            <h3>Procesador (CPU)</h3>
+            <p class="data-small" id="val-cpu-model">Cargando...</p>
+            <div class="flex-between">
+              <span class="subtitle">Carga Actual</span>
+              <span class="subtitle-bold"><span id="val-cpu-load">0</span>%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="bar-cpu" style="width: 0%"></div>
+            </div>
+          </div>
 
-      <div class="card glass">
-        <h3>Uso de RAM</h3>
-        <p class="data"><span id="val-ram">0</span>%</p>
-        <div class="progress-bar">
-          <div class="progress-fill" id="bar-ram" style="width: 0%"></div>
+          <div class="card glass">
+            <h3>Memoria RAM</h3>
+            <div class="flex-between">
+              <span class="data-small" id="val-ram-gb">0 GB / 0 GB</span>
+              <span class="subtitle-bold"><span id="val-ram-pct">0</span>%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="bar-ram" style="width: 0%"></div>
+            </div>
+            <div class="subtitle mt-2">Plataforma: <span id="val-os">...</span></div>
+            <div class="subtitle">Node.js: <span id="val-node">...</span></div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="card glass">
-        <h3>Base de Datos Usuarios</h3>
-        <p class="data" id="val-users">0</p>
-        <div class="subtitle">Registros Globales</div>
-      </div>
+      <!-- FILA 2: NÚCLEO LUMIBOT -->
+      <section class="grid-section">
+        <h2 class="section-title">🟢 Núcleo del Bot</h2>
+        <div class="grid-row">
+          <div class="card glass">
+            <h3>Tiempo Activo (Uptime)</h3>
+            <p class="data" id="val-uptime">00:00:00</p>
+            <div class="subtitle">Sesión continua de WhatsApp</div>
+          </div>
 
-      <div class="card glass">
-        <h3>Grupos Activos</h3>
-        <p class="data" id="val-chats">0</p>
-        <div class="subtitle">Chats Administrados</div>
-      </div>
+          <div class="card glass">
+            <h3>Grupos Activos</h3>
+            <p class="data" id="val-chats">0</p>
+            <div class="subtitle">Chats Administrados</div>
+          </div>
+          
+          <div class="card glass">
+            <h3>Usuarios Registrados</h3>
+            <p class="data" id="val-users">0</p>
+            <div class="subtitle">En Base de Datos Global</div>
+          </div>
+        </div>
+      </section>
 
-      <div class="card glass feature-card">
-        <h3>Cerebro Markoviano</h3>
-        <p class="data" id="val-markov">0</p>
-        <div class="subtitle">Mensajes Aprendidos</div>
-        <div class="glow-effect"></div>
-      </div>
+      <!-- FILA 3: CEREBRO MARKOVIANO -->
+      <section class="grid-section">
+        <h2 class="section-title">🧠 Red Neuronal (Markov)</h2>
+        <div class="grid-row">
+          <div class="card glass feature-card">
+            <h3>Base de Datos de Aprendizaje</h3>
+            <div class="flex-between align-end">
+              <div>
+                <p class="data" id="val-markov-msg">0</p>
+                <div class="subtitle">Mensajes Aprendidos</div>
+              </div>
+              <div class="text-right">
+                <p class="data-medium"><span id="val-markov-size">0</span> MB</p>
+                <div class="subtitle">Peso en Disco</div>
+              </div>
+            </div>
+            <div class="glow-effect"></div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer>
-      <p>Diseñado para LuferOS Security &copy; 2026. Todos los derechos reservados.</p>
+      <p>Centro de Comando Militar &copy; 2026. Designed for LuferOS Security.</p>
     </footer>
   </div>
 
@@ -67,18 +110,55 @@
         const res = await fetch('/api/stats');
         const data = await res.json();
         
+        // Estado de conexión
+        const orb = document.getElementById('status-orb');
+        const badge = document.getElementById('status-badge');
+        const statusText = document.getElementById('status-text');
+        
+        if (data.status === 'online') {
+          orb.className = 'orb';
+          badge.className = 'status-badge online';
+          statusText.innerText = 'SISTEMA EN LÍNEA';
+        } else {
+          orb.className = 'orb offline';
+          badge.className = 'status-badge offline';
+          statusText.innerText = 'DESCONECTADO (ESCANEAR QR)';
+        }
+
+        // Host
+        document.getElementById('val-cpu-model').innerText = data.hardware.cpuModel;
+        document.getElementById('val-cpu-load').innerText = data.hardware.cpuLoad;
+        document.getElementById('bar-cpu').style.width = data.hardware.cpuLoad + '%';
+        
+        document.getElementById('val-ram-pct').innerText = data.hardware.ramUsagePct;
+        document.getElementById('val-ram-gb').innerText = `${data.hardware.usedGb} GB / ${data.hardware.totalGb} GB`;
+        document.getElementById('bar-ram').style.width = data.hardware.ramUsagePct + '%';
+        
+        // Colores de alerta
+        document.getElementById('bar-ram').style.background = data.hardware.ramUsagePct > 80 ? '#ff3366' : 'var(--accent)';
+        document.getElementById('bar-cpu').style.background = data.hardware.cpuLoad > 80 ? '#ff3366' : 'var(--accent)';
+
+        document.getElementById('val-os').innerText = data.hardware.os;
+        document.getElementById('val-node').innerText = data.hardware.node;
+
+        // Bot
         document.getElementById('val-uptime').innerText = data.uptime;
-        document.getElementById('val-ram').innerText = data.ramUsage;
-        document.getElementById('bar-ram').style.width = data.ramUsage + '%';
-        document.getElementById('val-users').innerText = data.users;
         document.getElementById('val-chats').innerText = data.chats;
-        document.getElementById('val-markov').innerText = data.markovMessages;
+        document.getElementById('val-users').innerText = data.users;
+
+        // Markov
+        document.getElementById('val-markov-msg').innerText = data.markov.messages.toLocaleString();
+        document.getElementById('val-markov-size').innerText = data.markov.sizeMb;
+
       } catch (err) {
         console.error('Error sincronizando con el servidor:', err);
+        document.getElementById('status-orb').className = 'orb offline';
+        document.getElementById('status-badge').className = 'status-badge offline';
+        document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN CON DASHBOARD';
       }
     }
 
-    // Inicializar y actualizar cada 3 segundos
+    // Inicializar y actualizar
     fetchStats();
     setInterval(fetchStats, 3000);
   </script>
