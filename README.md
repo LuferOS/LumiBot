@@ -1,70 +1,77 @@
 <div align="center">
 
-# 🛡️ LUMI BOT 🛡️
-**Tactical WhatsApp Framework & OSINT Multi-Tool**
+# 🛡️ LUMI BOT v3.0 🛡️
+**Tactical WhatsApp Framework, OSINT & Neural Engine**
 
-![Version](https://img.shields.io/badge/Version-1.0.5--Stable-blue?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Telegram](https://img.shields.io/badge/Telegram-MTProto-0088cc?style=for-the-badge&logo=telegram) ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-3.0--Stable-blue?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Express](https://img.shields.io/badge/Express-Web--Dashboard-000000?style=for-the-badge&logo=express)
+
 [![Stars](https://img.shields.io/github/stars/LuferOS/LumiBot?style=for-the-badge&logo=github&color=gold)](https://github.com/LuferOS/LumiBot/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/LuferOS/LumiBot/total?style=for-the-badge&logo=github&color=green&label=Descargas)](https://github.com/LuferOS/LumiBot/releases)
-![Views](https://img.shields.io/badge/dynamic/json?style=for-the-badge&label=Vistas&query=value&url=https%3A%2F%2Fapi.countapi.xyz%2Fhit%2FLuferOS-LumiBot%2Fviews&color=blue)
 
+<p><i>La central de mando definitiva para administración militar, inteligencia de datos, automatización avanzada y redes neuronales estadísticas.</i></p>
 
-<p><i>La central de mando definitiva para administración militar, inteligencia de datos y automatización avanzada.</i></p>
 ---
+
 </div>
+
 ## 🎯 Sobre el Proyecto
-**LuferOS Security Bot** (LumiBot) no es solo un asistente de WhatsApp; es una arquitectura robusta diseñada para el control jerárquico y la extracción de información en tiempo real. Este framework ha sido optimizado para ofrecer respuestas milimétricas, integrando motores de Inteligencia Artificial y protocolos de seguridad de vanguardia.
-## 🚀 Características Principales
-* 📡 **Inteligencia Táctica (OSINT):** Motor de búsqueda en bases de datos filtradas para identificar riesgos y fugas de información personal.
-* 🪖 **Administración Militar:** Gestión de grupos basada en rangos, con relevos de mando (Suboficial de Servicio) y control de ingresos automatizado.
-* 🧠 **Procesamiento IA (Gemini):** Integración con Gemini 2.5 Flash para análisis de medios, transcripción de audios y visión artificial.
-* 🎭 **Módulos de Reacción:** Herramientas de entretenimiento y "trolleo" diseñadas para mantener la interacción dinámica dentro del perímetro.
+**LuferOS Security Bot** (LumiBot) ha evolucionado. Ya no es solo un asistente de WhatsApp; es una arquitectura robusta diseñada para el control jerárquico, extracción de información en tiempo real, e **Inteligencia Artificial Matemática**. Este framework integra desde protocolos de seguridad OSINT hasta un Cerebro Markoviano capaz de mimetizarse con el comportamiento de tu grupo.
+
+## 🚀 Nuevas Tecnologías & Características (v3.0)
+
+> [!TIP]
+> **🌟 NUEVO: Panel de Control Web (Dashboard)**
+> LumiBot ahora levanta un servidor HTTP con Express (`http://localhost:3000`) ofreciendo un espectacular panel en vivo (Dark Glassmorphism) donde puedes monitorizar: Uso de RAM, Uptime, total de grupos, base de datos de usuarios y volumen de memoria del Cerebro Markoviano en tiempo real.
+
+* 🧠 **Cerebro Markoviano Matemático:** Sistema pasivo impulsado por Cadenas de Markov (N-gramas). LumiBot aprende el vocabulario y modismos de tu grupo en tiempo real extrayendo datos de `lumi_markov.db`. Tiene un **45% de probabilidad** de interceder en cualquier charla creando oraciones "Frankenstein" con un 15% de probabilidad de renderizarlas como **Stickers Animados (.bratv)**.
+* 🔞 **Módulo NSFW & Acciones de Rol:** Más de 30 comandos de rol explícito e integración directa para búsqueda de material adulto en la red.
+* 👻 **Detector de Fantasmas & Top:** Algoritmo avanzado que escanea la base de datos para delatar a los inactivos (`.fantasmas`) y rankear a los más habladores (`.top`).
+* 📡 **Inteligencia Táctica (OSINT):** Motor de búsqueda en bases de datos para identificar riesgos y fugas de información.
+* 🪖 **Administración Militar:** Gestión de grupos basada en rangos, con relevos de mando (Suboficial de Servicio) y control automatizado.
+* ✨ **Juegos Dinámicos:** Módulo extendido de Verdad o Reto (+80 opciones) y ruletas interactivas.
+
 ---
-## ⚙️ Lista de Comandos Tácticos
+
+## ⚙️ Lista de Comandos Destacados
 
 | Comando | Categoría | Descripción |
 | :--- | :--- | :--- |
-| `.numbinfo [número]` | **OSINT** | Rastreo de datos filtrados (correos/pass) asociados a un número. |
-| `.scan [objetivo]` | **ANTIVIRUS** | Escáner táctico de ARCHIVOS A VIRUS TOTAL. |
-| `.add [número] [nombre]` | **Militar** | Incorpora a un recluta al grupo con mensaje de bienvenida formal. |
-| `.addoficial [num] [nom]` | **Militar** | Agrega al usuario y lo corona como **Suboficial de Servicio** en la DB. |
+| `.markov on/off` | **Cerebro IA** | Enciende el algoritmo pasivo de Cadenas de Markov en el grupo. |
+| `.fantasmas` / `.top` | **Gestión** | Detecta a los inactivos y muestra el ranking de los más activos. |
+| `.numbinfo [número]` | **OSINT** | Rastreo de datos filtrados asociados a un número. |
+| `.scan [objetivo]` | **Seguridad** | Escáner táctico de ARCHIVOS en VIRUS TOTAL. |
 | `.suboficial` | **Militar** | Consulta el rango, nombre y fecha del suboficial de turno actual. |
-| `.tr` *(en audio)* | **I.A.** | Transcribe y genera un resumen analítico del audio mediante IA. |
-| `.hd` *(en imagen)* | **I.A.** | Mejora y escala la resolución de fotos o stickers. |
-| `.dox [mención]` | **Trolleo** | Simulación de doxeo aleatorio (100% educativo/falso). |
-| `.p` / `.pendejo` | **Trolleo** | Escáner de pendejez con distorsión visual de la foto de perfil. |
-| `.belleza` | **Trolleo** | Analizador de facha (0-100%) con veredicto del procesador. |
-| `.ship [@u1] [@u2]` | **Trolleo** | Fusiona fotos de perfil y calcula compatibilidad o toxicidad. |
-| `.gay` / `.realofake` | **Trolleo** | Detectores de orientación y verdad/mentira absolutos. |
+| `.chatgpt` / `.gemini`| **I.A.** | Interacción directa con LLMs (AlyaCore API). |
+| `.verdad` / `.reto` | **Juegos** | Sistema masivo de preguntas y retos para romper el hielo. |
+| `.pussy`, `.spank`, etc | **NSFW / Rol** | Catálogo masivo (+30 comandos) de interacciones de rol subido de tono. |
 
 > [!IMPORTANT]
-> **CLASIFICADO:** Esta tabla solo muestra el armamento básico. El arsenal completo se descubre analizando el código o mediante el comando **`.menu`**.
+> **CLASIFICADO:** Esta tabla solo muestra un fragmento del armamento. El arsenal completo (+100 comandos) se despliega usando el comando **`.menu`** en WhatsApp.
+
 ---
-## 🔑 Configuración de Llaves (Telegram)
-El bot requiere acceso al protocolo MTProto para funciones de inteligencia. Sigue estos pasos para la sincronización:
-1. **API_ID y API_HASH:** Consíguelos en [my.telegram.org](https://my.telegram.org) (Sección *API development tools*).
-2. **STRING_SESSION:** **LuferOS** incluye un generador automático. Deja la variable vacía (`""`), arranca el bot y sigue las instrucciones en la terminal. El sistema te entregará la llave tras ingresar el código OTP.
----
+
 ## 🛠️ Guía de Instalación
-### 📦 Opción A: Instalación en Host (Akirax, Pterodactyl, VPS)
-*Recomendado para operatividad 24/7.*
-1. Sube los archivos vía SFTP.
-2. Usa **Node.js v18** o superior.
-3. Ejecuta:
-bash
+
+### 📦 Opción A: Instalación en Host / PC (Windows, VPS, Pterodactyl)
+*Recomendado para operatividad 24/7 y acceso al Web Dashboard.*
+1. Clona o descarga el repositorio.
+2. Instala **Node.js v21+**.
+3. Ejecuta en tu terminal:
+```bash
 npm install
 npm start
+```
+4. Abre tu navegador en `http://localhost:3000` para ver el panel de control táctico.
 
-## 📱 Opción B: Instalación en Android (Termux)
-Usa exclusivamente la versión de F-Droid.
-### 🏆 Créditos y Reconocimientos
-Depool: Creador de la base original Hatsune Miku. Se utilizó su core estructural, gestión de variables y comandos base para el desarrollo de este framework.
-Comandante LuferOS: Ingeniero Jefe. Desarrollo de módulos OSINT, IA analítica, sistema de administración militar, corrección de bugs y optimización táctica general.
-### ⚖️ Aviso Legal
-Este software se distribuye con fines educativos.
-Los módulos de trolleo generan información falsa y aleatoria.
-El comando .numbinfo es una herramienta de concienciación sobre ciberseguridad basada en datos públicos.
-El desarrollador no se responsabiliza por el uso inadecuado de la herramienta.
+---
+
+### ⚖️ Privacidad y Seguridad Git
+El archivo `.gitignore` está estrictamente configurado para proteger las bases de datos de `lumi_markov.db` y las llaves de encriptación de `Sessions/`. **NUNCA** elimines estas protecciones si vas a bifurcar (fork) o subir tu código.
+
+### 🏆 Reconocimientos
+* **Comandante LuferOS:** Ingeniero Jefe. Desarrollo del Dashboard, Cerebro Markoviano Matemático, OSINT, administración militar, refactorización total del código y módulos de entretenimiento expansivo.
+* **Depool:** Creador de la base original (Hatsune Miku).
+
 <div align="center">
-<p><b>Developed by Comandante LuferOS 🇨🇴 DAME UNA ESTRELLA MINIMO WE</b></p>
+<p><b>Developed by Comandante LuferOS 🇨🇴 DAME UNA ESTRELLA MÍNIMO WE</b></p>
 </div>
