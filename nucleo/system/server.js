@@ -14,7 +14,7 @@ export function startServer() {
   const PORT = 3000;
 
   // Servir archivos estáticos del panel web
-  const publicPath = path.join(__dirname, '../../../public');
+  const publicPath = path.join(__dirname, '../../public');
   app.use(express.static(publicPath));
 
   // Endpoint de estadísticas en tiempo real

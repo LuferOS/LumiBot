@@ -1,6 +1,3 @@
-// 📂 MEMORIA TÁCTICA GLOBAL
-global.suboficialEnTurno = global.suboficialEnTurno || null
-
 // 🕒 GENERADOR DE FECHA (Hora de Colombia)
 const obtenerFechaBogota = () => {
     return new Intl.DateTimeFormat('es-CO', { 
@@ -11,21 +8,13 @@ const obtenerFechaBogota = () => {
 }
 
 export default {
-    command: ['add', 'addoficial', 'suboficial'],
+    command: ['add'],
     category: 'grupo',
     run: async (client, m, args = [], usedPrefix = '.', command = 'add') => {
         
         if (!m.isGroup) return m.reply("Comandante, los comandos de ingreso solo operan dentro de grupos.")
         
         const accion = command.toLowerCase()
-
-        // 📋 CONSULTAR SUBOFICIAL DE SERVICIO ACTUAL
-        if (accion === 'suboficial') {
-            if (!global.suboficialEnTurno) return m.reply("Negativo. No hay ningún Suboficial de Servicio registrado.")
-            
-            const sub = global.suboficialEnTurno
-            return m.reply(`╭⋯ 🚨 *SUBOFICIAL DE SERVICIO* ⋯》\n┊ ⊳ *Rango/Nombre:* ${sub.nombre}\n┊ ⊳ *Contacto:* @${sub.numero}\n┊ ⊳ *Fecha de turno:* ${sub.fecha}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, null, { mentions: [`${sub.numero}@s.whatsapp.net`] })
-        }
 
         if (args.length < 2) return m.reply(`Faltan datos. Uso correcto:\n*${usedPrefix}${command} [Número] [Nombre]*`)
 
@@ -46,20 +35,6 @@ export default {
                 m.reply(`⏳ Ejecutando orden de adición directa para: ${nombreNuevo}...`)
                 await client.groupParticipantsUpdate(m.chat, [jid], 'add')
             }
-
-            // 🌟 PROCESO PARA SUBOFICIAL DE SERVICIO
-            if (accion === 'addoficial') {
-                const fechaActual = obtenerFechaBogota()
-                global.suboficialEnTurno = { numero: numeroObjetivo, nombre: nombreNuevo, fecha: fechaActual }
-                
-                // Si ya estaba adentro, le ponemos un pequeño aviso táctico
-                const avisoExtra = isParticipant ? " *(Reasignado internamente)*" : ""
-                
-                const texto = `╭⋯ 🚨 *RELEVO DE MANDO: SUBOFICIAL DE SERVICIO* ⋯》\n┊ ⊳ *Personal:* ${nombreNuevo}${avisoExtra}\n┊ ⊳ *Contacto:* @${numeroObjetivo}\n┊ ⊳ *Fecha:* ${fechaActual}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n> .`
-                
-                return client.sendMessage(m.chat, { text: texto, mentions: [jid] })
-            } 
-            
             // 👤 PROCESO PARA USUARIO NORMAL
             if (accion === 'add') {
                 if (isParticipant) return m.reply("El usuario ya se encuentra en la base. No se requiere adición.")

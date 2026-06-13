@@ -38,9 +38,6 @@
 | :--- | :--- | :--- |
 | `.markov on/off` | **Cerebro IA** | Enciende el algoritmo pasivo de Cadenas de Markov en el grupo. |
 | `.fantasmas` / `.top` | **Gestión** | Detecta a los inactivos y muestra el ranking de los más activos. |
-| `.numbinfo [número]` | **OSINT** | Rastreo de datos filtrados asociados a un número. |
-| `.scan [objetivo]` | **Seguridad** | Escáner táctico de ARCHIVOS en VIRUS TOTAL. |
-| `.suboficial` | **Militar** | Consulta el rango, nombre y fecha del suboficial de turno actual. |
 | `.chatgpt` / `.gemini`| **I.A.** | Interacción directa con LLMs (AlyaCore API). |
 | `.verdad` / `.reto` | **Juegos** | Sistema masivo de preguntas y retos para romper el hielo. |
 | `.pussy`, `.spank`, etc | **NSFW / Rol** | Catálogo masivo (+30 comandos) de interacciones de rol subido de tono. |
