@@ -211,6 +211,21 @@ async function startBot() {
       kay.message = Object.keys(kay.message)[0] === 'ephemeralMessage' ? kay.message.ephemeralMessage.message : kay.message;
       if (kay.key.fromMe && kay.key.id.startsWith('3EB0')) return;
       const m = await smsg(sock, kay);
+      
+      // Emitir tráfico al Web OS Dashboard
+      if (global.dashboardIo) {
+        try {
+          const senderJid = kay.key.participant || kay.key.remoteJid;
+          if (senderJid) {
+            global.dashboardIo.emit('ws_traffic', {
+              sender: senderJid.split('@')[0],
+              isGroup: kay.key.remoteJid.endsWith('@g.us'),
+              isOut: kay.key.fromMe
+            });
+          }
+        } catch(e) {}
+      }
+
       main(sock, m, chatUpdate);
     } catch (err) {}
   });

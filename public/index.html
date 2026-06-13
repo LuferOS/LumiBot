@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LumiBOT - Neural Datacenter</title>
+  <title>LumiBOT - Web OS</title>
+  
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS para el Mapa -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
   <div class="background-animation"></div>
@@ -14,89 +18,165 @@
     <header>
       <div class="logo">
         <div class="orb" id="status-orb"></div>
-        <h1>LumiBOT <span>Datacenter</span></h1>
+        <h1>LumiBOT <span>Web OS</span></h1>
       </div>
       <div class="status-badge online" id="status-badge">
         <span class="dot"></span> <span id="status-text">SISTEMA EN LÍNEA</span>
       </div>
     </header>
 
+    <!-- BARRA DE NAVEGACIÓN (TABS) -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="tab-overview">📊 Vista General</button>
+      <button class="tab-btn" data-tab="tab-map">🌍 Cyber Mapa</button>
+      <button class="tab-btn" data-tab="tab-editor">📁 Editor de Archivos</button>
+      <button class="tab-btn" data-tab="tab-terminal">💻 Terminal Táctica</button>
+    </nav>
+
     <main class="dashboard">
-      <!-- FILA 1: ESTADO DEL SISTEMA (HOST) -->
-      <section class="grid-section">
-        <h2 class="section-title">🖥️ Hardware del Host</h2>
-        <div class="grid-row">
-          <div class="card glass">
-            <h3>Procesador (CPU)</h3>
-            <p class="data-small" id="val-cpu-model">Cargando...</p>
-            <div class="flex-between">
-              <span class="subtitle">Carga Actual</span>
-              <span class="subtitle-bold"><span id="val-cpu-load">0</span>%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="bar-cpu" style="width: 0%"></div>
-            </div>
-          </div>
-
-          <div class="card glass">
-            <h3>Memoria RAM</h3>
-            <div class="flex-between">
-              <span class="data-small" id="val-ram-gb">0 GB / 0 GB</span>
-              <span class="subtitle-bold"><span id="val-ram-pct">0</span>%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="bar-ram" style="width: 0%"></div>
-            </div>
-            <div class="subtitle mt-2">Plataforma: <span id="val-os">...</span></div>
-            <div class="subtitle">Node.js: <span id="val-node">...</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FILA 2: NÚCLEO LUMIBOT -->
-      <section class="grid-section">
-        <h2 class="section-title">🟢 Núcleo del Bot</h2>
-        <div class="grid-row">
-          <div class="card glass">
-            <h3>Tiempo Activo (Uptime)</h3>
-            <p class="data" id="val-uptime">00:00:00</p>
-            <div class="subtitle">Sesión continua de WhatsApp</div>
-          </div>
-
-          <div class="card glass">
-            <h3>Grupos Activos</h3>
-            <p class="data" id="val-chats">0</p>
-            <div class="subtitle">Chats Administrados</div>
-          </div>
-          
-          <div class="card glass">
-            <h3>Usuarios Registrados</h3>
-            <p class="data" id="val-users">0</p>
-            <div class="subtitle">En Base de Datos Global</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FILA 3: CEREBRO MARKOVIANO -->
-      <section class="grid-section">
-        <h2 class="section-title">🧠 Red Neuronal (Markov)</h2>
-        <div class="grid-row">
-          <div class="card glass feature-card">
-            <h3>Base de Datos de Aprendizaje</h3>
-            <div class="flex-between align-end">
-              <div>
-                <p class="data" id="val-markov-msg">0</p>
-                <div class="subtitle">Mensajes Aprendidos</div>
+      
+      <!-- ======================================= -->
+      <!-- PESTAÑA: VISTA GENERAL -->
+      <!-- ======================================= -->
+      <div id="tab-overview" class="tab-content active">
+        <!-- FILA 1: ESTADO DEL SISTEMA (HOST) -->
+        <section class="grid-section">
+          <h2 class="section-title">🖥️ Hardware del Host</h2>
+          <div class="grid-row">
+            <div class="card glass">
+              <h3>Procesador (CPU)</h3>
+              <p class="data-small" id="val-cpu-model">Cargando...</p>
+              <div class="flex-between">
+                <span class="subtitle">Carga Actual</span>
+                <span class="subtitle-bold"><span id="val-cpu-load">0</span>%</span>
               </div>
-              <div class="text-right">
-                <p class="data-medium"><span id="val-markov-size">0</span> MB</p>
-                <div class="subtitle">Peso en Disco</div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="bar-cpu" style="width: 0%"></div>
               </div>
             </div>
-            <div class="glow-effect"></div>
+
+            <div class="card glass">
+              <h3>Memoria RAM</h3>
+              <div class="flex-between">
+                <span class="data-small" id="val-ram-gb">0 GB / 0 GB</span>
+                <span class="subtitle-bold"><span id="val-ram-pct">0</span>%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="bar-ram" style="width: 0%"></div>
+              </div>
+              <div class="subtitle mt-2">Plataforma: <span id="val-os">...</span></div>
+              <div class="subtitle">Node.js: <span id="val-node">...</span></div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <!-- FILA 2: NÚCLEO LUMIBOT -->
+        <section class="grid-section">
+          <h2 class="section-title">🟢 Núcleo del Bot</h2>
+          <div class="grid-row">
+            <div class="card glass">
+              <h3>Tiempo Activo (Uptime)</h3>
+              <p class="data" id="val-uptime">00:00:00</p>
+              <div class="subtitle">Sesión continua de WhatsApp</div>
+            </div>
+
+            <div class="card glass">
+              <h3>Grupos Activos</h3>
+              <p class="data" id="val-chats">0</p>
+              <div class="subtitle">Chats Administrados</div>
+            </div>
+            
+            <div class="card glass">
+              <h3>Usuarios Registrados</h3>
+              <p class="data" id="val-users">0</p>
+              <div class="subtitle">En Base de Datos Global</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FILA 3: CEREBRO MARKOVIANO -->
+        <section class="grid-section">
+          <h2 class="section-title">🧠 Red Neuronal (Markov)</h2>
+          <div class="grid-row">
+            <div class="card glass feature-card">
+              <h3>Base de Datos de Aprendizaje</h3>
+              <div class="flex-between align-end">
+                <div>
+                  <p class="data" id="val-markov-msg">0</p>
+                  <div class="subtitle">Mensajes Aprendidos</div>
+                </div>
+                <div class="text-right">
+                  <p class="data-medium"><span id="val-markov-size">0</span> MB</p>
+                  <div class="subtitle">Peso en Disco</div>
+                </div>
+              </div>
+              <div class="glow-effect"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ======================================= -->
+      <!-- PESTAÑA: MAPA GLOBAL -->
+      <!-- ======================================= -->
+      <div id="tab-map" class="tab-content" style="display: none;">
+        <section class="grid-section">
+          <h2 class="section-title">🌍 Monitoreo de Tráfico Mundial</h2>
+          <div class="card glass map-container">
+            <div id="cyber-map"></div>
+            <div class="map-overlay">
+              <h3 id="last-ping-country">Esperando conexiones...</h3>
+              <p id="ping-details">Interceptando encriptación E2E.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ======================================= -->
+      <!-- PESTAÑA: EDITOR DE ARCHIVOS -->
+      <!-- ======================================= -->
+      <div id="tab-editor" class="tab-content" style="display: none;">
+        <section class="grid-section">
+          <h2 class="section-title">📁 Gestor de Archivos (Web OS)</h2>
+          <div class="editor-container glass">
+            <!-- Barra lateral: Árbol de archivos -->
+            <div class="file-tree" id="file-tree">
+              <div class="tree-header">📦 root/</div>
+              <div id="tree-items">Cargando archivos...</div>
+            </div>
+            
+            <!-- Zona de edición -->
+            <div class="code-area">
+              <div class="editor-header">
+                <span id="current-file-name">Ningún archivo seleccionado</span>
+                <button class="save-btn" id="save-file-btn" disabled>💾 Guardar Cambios</button>
+              </div>
+              <textarea id="code-editor" class="code-font" spellcheck="false" disabled></textarea>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ======================================= -->
+      <!-- PESTAÑA: TERMINAL TÁCTICA -->
+      <!-- ======================================= -->
+      <div id="tab-terminal" class="tab-content" style="display: none;">
+        <section class="grid-section">
+          <h2 class="section-title">💻 Consola de Comandos (Shell)</h2>
+          <div class="terminal-container glass">
+            <div class="terminal-output code-font" id="term-out">
+[LumiBOT OS] Shell remoto iniciado.
+Escriba comandos bash/cmd para interactuar con el host.
+------------------------------------------------------
+</div>
+            <div class="terminal-input-line code-font">
+              <span class="prompt">root@lumibot:~#</span>
+              <input type="text" id="term-in" autocomplete="off" spellcheck="false" autofocus>
+            </div>
+          </div>
+        </section>
+      </div>
+
     </main>
 
     <footer>
@@ -104,63 +184,11 @@
     </footer>
   </div>
 
-  <script>
-    async function fetchStats() {
-      try {
-        const res = await fetch('/api/stats');
-        const data = await res.json();
-        
-        // Estado de conexión
-        const orb = document.getElementById('status-orb');
-        const badge = document.getElementById('status-badge');
-        const statusText = document.getElementById('status-text');
-        
-        if (data.status === 'online') {
-          orb.className = 'orb';
-          badge.className = 'status-badge online';
-          statusText.innerText = 'SISTEMA EN LÍNEA';
-        } else {
-          orb.className = 'orb offline';
-          badge.className = 'status-badge offline';
-          statusText.innerText = 'DESCONECTADO (ESCANEAR QR)';
-        }
-
-        // Host
-        document.getElementById('val-cpu-model').innerText = data.hardware.cpuModel;
-        document.getElementById('val-cpu-load').innerText = data.hardware.cpuLoad;
-        document.getElementById('bar-cpu').style.width = data.hardware.cpuLoad + '%';
-        
-        document.getElementById('val-ram-pct').innerText = data.hardware.ramUsagePct;
-        document.getElementById('val-ram-gb').innerText = `${data.hardware.usedGb} GB / ${data.hardware.totalGb} GB`;
-        document.getElementById('bar-ram').style.width = data.hardware.ramUsagePct + '%';
-        
-        // Colores de alerta
-        document.getElementById('bar-ram').style.background = data.hardware.ramUsagePct > 80 ? '#ff3366' : 'var(--accent)';
-        document.getElementById('bar-cpu').style.background = data.hardware.cpuLoad > 80 ? '#ff3366' : 'var(--accent)';
-
-        document.getElementById('val-os').innerText = data.hardware.os;
-        document.getElementById('val-node').innerText = data.hardware.node;
-
-        // Bot
-        document.getElementById('val-uptime').innerText = data.uptime;
-        document.getElementById('val-chats').innerText = data.chats;
-        document.getElementById('val-users').innerText = data.users;
-
-        // Markov
-        document.getElementById('val-markov-msg').innerText = data.markov.messages.toLocaleString();
-        document.getElementById('val-markov-size').innerText = data.markov.sizeMb;
-
-      } catch (err) {
-        console.error('Error sincronizando con el servidor:', err);
-        document.getElementById('status-orb').className = 'orb offline';
-        document.getElementById('status-badge').className = 'status-badge offline';
-        document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN CON DASHBOARD';
-      }
-    }
-
-    // Inicializar y actualizar
-    fetchStats();
-    setInterval(fetchStats, 3000);
-  </script>
+  <!-- Librerías Externas -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Lógica Principal del Web OS -->
+  <script src="app.js"></script>
 </body>
 </html>

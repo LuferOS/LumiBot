@@ -179,6 +179,149 @@ h1 span {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   border-color: rgba(255, 255, 255, 0.15);
+/* TAB NAVIGATION */
+.tabs {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 1rem;
+}
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+.tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.tab-btn.active {
+  color: var(--accent);
+  background: rgba(0, 255, 204, 0.1);
+  box-shadow: inset 0 0 10px rgba(0,255,204,0.1);
+}
+
+/* CYBER MAP */
+.map-container {
+  height: 500px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+#cyber-map {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.map-pulse {
+  animation: mapPulseAnim 2s infinite alternate;
+}
+@keyframes mapPulseAnim {
+  0% { stroke-width: 1; filter: drop-shadow(0 0 5px var(--accent)); }
+  100% { stroke-width: 3; filter: drop-shadow(0 0 15px var(--accent)); }
+}
+.map-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0,0,0,0.8);
+  border: 1px solid var(--accent);
+  padding: 1rem;
+  border-radius: 8px;
+  z-index: 1000;
+}
+.map-overlay h3 { color: var(--accent); font-size: 1rem; }
+.map-overlay p { color: #fff; font-size: 0.85rem; margin-top: 5px; }
+
+/* FILE EDITOR */
+.editor-container {
+  display: flex;
+  height: 600px;
+  padding: 0;
+  overflow: hidden;
+}
+.file-tree {
+  width: 250px;
+  background: rgba(0,0,0,0.4);
+  border-right: 1px solid var(--glass-border);
+  padding: 1rem;
+  overflow-y: auto;
+}
+.tree-header { color: var(--accent); font-weight: bold; margin-bottom: 1rem; }
+.tree-folder { cursor: pointer; color: #fff; padding: 5px 0; font-size: 0.9rem; }
+.tree-file { cursor: pointer; color: var(--text-muted); padding: 5px 0 5px 15px; font-size: 0.85rem; }
+.tree-file:hover, .tree-folder:hover { color: var(--accent); }
+.code-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.editor-header {
+  padding: 10px 20px;
+  background: rgba(0,0,0,0.6);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#current-file-name { color: #fff; font-weight: 500; font-size: 0.9rem; }
+.save-btn {
+  background: rgba(0, 255, 204, 0.2);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.code-font { font-family: 'Fira Code', monospace; }
+#code-editor {
+  flex: 1;
+  background: transparent;
+  color: #a6e22e; /* Verde tipo hacker/monokai */
+  border: none;
+  padding: 20px;
+  resize: none;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  outline: none;
+}
+#code-editor:disabled { color: var(--text-muted); }
+
+/* TERMINAL */
+.terminal-container {
+  height: 500px;
+  background: #000;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.terminal-output {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  color: #00ff00;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.terminal-input-line {
+  display: flex;
+  padding: 10px 15px;
+  background: rgba(20, 20, 20, 0.9);
+  border-top: 1px solid #333;
+}
+.prompt { color: #fff; margin-right: 10px; font-weight: bold; }
+#term-in {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #00ff00;
+  outline: none;
+  font-size: 0.9rem;
 }
 
 .card h3 {
