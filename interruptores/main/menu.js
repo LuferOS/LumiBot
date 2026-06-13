@@ -264,10 +264,15 @@ export default {
         msgPayload.caption = menu;
       }
 
-      await client.sendMessage(m.chat, msgPayload, { quoted: m });
+      try {
+        await client.sendMessage(m.chat, msgPayload, { quoted: m });
+      } catch (mediaError) {
+        console.error("[LUMIBOT DEBUG] Imgur Rate Limit (429) o error de imagen, enviando texto plano:", mediaError.message);
+        await client.sendMessage(m.chat, { text: menu, contextInfo: msgPayload.contextInfo }, { quoted: m });
+      }
       
     } catch (e) {
-      console.error("[LUMIBOT DEBUG] Error en menú:", e);
+      console.error("[LUMIBOT DEBUG] Error crítico en menú:", e);
       await m.reply(`🙄 *Bruh...* literal el menú explotó y no quiso cargar.\n> 🚩 Excusas técnicas: *${e.message}*`);
     }
   }

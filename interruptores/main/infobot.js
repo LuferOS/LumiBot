@@ -91,10 +91,15 @@ export default {
         msgPayload.caption = message
       }
 
-      await client.sendMessage(m.chat, msgPayload, { quoted: m });
+      try {
+        await client.sendMessage(m.chat, msgPayload, { quoted: m });
+      } catch (mediaError) {
+        console.error("[LUMIBOT DEBUG] Imgur Rate Limit (429) o error de imagen, enviando texto plano:", mediaError.message);
+        await client.sendMessage(m.chat, { text: message, contextInfo: msgPayload.contextInfo }, { quoted: m });
+      }
       
     } catch (e) {
-      console.error("[LUMIBOT DEBUG] Error en infobot:", e);
+      console.error("[LUMIBOT DEBUG] Error crítico en infobot:", e);
       return m.reply(`╭⋯ ❌ *AY POR FAVOR* ⋯》\n┊ Me dio dolor de cabeza recordando quién soy.\n┊ Detox: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     }
   }
