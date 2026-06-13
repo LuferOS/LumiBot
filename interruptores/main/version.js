@@ -8,20 +8,20 @@ export default {
       const botSettings = db.settings?.[botId] || {};
       const banner = botSettings.banner || 'https://i.imgur.com/8Q9N49Q.jpeg';
       
-      const versionText = `╭⋯ 💅 *LUMIBOT OVERRIDE: v3.1.0* ⋯》
-┊ ✨ *NOVEDADES Y CORRECCIONES RECIENTES* ✨
+      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v3.1.0* ⋯》
+┊ ✨ *NOTAS DE LA ACTUALIZACIÓN* ✨
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ 🚀 *MEJORAS (UPGRADES):*
-┊ ⊳ *IA Reestructurada:* Lumi volvió a sus raíces de "pick-me girl" gótica, sádica y memera. Ahora tiene comandos de ROL con GIFs ocultos (¡llorará, reirá o te dará una bofetada visual!). 💅
-┊ ⊳ *Gatillo Inteligente:* Se eliminó la aleatoriedad. La IA ahora solo te responderá si le respondes directamente a un mensaje de ella o la etiquetas mencionándola (@Lumi). Menos saturación, más precisión.
-┊ ⊳ *Nuevos juguetes:* Añadidos módulos de Stalking completos usando AlyaCore API (.github, .igstalk, .tiktokstalk).
-┊ ⊳ *Módulo .ss Renacido:* Ya no dependemos del obsoleto Thum.io. Ahora usamos la API privada de AlyaCore para capturas de pantalla ultra-rápidas.
+┊ 🚀 *MEJORAS DEL SISTEMA (UPGRADES):*
+┊ ⊳ *Módulo IA Optimizado:* Se reestructuró la personalidad del chatbot a su comportamiento original (Sádica/Meme). Ahora incluye capacidades de Rol (reacciones con GIFs) integradas.
+┊ ⊳ *Gatillo Inteligente de IA:* Eliminada la respuesta aleatoria. El bot ahora solo analiza y responde a mensajes que lo mencionan directamente o que son respuestas a sus propios mensajes, reduciendo el spam.
+┊ ⊳ *Nuevos Módulos de Extracción:* Añadidos comandos de "Stalking" (.github, .igstalk, .tiktokstalk) con integración a la API de AlyaCore para extraer perfiles completos.
+┊ ⊳ *Módulo de Capturas (SS):* Se reemplazó el proveedor obsoleto (Thum.io) por la red privada de AlyaCore para obtener capturas de pantalla ultra-rápidas y precisas (.ss).
 ┊
 ┊ 🐛 *CORRECCIONES (BUG FIXES):*
-┊ ⊳ *Anti-Baneo WhatsApp:* Se eliminó el uso forzado de \`externalAdReply\` en comandos como .menu y .infobot, previniendo que WhatsApp marque los mensajes con la alerta roja de "Reenviado muchas veces".
-┊ ⊳ *Escudo Anti-Caídas 429:* Si Imgur bloquea al bot por exceso de peticiones, ya no colapsará tu consola. El bot ahora captura el error y te entrega el texto de todos modos.
-┊ ⊳ *Limpieza de Inicio:* El bot ignora todos los mensajes del grupo que se acumularon durante su tiempo offline.
-┊ ⊳ *Fallback IA:* Corrección de silencio mortal. Si falla el envío de un GIF por parte de la IA, su texto siempre llegará a salvo.
+┊ ⊳ *Mitigación de Baneos:* Se eliminó el uso forzado de \`externalAdReply\` en módulos como el menú e infobot, evitando que WhatsApp marque los mensajes como spam ("Reenviado muchas veces").
+┊ ⊳ *Manejo de Errores HTTP 429:* Implementado un escudo contra limitación de tasa (Rate Limiting) en las descargas de banners de Imgur. El bot ahora entrega la respuesta en texto plano sin crashear.
+┊ ⊳ *Prevención de Saturación Inicial:* Al encender, el bot ignorará todos los mensajes que fueron enviados mientras estaba apagado, previniendo ráfagas de procesamiento y caídas por sobrecarga.
+┊ ⊳ *Manejo de Fallos Multimedia:* Implementado un "Fallback" en la IA para asegurar que el texto se entregue intacto incluso si WhatsApp rechaza el envío del GIF de rol.
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
 
       let msgPayload = {};

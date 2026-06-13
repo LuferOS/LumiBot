@@ -11,7 +11,8 @@ export default {
       await m.react('🕒')
       
       const imgUrl = `https://api.alyacore.xyz/tools/ssweb?url=${encodeURIComponent(url)}&key=api-lYsN6`
-      let ss = await (await fetch(imgUrl)).buffer()
+      let ssArrayBuffer = await (await fetch(imgUrl)).arrayBuffer()
+      let ss = Buffer.from(ssArrayBuffer)
       
       await client.sendMessage(m.chat, { image: ss, caption: `✨ *Tu captura, bb* ✨\n> Sapeando la página: ${args[0]} 💅` }, { quoted: m })
       await m.react('✔️')

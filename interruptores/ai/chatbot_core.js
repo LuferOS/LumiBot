@@ -18,8 +18,10 @@ Acciones válidas: laugh (reírse), slap (bofetada), punch (golpear), angry (eno
 
 export default async (client, m, textToMatch) => {
   try {
+    if (m.key?.fromMe || m.sender === client.user.id.split(':')[0] + '@s.whatsapp.net') return;
+
     const isReplyToMe = m.quoted && m.quoted.sender === client.user.id.split(':')[0] + '@s.whatsapp.net';
-    const isMentioningMe = textToMatch.toLowerCase().includes('lumi') || (m.mentionedJid && m.mentionedJid.includes(client.user.id.split(':')[0] + '@s.whatsapp.net'));
+    const isMentioningMe = /\blumi\b/i.test(textToMatch) || (m.mentionedJid && m.mentionedJid.includes(client.user.id.split(':')[0] + '@s.whatsapp.net'));
     
     // Solo responde cuando la llaman o le responden directamente
     if (!isReplyToMe && !isMentioningMe) {
@@ -36,16 +38,16 @@ export default async (client, m, textToMatch) => {
     
     // Obtener contexto de la persona que mandó el último mensaje
     const userHistory = await getUserContext(m.chat, m.sender, 15).catch(() => []);
+    const senderName = m.pushName || 'El usuario';
     let userInfo = '';
     if (userHistory.length > 0) {
-      const senderName = m.pushName || 'El usuario';
-      userInfo = `\n\n[INFO PRIVADA DEL ÚLTIMO USUARIO (${senderName})]\nSuele decir cosas como: "${userHistory.join('", "')}". Aprende su personalidad con esto.`;
+      userInfo = `\n\n[INFO DE QUIEN TE ACABA DE HABLAR (${senderName})]\nSuele decir cosas como: "${userHistory.join('", "')}". Aprende su personalidad con esto para humillarlo.`;
     }
     
     // Crear el texto de consulta (los mensajes del chat)
-    const chatQuery = `[ÚLTIMOS 6 MENSAJES DEL GRUPO]\n${chatContext}${userInfo}\n\nINSTRUCCIÓN: Lee los 6 mensajes anteriores. Elige a 1 o 2 personas de esos mensajes que llamen tu atención y respóndeles a ambos en un solo mensaje de forma sarcástica/amorosa/celosa.`;
+    const chatQuery = `[ÚLTIMOS MENSAJES DEL GRUPO (CONTEXTO)]\n${chatContext}${userInfo}\n\nINSTRUCCIÓN: Lee el contexto para entender de qué hablan, pero TU RESPUESTA DEBE ESTAR DIRIGIDA EXPLÍCITAMENTE A "${senderName}", quien acaba de mencionarte o responderte. Búrlate de lo que dijo o de su forma de ser.`;
 
-    console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando a quién responder del bloque de 6 mensajes...`));
+    console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando respuesta para ${senderName}...`));
 
     const url = `https://api.alyacore.xyz/ai/gptprompt?text=${encodeURIComponent(chatQuery)}&prompt=${encodeURIComponent(systemPrompt)}&key=api-lYsN6`;
     
