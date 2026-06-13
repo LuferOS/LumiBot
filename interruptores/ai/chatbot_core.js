@@ -32,7 +32,7 @@ export default async (client, m, textToMatch) => {
     const chatContext = rawContext.map(msg => `[${msg.sender_name || 'Alguien'}]: ${msg.message_text}`).join('\n');
     
     // Obtener contexto de la persona que mandó el último mensaje
-    const userHistory = await getUserContext(m.chat, m.sender, 5).catch(() => []);
+    const userHistory = await getUserContext(m.chat, m.sender, 15).catch(() => []);
     let userInfo = '';
     if (userHistory.length > 0) {
       const senderName = m.pushName || 'El usuario';
