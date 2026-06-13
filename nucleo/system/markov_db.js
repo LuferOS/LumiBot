@@ -137,6 +137,22 @@ export function getRecentContext(chatId, limit = 5) {
 }
 
 /**
+ * Obtiene el contexto histórico específico de un usuario para que la IA sepa cómo habla.
+ */
+export function getUserContext(chatId, senderJid, limit = 10) {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT message_text FROM messages WHERE chat_id = ? AND sender_jid = ? AND message_text NOT LIKE '[Envió %' ORDER BY timestamp DESC LIMIT ?`,
+      [chatId, senderJid, limit],
+      (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows.map(r => r.message_text));
+      }
+    );
+  });
+}
+
+/**
  * Obtiene mensajes aleatorios del chat de cualquier fecha en el pasado.
  */
 export function getRandomQuotes(chatId, limit = 3) {

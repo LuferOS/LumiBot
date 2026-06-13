@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { getRecentContext } from '../../nucleo/system/markov_db.js';
+import { getRecentContext, getUserContext } from '../../nucleo/system/markov_db.js';
 
 const systemPrompt = `Eres Lumi, una chica adolescente/adulta sarcástica, diva, amante de los memes y EXTREMADAMENTE celosa. 
 REGLAS ESTRICTAS:
@@ -31,8 +31,16 @@ export default async (client, m, textToMatch) => {
     // Formatear el contexto para la IA
     const chatContext = rawContext.map(msg => `[${msg.sender_name || 'Alguien'}]: ${msg.message_text}`).join('\n');
     
+    // Obtener contexto de la persona que mandó el último mensaje
+    const userHistory = await getUserContext(m.chat, m.sender, 5).catch(() => []);
+    let userInfo = '';
+    if (userHistory.length > 0) {
+      const senderName = m.pushName || 'El usuario';
+      userInfo = `\n\n[INFO PRIVADA SOBRE QUIEN HABLA]\n${senderName} suele decir cosas como: "${userHistory.join('", "')}". Usa esto para juzgarlo(a) o tratarlo(a).`;
+    }
+    
     // Crear el texto de consulta
-    const query = `[CONTEXTO DEL CHAT RECIENTE]\n${chatContext}\n\nResponde como Lumi al último mensaje de la conversación. (Si no vale la pena, di IGNORE).`;
+    const query = `[CONTEXTO DEL CHAT RECIENTE]\n${chatContext}${userInfo}\n\nResponde como Lumi al último mensaje de la conversación. (Si no vale la pena, di IGNORE).`;
 
     const url = `https://api.alyacore.xyz/ai/chatgpt?text=${encodeURIComponent(query)}&system=${encodeURIComponent(systemPrompt)}&key=api-lYsN6`;
     
