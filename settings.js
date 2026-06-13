@@ -31,8 +31,8 @@ global.links = {
 }
 
 // Mantenemos la variable 'miku' para no romper dependencias, pero el contenido es nuestro.
-global.miku = { 
-  contextInfo: { 
+global.miku = {
+  contextInfo: {
     externalAdReply: {
       title: "LumiBOT",
       body: global.dev,

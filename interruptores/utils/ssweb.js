@@ -6,8 +6,13 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       if (!args[0]) return m.reply('🙄 *Bruh, me pasas el link o te lo adivino?* 💅\n> Literal necesito una URL para tomarle captura.')
+      let url = args[0]
+      if (!url.startsWith('http')) url = 'https://' + url
       await m.react('🕒')
-      let ss = await (await fetch(`https://image.thum.io/get/fullpage/${args[0]}`)).buffer()
+      
+      const imgUrl = `https://api.alyacore.xyz/tools/ssweb?url=${encodeURIComponent(url)}&key=api-lYsN6`
+      let ss = await (await fetch(imgUrl)).buffer()
+      
       await client.sendMessage(m.chat, { image: ss, caption: `✨ *Tu captura, bb* ✨\n> Sapeando la página: ${args[0]} 💅` }, { quoted: m })
       await m.react('✔️')
     } catch (error) {

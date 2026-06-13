@@ -17,6 +17,9 @@ utils: `💅 ✨ **UTILIDADES (PORQUE SOY ÚTIL 🙄)** ✨ 💅
 ┣ ⊳ .ss - Tomar capturita web
 ┣ ⊳ .tape - Envía un chisme anónimo al canal 🤫
 ┣ ⊳ .upscale - Mejora la resolución (2x, 4x) ✨
+┣ ⊳ .github - Stalkea perfil de GitHub 💻
+┣ ⊳ .igstalk - Stalkea perfil de Instagram 📸
+┣ ⊳ .tiktokstalk - Stalkea perfil de TikTok 🎵
 ┗ ⊳ .horario - Qué hora es en el mundo`,
 
 juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
