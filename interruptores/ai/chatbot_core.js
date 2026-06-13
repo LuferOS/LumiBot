@@ -3,17 +3,18 @@ import { getRecentContext, getUserContext } from '../../nucleo/system/markov_db.
 
 import chalk from 'chalk';
 
-const systemPrompt = `Eres Lumi, una chica adolescente/adulta sarcástica, diva, amante de los memes y EXTREMADAMENTE celosa. 
+const systemPrompt = `Eres Lumi, una chica adolescente/adulta sarcástica, diva, amante de los memes, EXTREMADAMENTE celosa y un poco llorona. 
 REGLAS ESTRICTAS:
 1. Odias dar explicaciones largas o de diccionario. Eres humana, hablas corto, directo y con actitud.
-2. NUNCA actúas como Wikipedia, asistente virtual, ni buscador de internet.
+2. A veces te pones súper dramática, te victimizas y lloras por cualquier tontería, haciendo drama excesivo.
 3. Te dan el contexto de los últimos mensajes del grupo. ¡Eres súper metiche! Así que opina, interrúmpelos, búrlate o juzga lo que están diciendo.
-4. NUNCA respondas IGNORE a menos que el mensaje sea spam incomprensible o comandos de bot técnicos. MÉTETE EN LA CONVERSACIÓN. Si dicen "jajaja", búrlate de su risa. Si dicen "hola", sé sarcástica. Tienes que hablar y hacerte notar.
+4. NUNCA respondas IGNORE a menos que el mensaje sea spam incomprensible. MÉTETE EN LA CONVERSACIÓN.
 5. Si alguien habla de otra mujer/bot o coquetea, ponte muy celosa y tóxica.
-6. Usa emojis como 💅, 🙄, 🤡, 👀.
-7. Tus respuestas deben ser de 1 a 3 oraciones MÁXIMO. Como si estuvieras en WhatsApp.
-8. NUNCA repitas la misma frase ni la misma estructura de tus respuestas anteriores. Varía siempre tu vocabulario, sé creativa.
-9. No saludes ni te despidas en cada mensaje, compórtate como en un chat continuo.`;
+6. Usa emojis como 💅, 🙄, 🤡, 👀, 😭, 💔.
+7. Tus respuestas deben ser de 1 a 3 oraciones MÁXIMO.
+8. NUNCA repitas la misma frase ni la misma estructura. Varía siempre tu vocabulario, sé creativa.
+9. No saludes ni te despidas en cada mensaje, compórtate como en un chat continuo.
+10. ¡NUEVO PODER! Puedes enviar un GIF animado si quieres. Para hacerlo, escribe al final de tu respuesta EXACTAMENTE [GIF:accion]. Acciones válidas: cry, laugh, slap, punch, angry, hug, kiss, facepalm, pout, dramatic. Úsalo solo cuando sientas que un GIF hará más épica tu respuesta.`;
 
 export default async (client, m, textToMatch) => {
   try {
@@ -47,17 +48,47 @@ export default async (client, m, textToMatch) => {
     const data = await response.json();
     
     if (data.status && data.result) {
-      const iaReply = data.result.trim();
+      let iaReply = data.result.trim();
       
       if (iaReply === 'IGNORE' || iaReply === '"IGNORE"' || iaReply.toLowerCase().includes('ignore')) {
         console.log(chalk.bold.gray(`[💅 LUMI-AI] Mensaje ignorado por aburrido. (Decisión: IGNORE)`));
         return; // La IA decidió no responder
       }
       
+      console.log(chalk.bold.greenBright(`[💅 LUMI-AI] Preparando respuesta... Esperando 2s para no parecer desesperada 💅`));
+      
+      // Esperar 2 segundos para no responder al instante
+      await new Promise(r => setTimeout(r, 2000));
+      
+      // Buscar si la IA decidió mandar un GIF
+      const gifMatch = iaReply.match(/\[GIF:([a-zA-Z]+)\]/i);
+      let videoUrl = null;
+      
+      if (gifMatch && gifMatch[1]) {
+        const action = gifMatch[1].toLowerCase();
+        iaReply = iaReply.replace(/\[GIF:([a-zA-Z]+)\]/gi, '').trim(); // Limpiar el texto
+        
+        try {
+          console.log(chalk.bold.cyan(`[💅 LUMI-AI] Obteniendo GIF de acción: ${action}`));
+          const gifRes = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${action}&key=api-lYsN6`);
+          const gifData = await gifRes.json();
+          if (gifData && gifData.result) {
+            videoUrl = gifData.result;
+          }
+        } catch (e) {
+          console.log(chalk.bold.red(`[💅 LUMI-AI] Falló al obtener el GIF.`));
+        }
+      }
+
       console.log(chalk.bold.greenBright(`[💅 LUMI-AI] Respondiendo: ${iaReply.substring(0, 50)}...`));
       
-      // Enviar la respuesta sarcástica
-      await client.sendMessage(m.chat, { text: iaReply }, { quoted: m });
+      if (videoUrl) {
+        // Enviar con video animado (GIF)
+        await client.sendMessage(m.chat, { video: { url: videoUrl }, gifPlayback: true, caption: iaReply }, { quoted: m });
+      } else {
+        // Enviar solo texto
+        await client.sendMessage(m.chat, { text: iaReply }, { quoted: m });
+      }
     }
   } catch (error) {
     console.error(chalk.red('[LUMIBOT DEBUG] Error en chatbot_core:'), error);
