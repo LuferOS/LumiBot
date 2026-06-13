@@ -9,6 +9,7 @@ import initDB from './nucleo/system/initDB.js';
 import antilink from './interruptores/antilink.js';
 import level from './interruptores/level.js';
 import { getGroupAdmins } from './nucleo/message.js';
+import { insertMessage } from './nucleo/system/markov_db.js';
 
 seeCommands();
 
@@ -163,7 +164,7 @@ export default async (client, m) => {
   const chat = global.db.data.chats[m.chat] || {}
   const settings = global.db.data.settings[botJid] || {}
   const user = global.db.data.users[sender] ||= {}
-  const users = chat.users[sender] || {}
+  const users = chat.users[sender] ||= {}
   const pushname = m.pushName || 'Desconocido';
   
   let groupMetadata = null
@@ -192,8 +193,13 @@ export default async (client, m) => {
 
   const today = new Date().toLocaleDateString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).split('/').reverse().join('-');
   if (!users.stats) users.stats = {};
-  if (!users.stats[today]) users.stats[today] = { msgs: 0, cmds: 0 };
+  if (!users.stats[today]) users.stats[today] = { msgs: 0, cmds: 0, audios: 0, stickers: 0, media: 0 };
   users.stats[today].msgs++;
+  
+  // ⚡ LUMIBOT OVERRIDE: Tracking avanzado de multimedia
+  if (m.type === 'audioMessage') users.stats[today].audios = (users.stats[today].audios || 0) + 1;
+  if (m.type === 'stickerMessage') users.stats[today].stickers = (users.stats[today].stickers || 0) + 1;
+  if (m.type === 'imageMessage' || m.type === 'videoMessage') users.stats[today].media = (users.stats[today].media || 0) + 1;
   
   const rawBotname = settings.namebot || 'LuferOS';
   const tipo = settings.type || 'Sub';
@@ -235,7 +241,29 @@ export default async (client, m) => {
     }
   }
 
-  if (!match) return;
+  if (!match) {
+    if (chat.markov) {
+      let markovText = textToMatch;
+      if (!markovText) {
+        if (m.type === 'audioMessage') markovText = '[Envió un Audio]';
+        else if (m.type === 'stickerMessage') markovText = '[Envió un Sticker]';
+        else if (m.type === 'imageMessage') markovText = '[Envió una Imagen]';
+        else if (m.type === 'videoMessage') markovText = '[Envió un Video]';
+      }
+
+      if (markovText) {
+        insertMessage(m.chat, sender, pushname, markovText, Date.now()).catch(() => {});
+        
+        // Probabilidad de respuesta pasiva (45%)
+        if (Math.random() < 0.45) {
+          import('./interruptores/main/markov_core.js').then((module) => {
+            module.default.run(client, m, markovText);
+          }).catch(err => console.error('[LUMIBOT DEBUG] Error cargando markov_core:', err));
+        }
+      }
+    }
+    return;
+  }
   let usedPrefix = (match[0] || [])[0] || '';
   let args = textToMatch.slice(usedPrefix.length).trim().split(" ");
   let command = (args.shift() || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -293,7 +321,7 @@ export default async (client, m) => {
   
   if (!isOwners && settings.self) return;  
   if (m.chat && !m.chat.endsWith('g.us')) {
-    const allowedInPrivateForUsers = ['allmenu', 'help', 'menu', 'infobot', 'botinfo', 'invite', 'invitar', 'ping', 'speed', 'p', 'status', 'estado', 'report', 'reporte', 'sug', 'suggest', 'token', 'join', 'unir', 'logout', 'reload', 'self', 'setbanner', 'setbotbanner', 'setchannel', 'setbotchannel', 'setbotcurrency', 'setcurrency', 'seticon', 'setboticon', 'setlink', 'setbotlink', 'setbotname', 'setname', 'setbotowner', 'setowner', 'setimage', 'setpfp', 'setprefix', 'setbotprefix', 'setstatus', 'setusername', 'code', 'qr']
+    const allowedInPrivateForUsers = ['allmenu', 'help', 'menu', 'infobot', 'botinfo', 'invite', 'invitar', 'ping', 'speed', 'p', 'status', 'estado', 'report', 'reporte', 'sug', 'suggest', 'token', 'join', 'unir', 'logout', 'reload', 'self', 'setbanner', 'setbotbanner', 'setchannel', 'setbotchannel', 'setbotcurrency', 'setcurrency', 'seticon', 'setboticon', 'setlink', 'setbotlink', 'setbotname', 'setname', 'setbotowner', 'setowner', 'setimage', 'setpfp', 'setprefix', 'setbotprefix', 'setstatus', 'setusername', 'code', 'qr', 'tape', 'confesar', 'secreto', 'chismesito', 'funar', 'chisme', '8ball', 'ruina', 'ruleta', 'gemelo', 'simp', 'dox', 'letra', 'ship', 'xnxx', 'xvideos', 'xvideo', 'waifunsfw', 'calata', 'boobs', 'tetas', 'bigboobs', 'bigtetas', 'pussy', 'vagina', 'bikini', 'spank', 'nalgada', 'azotar', 'undress', 'desvestir', 'quitarropa', 'yuri', 'tijeras', 'sixnine', '69', 'anal', 'fuck', 'follar', 'coger', 'cummouth', 'correrboca', 'suckboobs', 'chuparpechos', 'chupartetas', 'cumshot', 'lickpussy', 'lamervagina', 'comer', 'lickdick', 'chupar', 'mamar', 'lickass', 'lamerculo', 'comerculo', 'handjob', 'paja', 'pajear', 'grope', 'manosear', 'tocar', 'cum', 'correrse', 'venirse', 'fingering', 'dedos', 'meterdedos', 'creampie', 'rellenar', 'facesitting', 'sentarsecara', 'futanari', 'futa', 'pegging', 'bondage', 'amarrar', 'atar', 'deepthroat', 'gargantaprofunda', 'thighjob', 'rusamuslos', 'yaoi', 'bukkake', 'orgy', 'orgia', 'fiesta', 'grabboobs', 'agarrarpechos', 'blowjob', 'mamada', 'boobjob', 'rusa', 'pajapechos', 'fap', 'masturbarse', 'footjob', 'pajapies', 'squirting', 'squirt', 'chorrear', 'upscale', 'mejorar', 'escala', 'gemini', 'g', 'copilot', 'c', 'chatgpt', 'ia', 'lumi', 'brat', 'bratv', 'verdad', 'reto', 'compatibilidad', 'amor', 'lovemeter', 'suerte'];
     if (!global.owner.map(num => num + '@s.whatsapp.net').includes(sender) && !allowedInPrivateForUsers.includes(command)) return;
   }
   
@@ -331,6 +359,15 @@ export default async (client, m) => {
   
   try {
     await client.readMessages([m.key]);
+    
+    // ⚡ LUMIBOT OVERRIDE: Log extendido de Ejecución
+    if (m.message || !consolePrimary || consolePrimary === botJid) {
+      const h = chalk.bold.cyan('╭⋯ ⚙️ EJECUCIÓN NÚCLEO ⋯》');
+      const t = chalk.bold.cyan('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》');
+      const v = chalk.bold.cyan('┊');
+      console.log(`\n${h}\n${chalk.bold.yellow(`${v} Módulo: ${chalk.whiteBright((cmdData.pluginName || 'global') + '.js')}`)}\n${chalk.bold.blueBright(`${v} Estado: ${chalk.whiteBright('⏳ Procesando y esperando respuestas...')}`)}\n${t}`);
+    }
+
     user.usedcommands = (user.usedcommands || 0) + 1;
     settings.commandsejecut = (settings.commandsejecut || 0) + 1;
     users.usedTime = new Date();
@@ -338,8 +375,17 @@ export default async (client, m) => {
     user.exp = (user.exp || 0) + Math.floor(Math.random() * 100);
     user.name = m.pushName;
     users.stats[today].cmds++;
+    
     await cmdData.run(client, m, args, usedPrefix, command, text);
+
+    if (m.message || !consolePrimary || consolePrimary === botJid) {
+      console.log(`\n${chalk.bold.green('╭⋯ ✅ OPERACIÓN EXITOSA ⋯》')}\n${chalk.bold.green('┊')} ${chalk.bold.white(`Respuestas enviadas por ${cmdData.pluginName || 'global'}.js`)}\n${chalk.bold.green('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》')}`);
+    }
+
   } catch (error) {
+    if (m.message || !consolePrimary || consolePrimary === botJid) {
+      console.log(`\n${chalk.bold.red('╭⋯ ❌ ERROR DE NÚCLEO ⋯》')}\n${chalk.bold.red('┊')} ${chalk.bold.white(`Fallo en ${cmdData.pluginName || 'global'}.js: ${error.message}`)}\n${chalk.bold.red('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》')}`);
+    }
     await client.sendMessage(m.chat, { text: `╭⋯ ❌ *ERROR CRÍTICO DEL NÚCLEO* ⋯》\n┊ El procesador colapsó ejecutando este módulo.\n┊ ⊳ *Detalles:* ${error.message || error}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》` }, { quoted: m });
   }
   level(m);

@@ -3,7 +3,166 @@ import { getDevice } from '@whiskeysockets/baileys';
 import fs from 'fs';
 import axios from 'axios';
 import moment from 'moment-timezone';
-import { bodyMenu, menuObject } from '../../nucleo/commands.js';
+
+const menuObject = {
+utils: `💅 ✨ **UTILIDADES (PORQUE SOY ÚTIL 🙄)** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .letra - Letras aesthetic ✨
+┣ ⊳ .dox - Doxear a alguien (falso) 💻
+┣ ⊳ .simp - Mide tu nivel de simp 💖
+┣ ⊳ .clima - Pa saber si te vas a mojar
+┣ ⊳ .translate - Por si no masticas inglés
+┣ ⊳ .enhance - Arregla tus fotos pixeladas 🤡
+┣ ⊳ .read - Sapear mensajes ViewOnce 👀
+┣ ⊳ .ss - Tomar capturita web
+┣ ⊳ .tape - Envía un chisme anónimo al canal 🤫
+┣ ⊳ .upscale - Mejora la resolución (2x, 4x) ✨
+┗ ⊳ .horario - Qué hora es en el mundo`,
+
+juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .funar - Insultar a alguien 💅
+┣ ⊳ .chisme - Te cuento un secreto turbio ☕
+┣ ⊳ .ship - Emparejar a dos en el grupo 💖
+┣ ⊳ .gemelo - Encuentra a tu gemel@ perdid@ 👯‍♀️
+┣ ⊳ .ruina - Lee cómo arruinarás tu vida 🔮
+┣ ⊳ .8ball - Pregúntale a la bola de cristal 🎱
+┣ ⊳ .verdad - Verdad incómoda 🎯
+┣ ⊳ .reto - Retos extremos 🥵
+┣ ⊳ .compatibilidad - Medidor de amor 💖
+┣ ⊳ .suerte - Descubre tu suerte hoy 🍀
+┗ ⊳ .ruleta - Ruleta rusa, sobrevive si puedes 🔫`,
+
+anime: `💅 ✨ **REACCIONES ANIME Y SFW 🌸** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .hug - Abrazar a alguien 🤗
+┣ ⊳ .kiss - Dar un besito 😘
+┣ ⊳ .slap - Bofetada merecida 👋
+┣ ⊳ .punch - Dar un puñetazo 👊
+┣ ⊳ .cry - Llorar dramáticamente 😭
+┣ ⊳ .pat - Acariciar la cabeza 🥺
+┣ ⊳ .kill - Eliminar a alguien 💀
+┣ ⊳ .dance - Bailar con estilo 💃
+┣ ⊳ .bite - Morder a alguien 🦷
+┣ ⊳ .sleep - A mimir 😴
+┣ ⊳ .laugh - Reírse sin parar 😂
+┣ ⊳ .cuddle - Acurrucarse 🥰
+┣ ⊳ .blush - Sonrojarse 😳
+┣ ⊳ .angry - Estar enojad@ 😠
+┣ ⊳ .bored - Morir de aburrimiento 🥱
+┣ ⊳ .scared - Estar asustad@ 😨
+┣ ⊳ .shy - Sentir timidez 👉👈
+┣ ⊳ .smile - Sonreír bonito 😊
+┣ ⊳ .bath - Bañarse (ya toca) 🛁
+┣ ⊳ .wave - Saludar 👋
+┣ ⊳ .drunk - Estar super ebri@ 🍻
+┣ ⊳ .eat - Comer algo rico 🍔
+┣ ⊳ .facepalm - Vergüenza ajena 🤦‍♀️
+┣ ⊳ .love - Puro amor 💖
+┣ ⊳ .wink - Guiñar el ojo 😉
+┣ ⊳ .highfive - Chocar los cinco 🙌
+┣ ⊳ .spit - Escupir a alguien 💦
+┣ ⊳ .walk - Dar un paseo 🚶‍♀️
+┣ ⊳ .smoke - Fumar (no lo hagan) 🚬
+┣ ⊳ .bleh - Sacar la lengua 😛
+┣ ⊳ .poke - Dar un toquecito 👉
+┣ ⊳ .clap - Aplaudir 👏
+┣ ⊳ .lick - Lamer 👅
+┣ ⊳ .pout - Hacer pucheros 😤
+┣ ⊳ .think - Pensar muy fuerte 🤔
+┣ ⊳ .bullying - Hacer bullying 😈
+┣ ⊳ .seduce - Seducir 😏
+┣ ⊳ .handhold - Tomar de la mano 🤝
+┣ ⊳ .peek - Espiar 👀
+┣ ⊳ .comfort - Consolar 🥺
+┣ ⊳ .thinkhard - Pensar durísimo 🤯
+┣ ⊳ .curious - Ser curios@ 🧐
+┣ ⊳ .sniff - Olfatear 👃
+┣ ⊳ .stare - Mirar fijamente 👁️👁️
+┣ ⊳ .trip - Tropezar 🥴
+┣ ⊳ .snuggle - Acurrucarse tierno 🤗
+┣ ⊳ .dramatic - Hacer drama 🎭
+┣ ⊳ .cold - Tener muchísimo frío 🥶
+┣ ⊳ .impregnate - Embarazar mágico 🤰
+┣ ⊳ .kisscheek - Beso en la mejilla 💋
+┣ ⊳ .sing - Cantar a todo pulmón 🎤
+┣ ⊳ .tickle - Hacer cosquillas 🤗
+┣ ⊳ .scream - Gritar de la nada 😱
+┣ ⊳ .push - Empujar fuertemente 🫸
+┣ ⊳ .nope - Decir que NO 🙅‍♀️
+┣ ⊳ .jump - Saltar de alegría 🦘
+┣ ⊳ .heat - Tener calor 🥵
+┣ ⊳ .gaming - Jugar videojuegos 🎮
+┣ ⊳ .draw - Dibujar bonito 🎨
+┣ ⊳ .call - Llamar por teléfono 📞
+┣ ⊳ .step - Pisotear 👢
+┣ ⊳ .smug - Presumir 😏
+┣ ⊳ .cringe - Dar cringe 😬
+┗ ⊳ .bonk - Dar un zape 🔨`,
+
+nsfw: `💅 ✨ **ZONA +18 (BAJO TU PROPIO RIESGO 😈)** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .xnxx - Descargar de XNXX 🎬
+┣ ⊳ .xvideos - Descargar de XVideos 🎬
+┣ ⊳ .waifunsfw - Waifus sin censura 🔞
+┣ ⊳ .tetas - Imagínate... 🍒
+┣ ⊳ .pussy - Solo para valientes 🐱
+┣ ⊳ .bikini - Fotos en traje de baño 👙
+┣ ⊳ .calata - Imágenes ricolinas 🔥
+┣ ⊳ .spank - nalgada 🍑👋
+┣ ⊳ .undress - encuerar 👗
+┣ ⊳ .yuri - tijeras ✂️
+┣ ⊳ .sixnine - hacer un 69 🔄
+┣ ⊳ .anal - anal 🚪
+┣ ⊳ .fuck - coger 👉👌
+┣ ⊳ .cummouth - corrida en boca 👄💦
+┣ ⊳ .suckboobs - chupar tetas 🍒
+┣ ⊳ .cumshot - corrida 💦
+┣ ⊳ .lickpussy - lamer un coño 🐱
+┣ ⊳ .lickdick - lamer polla 🍆
+┣ ⊳ .lickass - lamer culo 🍑
+┣ ⊳ .handjob - paja manual 🖐️
+┣ ⊳ .grope - nalgas 👐
+┣ ⊳ .cum - violar 💦💦
+┣ ⊳ .fingering - dedear ✌️
+┣ ⊳ .creampie - corrida interna 🦃
+┣ ⊳ .facesitting - sentarse en la cara 🪑
+┣ ⊳ .futanari - hermafrodita hentai 🍌👧
+┣ ⊳ .pegging - penetración con arnés 🏇
+┣ ⊳ .bondage - ataduras eróticas ⛓️
+┣ ⊳ .deepthroat - garganta profunda 🗣️
+┣ ⊳ .thighjob - sexo entre muslos 🦵
+┣ ⊳ .yaoi - hentai gay masculino 👨‍❤️‍👨
+┣ ⊳ .bukkake - eyaculación múltiple sobre alguien 🚿
+┣ ⊳ .orgy - orgía 🎊
+┣ ⊳ .grabboobs - tetas 🍒
+┣ ⊳ .blowjob - mamar 😮🍆
+┣ ⊳ .boobjob - rusa 🍒🍆
+┣ ⊳ .fap - paja 🤚
+┣ ⊳ .footjob - paja con los pies 🦶
+┗ ⊳ .squirting - Lluvia 🌧️`,
+
+ai: `💅 ✨ **INTELIGENCIA ARTIFICIAL 🧠** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .chatgpt / .ia / .lumi - Habla con ChatGPT 🤖
+┣ ⊳ .gemini / .g - Habla con Gemini ✨
+┣ ⊳ .copilot / .c - Habla con Copilot 💻
+┗ ⊳ .markov on/off - IA Pasiva de Grupo 🧠`,
+
+stickers: `💅 ✨ **STICKERS Y EDICIÓN 🎨** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .brat - Crea un sticker estilo Brat 🟩
+┗ ⊳ .bratv - Crea un sticker animado Brat 🟩🎬`
+};
+
+const bodyMenu = `
+╭⋯ ✧ $botname ✧ ⋯》
+┊ ⊳ *Operativo:* $sender
+┊ ⊳ *Módulo:* $cat
+┊ ⊳ *Hora:* $tempo
+┊ ⊳ *Uptime:* $uptime
+┊ ⊳ *Usuarios:* $users
+╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
 
 function normalize(text = '') {
   text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
@@ -44,14 +203,14 @@ export default {
       const alias = {
         anime: ['anime', 'reacciones'],
         downloads: ['downloads', 'descargas'],
-        economia: ['economia', 'economy', 'eco'],
-        gacha: ['gacha', 'rpg'],
         grupo: ['grupo', 'group'],
         nsfw: ['nsfw', '+18'],
         profile: ['profile', 'perfil'],
         sockets: ['sockets', 'bots'],
         stickers: ['stickers', 'sticker'],
-        utils: ['utils', 'utilidades', 'herramientas']
+        utils: ['utils', 'utilidades', 'herramientas'],
+        juegos: ['juegos', 'salseo', 'juego'],
+        ai: ['ai', 'ia', 'bot']
       };
       
       const input = normalize(args[0] || '');
@@ -60,12 +219,12 @@ export default {
       const category = cat ? `[ Módulo: ${cat.toUpperCase()} ]` : '[ SISTEMA CENTRAL LUMIBOT ]';
       
       if (args[0] && !cat) {      
-        return m.reply(`╭⋯ ❌ *LUMIBOT - ERROR DE SINTAXIS* ⋯》\n┊ El módulo *${args[0]}* no está registrado.\n┊ ⊳ Módulos activos: *${Object.keys(alias).join(', ')}*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+        return m.reply(`🙄 *Bruh*... literal ese módulo *${args[0]}* ni existe o te lo inventaste.\n> 💅 Módulos reales: *${Object.keys(alias).join(', ')}*`);
       }
       
       const sections = menuObject || {};
       const content = cat ? String(sections[cat] || '') : Object.values(sections).map(s => String(s || '')).join('\n\n');
-      let menu = bodyMenu ? String(bodyMenu || '') + '\n\n' + content : content;
+      let menu = bodyMenu + '\n\n' + content;
       
       const replacements = {
         $owner: owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? db.users?.[owner]?.name || owner.split('@')[0] : owner) : 'LuferOS',
@@ -92,11 +251,7 @@ export default {
         contextInfo: {
           mentionedJid: [m.sender],
           isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: canalId,
-            serverMessageId: 0,
-            newsletterName: canalName
-          }
+          forwardingScore: 999
         }
       };
 
@@ -122,7 +277,7 @@ export default {
       
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en menú:", e);
-      await m.reply(`╭⋯ ❌ *LUMIBOT OVERRIDE* ⋯》\n┊ Fallo en la renderización gráfica.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+      await m.reply(`🙄 *Bruh...* literal el menú explotó y no quiso cargar.\n> 🚩 Excusas técnicas: *${e.message}*`);
     }
   }
 };

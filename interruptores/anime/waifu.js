@@ -6,17 +6,34 @@ export default {
   run: async (client, m, args, usedPrefix, command, text) => {
     try {
       await m.react('🕒')
-      let mode = db.data.chats[m.chat]?.nsfw ? 'nsfw' : 'sfw'
-      let res = await fetch(`https://api.waifu.pics/${mode}/${command}`)
-      if (!res.ok) return
-      let json = await res.json()
-      if (!json.url) return
-      let img = Buffer.from(await (await fetch(json.url)).arrayBuffer())
-      await client.sendFile(m.chat, img, 'thumbnail.jpg', `💙 Aquí tienes tu *${command.toUpperCase()}* 💙^•ﻌ•^💙`, m, global.miku)
+      let mode = global.db.data.chats[m.chat]?.nsfw ? 'nsfw' : 'sfw'
+      let json, imgUrl;
+      
+      try {
+        let res = await fetch(`https://api.waifu.pics/${mode}/${command}`, { timeout: 4000 })
+        if (!res.ok) throw new Error('API 1 falló');
+        json = await res.json()
+        imgUrl = json.url;
+      } catch (err1) {
+        if (command === 'waifu') {
+          // Fallback a waifu.im
+          let res2 = await fetch(`https://api.waifu.im/search/?included_tags=waifu${mode === 'nsfw' ? '&is_nsfw=true' : '&is_nsfw=false'}`);
+          if (!res2.ok) throw new Error('API 2 también falló');
+          let json2 = await res2.json();
+          imgUrl = json2.images?.[0]?.url;
+        } else {
+          throw err1; // Si no es waifu, no hay fallback acá, tira error normal
+        }
+      }
+
+      if (!imgUrl) throw new Error('Ninguna API devolvió imagen 🤡');
+      
+      let img = Buffer.from(await (await fetch(imgUrl)).arrayBuffer())
+      await client.sendFile(m.chat, img, 'thumbnail.jpg', `✨ Aquí tienes tu *${command.toUpperCase()}* literal arte puro 💅`, m, global.miku)
       await m.react('✔️')
     } catch (e) {
       await m.react('✖️')
-      await m.reply(`💙 An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`🙄 *Bruh, literal las APIs se murieron* 💅\n\nNo pude sacar tu *${command}* porque el servidor está re caído.\n\n> 🚩 Excusas técnicas: *${e.message}*`)
     }
   },
 }

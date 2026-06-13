@@ -79,12 +79,7 @@ export default {
       let msgPayload = {
         contextInfo: {
           mentionedJid: [owner, m.sender].filter(Boolean),
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: canalId,
-            serverMessageId: 0, // Se recomienda numérico para Baileys
-            newsletterName: canalName
-          }
+          isForwarded: true
         }
       }
 

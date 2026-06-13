@@ -9,11 +9,13 @@ import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 import readlineSync from "readline-sync";
+import dns from "dns";
 import os from "os";
 import { smsg } from "./nucleo/message.js";
 import db from "./nucleo/system/database.js";
 import { startSubBot } from './nucleo/subs.js';
 import { exec } from "child_process";
+import { startServer } from './nucleo/system/server.js';
 
 const log = {
   info: (msg) => console.log(chalk.bgCyan.black.bold(` INFO `), chalk.cyanBright(msg)),
@@ -177,13 +179,22 @@ async function startBot() {
         exec("rm -rf ./Sessions/Owner/*");
         process.exit(1);
       } else {
-        reconexion++;
-        if (reconexion > intentos) {
-          log.error(`Fallo crítico. Límite de reconexión excedido.`);
-          process.exit(1);
+        const isOnline = await new Promise(resolve => {
+          dns.resolve('www.google.com', (err) => {
+            resolve(!err);
+          });
+        });
+
+        if (!isOnline) {
+          log.warn(`[🛡️ VERIFICADOR DE RED] Sin conexión a internet. Reintentando en 10s...`);
+          setTimeout(startBot, 10000);
+          return;
         }
-        log.warn(`Enlace caído (Cod: ${reason}). Reconectando motor...`);
-        setTimeout(startBot, 3000);
+
+        reconexion++;
+        log.warn(`Enlace caído (Cod: ${reason}). Intento ${reconexion}. Reconectando en 10s...`);
+        // Sin process.exit() para evitar que el bot se apague definitivamente
+        setTimeout(startBot, 10000);
       }
     }
 
@@ -229,6 +240,7 @@ cleanCache();
   global.loadDatabase();
   console.log(chalk.gray('[+] Base de datos sincronizada.'));
   await startBot();
+  startServer();
 })();
 
 process.on('uncaughtException', (err) => {});

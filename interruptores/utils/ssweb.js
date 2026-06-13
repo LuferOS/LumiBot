@@ -2,14 +2,17 @@ import fetch from 'node-fetch'
 
 export default {
   command: ['ssweb', 'ss'],
-  category: ['tools'],
+  category: 'tools',
   run: async (client, m, args, usedPrefix, command) => {
     try {
-      if (!args[0]) return m.reply('💙 Por favor, ingrese el Link de una página.')
+      if (!args[0]) return m.reply('🙄 *Bruh, me pasas el link o te lo adivino?* 💅\n> Literal necesito una URL para tomarle captura.')
+      await m.react('🕒')
       let ss = await (await fetch(`https://image.thum.io/get/fullpage/${args[0]}`)).buffer()
-      await client.sendMessage(m.chat, { image: ss, caption: args[0] }, { quoted: m })
+      await client.sendMessage(m.chat, { image: ss, caption: `✨ *Tu captura, bb* ✨\n> Sapeando la página: ${args[0]} 💅` }, { quoted: m })
+      await m.react('✔️')
     } catch (error) {
-      return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.react('✖️')
+      return m.reply(`🙄 *La página no quiso colaborar* 💅\n> Literal el link está roto o la web es muy pesada.\n> 🚩 Excusas técnicas: *${error.message}*`)
     }
   }
 }

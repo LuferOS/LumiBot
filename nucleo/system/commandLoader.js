@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +15,9 @@ function verifyIntegrity(comando, pluginName) {
   if (!comando) {
     throw new Error("Estructura vacía o exportación 'default' ausente.");
   }
-  if (!comando.command || !Array.isArray(comando.command) || comando.command.length === 0) {
+  if (typeof comando === 'function') return true;
+  if (!comando.command) return true;
+  if (!Array.isArray(comando.command) || comando.command.length === 0) {
     throw new Error("Matriz de directivas (command: []) inválida, vacía o no definida.");
   }
   if (typeof comando.run !== "function") {
@@ -49,7 +51,7 @@ async function seeCommands(dir = commandsFolder) {
       if (cached && cached.mtime === mtime) {
         imported = cached.imported;
       } else {
-        const modulePath = `${path.resolve(fullPath)}?update=${Date.now()}`;
+        const modulePath = `${pathToFileURL(path.resolve(fullPath)).href}?update=${Date.now()}`;
         imported = await import(modulePath);
         pluginCache.set(fullPath, { mtime, imported });
       }
@@ -62,7 +64,7 @@ async function seeCommands(dir = commandsFolder) {
       
       global.plugins[pluginName] = imported;
       
-      comando.command.forEach(cmd => {
+      comando.command?.forEach(cmd => {
         global.comandos.set(cmd.toLowerCase(), {
           pluginName,
           run: comando.run,
@@ -108,7 +110,7 @@ global.reload = async (_ev, fullPath) => {
         return; // Silenciamos el log de "Sin cambios" para no hacer spam en consola
       }
       
-      const modulePath = `${fullPath}?update=${Date.now()}`;
+      const modulePath = `${pathToFileURL(fullPath).href}?update=${Date.now()}`;
       const imported = await import(modulePath);
       const pluginName = filename.replace(".js", "");
       const comando = imported.default;
@@ -124,7 +126,7 @@ global.reload = async (_ev, fullPath) => {
       
       global.plugins[pluginName] = imported;
       
-      const cmds = Array.isArray(comando.command) ? comando.command : [comando.command];
+      const cmds = (Array.isArray(comando.command) ? comando.command : (comando.command ? [comando.command] : []));
       cmds.forEach(cmd => {
         if (cmd) global.comandos.set(cmd.toLowerCase(), {
           pluginName,

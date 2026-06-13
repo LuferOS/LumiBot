@@ -1,11 +1,10 @@
 import crypto from 'crypto'
-import fileTypePkg from 'file-type'
+import { fileTypeFromBuffer } from 'file-type'
 import { promises as fsp } from 'fs'
 import os from 'os'
 import path from 'path'
 import { spawn } from 'child_process' //xd
 
-const { fileTypeFromBuffer } = fileTypePkg
 const fetchFn = fetch
 export default {
   command: ['hd', 'enhance', 'remini'],
@@ -16,11 +15,11 @@ export default {
       const mime = q?.mimetype || q?.msg?.mimetype || ''
 
       if (!mime) {
-          return m.reply(`╭⋯ 📸 *Falta la imagen, bro* ⋯》\n┊ Responde a una foto para subirle la calidad y dejarla nítida.\n┊ Uso: ${usedPrefix + command}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+          return m.reply(`🙄 *Bruh, literal dónde está la foto?* 💅\n> Responde a una foto para subirle la calidad y quitarle lo píxel.`)
       }
       
       if (!/^image\/(jpe?g|png|webp)$/i.test(mime)) {
-          return m.reply(`╭⋯ 👾 *Formato no soportado* ⋯》\n┊ Ese tipo de archivo (*${mime || 'raro'}*) no me sirve.\n┊ Manda un JPG o PNG normalito.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+          return m.reply(`🙄 *Amiga, eso no es una foto* 💅\n> Manda un JPG o PNG normalito, no me mandes formatos raros (*${mime || 'raro'}*).`)
       }
 
       await m.react('🕒')
@@ -28,14 +27,14 @@ export default {
       
       if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 10) {
           await m.react('✖️')
-          return m.reply(`╭⋯ ⚠️ *Error de descarga* ⋯》\n┊ No pude bajar la imagen original. Pásala de nuevo a ver si ahora sí agarra.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+          return m.reply(`🙄 *Bruh, la foto no bajó* 💅\n> Pásala de nuevo, literal WhatsApp se bugueó.`)
       }
 
       const ft = await safeFileType(buffer)
       const inputMime = ft?.mime || mime || 'image/jpeg'
       if (!/^image\/(jpe?g|png|webp)$/i.test(inputMime)) {
           await m.react('✖️')
-          return m.reply(`╭⋯ 👾 *Archivo corrupto* ⋯》\n┊ El formato interno (*${inputMime}*) no es compatible para escalarlo en HD.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+          return m.reply(`🙄 *Oso mil, archivo corrupto* 💅\n> El formato interno (*${inputMime}*) no se puede escalar a HD.`)
       }
 
       const result = await vectorinkEnhanceFromBuffer(buffer, inputMime)
@@ -43,10 +42,10 @@ export default {
       if (!result?.ok || !result?.buffer) {
         await m.react('✖️')
         const msg = result?.error?.code || result?.error?.step || result?.error?.message || 'error'
-        return m.reply(`╭⋯ 🔧 *Fallo en el servidor* ⋯》\n┊ La IA de VectorInk rechazó la imagen. Seguro está muy pesada o el server anda caído.\n┊ Info del error: ${msg}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+        return m.reply(`🙄 *La IA no quiso trabajar hoy* 💅\n> Rechazó tu foto. Seguro está muy fea o el server anda caído.\n> 🚩 Excusas: ${msg}`)
       }
 
-      const caption = `╭⋯ 🔥 *IMAGEN EN HD* ⋯》\n┊ ⊳ *Resolución:* Mejorada a tope\n┊ ⊳ *Motor:* VectorInk API\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\n> ⚡ *Powered by LuferOS*`
+      const caption = `✨ *FOTO EN HD LISTA* ✨\n> Literal le quité lo Android 💅`
 
       await client.sendMessage(m.chat, { image: result.buffer, caption: caption }, { quoted: m })
       await m.react('✔️')
@@ -54,7 +53,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en hd.js:", e)
       await m.react('✖️')
-      await m.reply(`╭⋯ ❌ *Error del sistema* ⋯》\n┊ Algo reventó feo procesando la foto.\n┊ Detalle: ${e?.message || String(e)}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)
+      await m.reply(`🙄 *Bruh, todo explotó* 💅\n> Algo reventó feo procesando la foto.\n> 🚩 Detalle: ${e?.message || String(e)}`)
     }
   }
 }

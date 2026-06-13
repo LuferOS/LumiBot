@@ -99,11 +99,6 @@ export default async (client, m) => {
         
         const contextInfo = {
           isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: botSettings.id || '120363169294281316@newsletter',
-            serverMessageId: '0',
-            newsletterName: botSettings.nameid || '🛡️ LUMIBOT SECURITY 🛡️'
-          },
           externalAdReply: {
             title: botSettings.namebot || 'SISTEMA LUMIBOT',
             body: global.dev || '© Powered by LuferOS Security',

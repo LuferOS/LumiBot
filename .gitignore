@@ -1,0 +1,8 @@
+node_modules/
+Sessions/
+lumi_markov.db
+nucleo/database.json
+src/database/waifudatabase.json
+*.db
+tmp/
+.env

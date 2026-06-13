@@ -34,11 +34,6 @@ global.links = {
 global.miku = { 
   contextInfo: { 
     isForwarded: true, 
-    forwardedNewsletterMessageInfo: { 
-      newsletterJid: "120363169294281316@newsletter", 
-      serverMessageId: "0", 
-      newsletterName: "🛡️ LUMIBOT SECURITY 🛡️"
-    },
     externalAdReply: {
       title: "LumiBOT",
       body: global.dev,
