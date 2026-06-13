@@ -18,6 +18,16 @@ Acciones válidas: kiss (besar), hug (abrazar), slap (bofetada), bite (morder), 
 
 export default async (client, m, textToMatch) => {
   try {
+    const isReplyToMe = m.quoted && m.quoted.sender === client.user.id.split(':')[0] + '@s.whatsapp.net';
+    const isMentioningMe = textToMatch.toLowerCase().includes('lumi');
+    
+    // Para evitar la saturación de cuota de la API:
+    // Si la mencionan o le responden, responde siempre (100%).
+    // Si están charlando normal, tiene un 33% de probabilidad de meterse (aprox 4 de cada 12 mensajes).
+    const shouldAskAI = isReplyToMe || isMentioningMe || (Math.random() <= 0.33);
+    
+    if (!shouldAskAI) return;
+
     // Obtener los últimos 6 mensajes de contexto en lugar de 20 para hacer respuestas más específicas
     const rawContext = await getRecentContext(m.chat, 6).catch(() => []);
     
