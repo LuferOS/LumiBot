@@ -31,6 +31,32 @@ LumiBot ha evolucionado. Adiós a las terminales aburridas y los bots militares 
 
 Además de hacer todo lo que un bot normal hace (descargar música, administrar grupos, crear stickers), ella **lee activamente los mensajes de tu grupo** para opinar, tirar hate o sumarse al chisme, siempre evaluando la personalidad de quién le habla basándose en el historial de mensajes de esa persona.
 
+### 🗺️ Mapa Mental del Ecosistema Lumi
+```mermaid
+mindmap
+  root((LumiBot 💅))
+    IA Activa
+      Perfilar Usuarios
+      Filtro de Aburrimiento
+      Respuestas Sarcásticas
+      Integración LLM (AlyaCore)
+    Cerebro Matemático
+      Cadenas de Markov
+      Aprendizaje Estadístico
+      Generación de Stickers Bratv
+    Entretenimiento
+      Juegos de Rol SFW / NSFW
+      Generador Dinámico de Chismes
+      Descargas de TikTok / YT
+    Seguridad & Admin
+      Detector de Fantasmas
+      Ranking de Simps
+      Control de Roles
+    Dashboard Web
+      Monitor de Recursos
+      Panel en Vivo
+```
+
 ---
 
 ## 🧠 Arquitectura e Inteligencia Artificial
@@ -72,6 +98,29 @@ Además del modelo de lenguaje en la nube, Lumi tiene un cerebro pasivo entrenad
 - Al activarlo, puede escupir oraciones sin sentido lógico pero gramaticalmente correctas para tu grupo. 
 - ¡Puede generar **Stickers Animados (.bratv)** a partir de sus pensamientos matemáticos!
 
+#### Flujo de Aprendizaje y Ejecución de Markov
+```mermaid
+stateDiagram-v2
+    [*] --> EscuchandoMensajes
+    EscuchandoMensajes --> GuardarEnBD: Usuario envía mensaje
+    GuardarEnBD --> GenerarProbabilidad: ¿Añadir al modelo N-grama?
+    
+    state GenerarProbabilidad {
+        [*] --> DadoPasivo: 25% Probabilidad Pasiva
+        DadoPasivo --> ExtraerCorpus: ¡Éxito!
+        DadoPasivo --> Ignorar: Fallo
+        ExtraerCorpus --> ConstruirDiccionario: Extrae miles de msjs locales
+        ConstruirDiccionario --> EnsamblarOracion: Probabilidad de palabra N+1
+        EnsamblarOracion --> DecidirFormato
+    }
+    
+    DecidirFormato --> TextoPuro: 85% Prob.
+    DecidirFormato --> StickerBratv: 15% Prob.
+    TextoPuro --> [*]
+    StickerBratv --> RenderizarVideoFFmpeg
+    RenderizarVideoFFmpeg --> [*]
+```
+
 ---
 
 ## 📊 Web Dashboard en Vivo
@@ -85,6 +134,21 @@ El Dashboard muestra:
 2. **Tiempo Despierta:** Uptime del bot.
 3. **Métrica de Simps:** Total de usuarios registrados y grupos que domina.
 4. **Memoria del Cerebro:** Cuántos mensajes ha absorbido el Cerebro Markoviano en la base de datos local SQLite.
+
+#### Arquitectura del Panel
+```mermaid
+graph LR
+    A[LumiBot Main Core] -->|Reporta RAM/Uptime| B(Express Server)
+    A -->|Lee usuarios| C[(database.json)]
+    A -->|Lee historial| D[(lumi_markov.db)]
+    C --> B
+    D --> B
+    B -->|WebSocket / HTTP| E[💻 Dashboard en Navegador]
+    E -->|Glassmorphism UI| F((Tu Pantalla))
+    
+    style B fill:#ff69b4,stroke:#333,stroke-width:2px
+    style D fill:#87cefa,stroke:#333
+```
 
 ---
 
