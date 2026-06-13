@@ -260,17 +260,8 @@ export default {
         msgPayload.gifPlayback = true;
         msgPayload.caption = menu;
       } else {
-        msgPayload.text = menu;
-        msgPayload.contextInfo.externalAdReply = {
-          title: botname,
-          body: "© Powered by LuferOS Security",
-          showAdAttribution: false,
-          thumbnailUrl: banner,
-          mediaType: 1,
-          previewType: 0,
-          renderLargerThumbnail: true,
-          sourceUrl: link
-        };
+        msgPayload.image = { url: banner };
+        msgPayload.caption = menu;
       }
 
       await client.sendMessage(m.chat, msgPayload, { quoted: m });

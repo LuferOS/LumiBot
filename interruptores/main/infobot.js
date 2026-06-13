@@ -87,17 +87,8 @@ export default {
         msgPayload.gifPlayback = true
         msgPayload.caption = message
       } else {
-        msgPayload.text = message
-        msgPayload.contextInfo.externalAdReply = {
-          title: botname,
-          body: `💅 Siéntate y toma nota, mi amor.`,
-          showAdAttribution: false,
-          thumbnailUrl: banner,
-          mediaType: 1,
-          previewType: 0,
-          renderLargerThumbnail: true,
-          sourceUrl: link
-        }
+        msgPayload.image = { url: banner }
+        msgPayload.caption = message
       }
 
       await client.sendMessage(m.chat, msgPayload, { quoted: m });
