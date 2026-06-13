@@ -36,12 +36,12 @@ export default async (client, m, textToMatch) => {
       userInfo = `\n\n[INFO PRIVADA SOBRE QUIEN HABLA]\n${senderName} suele decir cosas como: "${userHistory.join('", "')}". Usa esto para juzgarlo(a) o tratarlo(a).`;
     }
     
-    // Crear el texto de consulta
-    const query = `[CONTEXTO DEL CHAT RECIENTE]\n${chatContext}${userInfo}\n\nResponde como Lumi al último mensaje de la conversación. (Si no vale la pena, di IGNORE).`;
+    // Crear el texto de consulta uniendo el systemPrompt con el query
+    const fullQuery = `${systemPrompt}\n\n[CONTEXTO DEL CHAT RECIENTE]\n${chatContext}${userInfo}\n\nResponde al último mensaje de la conversación siguiendo tus reglas. (Si sientes que no aportas nada, responde literalmente la palabra IGNORE).`;
 
     console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando si vale la pena responder a: "${textToMatch.substring(0, 30)}..."`));
 
-    const url = `https://api.alyacore.xyz/ai/chatgpt?text=${encodeURIComponent(query)}&system=${encodeURIComponent(systemPrompt)}&key=api-lYsN6`;
+    const url = `https://api.alyacore.xyz/ai/gemini?text=${encodeURIComponent(fullQuery)}&key=api-lYsN6`;
     
     const response = await fetch(url);
     const data = await response.json();
