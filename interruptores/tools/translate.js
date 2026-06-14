@@ -7,7 +7,7 @@ export default {
   category: 'tools',
   run: async (client, m, args, usedPrefix, command) => {
     if (!args[0]) {
-      return m.reply(`🙄 *Bruh, ingresa el texto a traducir y opcionalmente el idioma.* 💅\n> Ejemplo: *${usedPrefix}${command} en Hola como estas*\n> (Por defecto lo traduce a español si no le dices nada)`)
+      return m.reply(`🙄 *Bruh, dime qué quieres que traduzca o en qué idioma.* 💅\n> Ejemplo: *${usedPrefix}${command} en Hola como estas*\n> (Si te da pereza poner idioma, por defecto lo paso a español)`)
     }
     
     await m.react('⏳')
@@ -30,16 +30,16 @@ export default {
     }
 
     if (!text) {
-        return m.reply(`🙄 *No hay nada que traducir.* 💅`)
+        return m.reply(`🙄 *Literal me pediste que tradujera el vacío. Escribe algo.* 💅`)
     }
     
     try {
-      const res = await fetch(`https://api.alyacore.xyz/tools/translate?text=${encodeURIComponent(text)}&lang=${lang}&key=${ALYA_KEY}`)
+      const res = await fetch(`https://api.alyacore.xyz/tools/translate?text=${encodeURIComponent(text)}&lang=${lang}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
       const data = await res.json()
       
       if (!data.status || !data.data) {
          await m.react('❌')
-         return m.reply(`🙄 *La traducción falló.* 💅`)
+         return m.reply(`🙄 *Ay por favor...*\nMis neuronas políglotas colapsaron. El traductor está caído o el idioma no existe. 💅`)
       }
 
       const translation = data.data.translation || data.data.text || data.data
@@ -51,7 +51,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en translate.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *Error en la API de traducción* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Ups, algo explotó.* 💅\nEl traductor me bloqueó.\n> Error técnico: ${e.message}`)
     }
   }
 }

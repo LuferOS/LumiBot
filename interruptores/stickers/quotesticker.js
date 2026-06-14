@@ -12,7 +12,7 @@ export default {
     let text = args.join(' ')
     
     if (!text && (!media || !media.text)) {
-      return m.reply(`🙄 *Bruh, responde a una imagen con un texto, o solo escribe texto para crear un quote.* 💅\n> Ejemplo: *${usedPrefix}${command} Hola mundo*`)
+      return m.reply(`🙄 *Bruh, ¿es en serio?*\nResponde a una imagen con texto o mínimo escribe algo para crear tu sticker de cita. No leo mentes. 💅\n> Ejemplo: *${usedPrefix}${command} Hola mundo*`)
     }
     
     if (!text && media && media.text) {
@@ -48,13 +48,14 @@ export default {
       
       const res = await fetch(`https://api.alyacore.xyz/tools/quotesticker?key=${ALYA_KEY}`, {
           method: 'POST',
-          body: form
+          body: form,
+          headers: { 'User-Agent': 'Mozilla/5.0' }
       })
       const data = await res.json()
       
       if (!data || !data.status || !data.data) {
          await m.react('❌')
-         return m.reply(`🙄 *No pude crear el sticker de cita.* 💅`)
+         return m.reply(`🙄 *Ay por favor...*\nEl servidor se ahogó procesando tu sticker. Intenta luego si no es mucha molestia. 💅`)
       }
 
       const stickerUrl = data.data.url || data.data.sticker || data.data
@@ -64,7 +65,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en quotesticker.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *La API de QuoteSticker falló* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Ups, algo explotó.* 💅\nLa API de QuoteSticker me ignoró por completo.\n> Error técnico: ${e.message}`)
     }
   }
 }

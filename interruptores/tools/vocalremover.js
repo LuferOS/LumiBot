@@ -12,7 +12,7 @@ export default {
     let url = args[0]
     
     if (!msg && !url) {
-      return m.reply(`🙄 *Bruh, responde a un audio/video o pasa un enlace.* 💅\n> Ejemplo: *${usedPrefix}${command} https://...*`)
+      return m.reply(`🙄 *Bruh, ¿qué quieres que separe?*\nResponde a un audio/video o pásame un link. No hago magia con el aire. 💅\n> Ejemplo: *${usedPrefix}${command} https://...*`)
     }
     
     await m.react('⏳')
@@ -21,7 +21,7 @@ export default {
       let data;
       
       if (url && url.startsWith('http')) {
-         const res = await fetch(`https://api.alyacore.xyz/tools/vocalremover?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`)
+         const res = await fetch(`https://api.alyacore.xyz/tools/vocalremover?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       } else if (msg) {
          const stream = await downloadContentFromMessage(msg, media.message?.audioMessage ? 'audio' : 'video')
@@ -35,14 +35,15 @@ export default {
          
          const res = await fetch(`https://api.alyacore.xyz/tools/vocalremover?key=${ALYA_KEY}`, {
              method: 'POST',
-             body: form
+             body: form,
+             headers: { 'User-Agent': 'Mozilla/5.0' }
          })
          data = await res.json()
       }
       
       if (!data || !data.status || !data.data) {
          await m.react('❌')
-         return m.reply(`🙄 *No pude separar la voz del audio.* 💅`)
+         return m.reply(`🙄 *Ay por favor...*\nEl servidor no pudo separar las voces. Seguro el audio está malísimo. 💅`)
       }
 
       const vocalUrl = data.data.vocal || data.data.vocals || data.data.url
@@ -59,7 +60,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en vocalremover.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *La API de VocalRemover falló* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Literalmente la IA se atragantó.* 💅\n> Error técnico: ${e.message}`)
     }
   }
 }

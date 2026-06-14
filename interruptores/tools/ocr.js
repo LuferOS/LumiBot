@@ -12,7 +12,7 @@ export default {
     let url = args[0]
     
     if (!msg && !url) {
-      return m.reply(`🙄 *Bruh, responde a una imagen o pasa un enlace.* 💅\n> Ejemplo: *${usedPrefix}${command} https://...*`)
+      return m.reply(`🙄 *Bruh, ¿qué se supone que lea?*\nResponde a una imagen que contenga texto o pásame un link. No tengo visión de rayos X. 💅\n> Ejemplo: *${usedPrefix}${command} https://...*`)
     }
     
     await m.react('⏳')
@@ -21,7 +21,7 @@ export default {
       let data;
       
       if (url && url.startsWith('http')) {
-         const res = await fetch(`https://api.alyacore.xyz/tools/ocr?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`)
+         const res = await fetch(`https://api.alyacore.xyz/tools/ocr?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       } else if (msg) {
          // Descargar buffer del mensaje
@@ -36,14 +36,15 @@ export default {
          
          const res = await fetch(`https://api.alyacore.xyz/tools/ocr?key=${ALYA_KEY}`, {
              method: 'POST',
-             body: form
+             body: form,
+             headers: { 'User-Agent': 'Mozilla/5.0' }
          })
          data = await res.json()
       }
       
       if (!data || !data.status || !data.data) {
          await m.react('❌')
-         return m.reply(`🙄 *No pude extraer texto de esta imagen.* 💅`)
+         return m.reply(`🙄 *No encontré ni una sola letra válida en esa imagen.* 💅`)
       }
 
       const texto = data.data.text || data.data
@@ -55,7 +56,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en ocr.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *La API de OCR falló* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *La API se quedó ciega.* 💅\n> Error técnico: ${e.message}`)
     }
   }
 }

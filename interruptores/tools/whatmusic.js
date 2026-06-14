@@ -12,7 +12,7 @@ export default {
     let url = args[0]
     
     if (!msg && !url) {
-      return m.reply(`🙄 *Bruh, responde a un audio/video o pasa un enlace.* 💅\n> Ejemplo: *${usedPrefix}${command} https://...*`)
+      return m.reply(`🙄 *Bruh, ¿qué se supone que escuche?*\nResponde a un audio/video o pásame un link. No tengo poderes psíquicos. 💅\n> Ejemplo: *${usedPrefix}${command} https://...*`)
     }
     
     await m.react('⏳')
@@ -21,7 +21,7 @@ export default {
       let data;
       
       if (url && url.startsWith('http')) {
-         const res = await fetch(`https://api.alyacore.xyz/tools/whatmusic?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`)
+         const res = await fetch(`https://api.alyacore.xyz/tools/whatmusic?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       } else if (msg) {
          // Descargar buffer del mensaje
@@ -36,14 +36,15 @@ export default {
          
          const res = await fetch(`https://api.alyacore.xyz/tools/whatmusic?key=${ALYA_KEY}`, {
              method: 'POST',
-             body: form
+             body: form,
+             headers: { 'User-Agent': 'Mozilla/5.0' }
          })
          data = await res.json()
       }
       
       if (!data || !data.status || !data.data) {
          await m.react('❌')
-         return m.reply(`🙄 *No pude reconocer esta canción.* 💅`)
+         return m.reply(`🙄 *Mis oídos finos no reconocen este ruido.* 💅`)
       }
 
       const info = data.data
@@ -59,7 +60,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en whatmusic.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *La API de WhatMusic falló* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Literalmente me quedé sorda.* 💅\nLa API colapsó escuchando tu audio.\n> Error técnico: ${e.message}`)
     }
   }
 }
