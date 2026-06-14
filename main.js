@@ -39,6 +39,12 @@ export default async (client, m) => {
     } catch (e) {}
   }
   
+  // ⚡ LUMIBOT OVERRIDE: General Button Payloads as Commands
+  if (buttonId && !buttonId.startsWith('youtube_') && !buttonId.startsWith('waifu_')) {
+    m.text = buttonId;
+    body = buttonId;
+  }
+  
   // ⚡ LUMIBOT OVERRIDE: Gestión de Botones YouTube
   if (buttonId && (
     buttonId.includes('youtube_audio_') ||
