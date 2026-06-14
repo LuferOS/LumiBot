@@ -243,6 +243,7 @@ const category = cat ? `[ Chisme de: ${cat.toUpperCase()} ]` : '[ STATUS: DIVA I
       const comandosPrincipales = `💅 ✨ **PRINCIPALES 👑** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┣ ⊳ .menu - Literal lo que estás viendo 💅
+┣ ⊳ .audio - Menú de todos los audiomemes 🎵
 ┣ ⊳ .infobot - Chisme sobre mi cuerpo y sistema
 ┣ ⊳ .version - Novedades, arreglos y actualizaciones
 ┗ ⊳ .ping - Mira qué tan rápida soy ⚡\n\n`;

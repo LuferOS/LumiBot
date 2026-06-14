@@ -45,7 +45,7 @@ function chunkText(text, maxLen = 3500) {
 }
 
 export default {
-  command: ['menuaudios', 'menu2', 'menú2', 'memu2', 'menuaudio', 'memuaudios', 'memuaudio'],
+  command: ['menuaudios', 'menu2', 'menú2', 'memu2', 'menuaudio', 'memuaudios', 'memuaudio', 'audio', 'audios'],
   category: 'menu',
   run: async (client, m) => {
     const username = client.getName(m.sender)
