@@ -22,45 +22,57 @@ export default {
     await m.react('⏳')
     
     try {
-      const form = new FormData()
-      form.append('username', m.pushName || 'Usuario')
-      form.append('text', text)
-      form.append('color', '#000000') // Por defecto oscuro
-      
+      let avatarUrl = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Fallback
       if (msg) {
          const stream = await downloadContentFromMessage(msg, 'image')
          let buffer = Buffer.from([])
          for await (const chunk of stream) {
              buffer = Buffer.concat([buffer, chunk])
          }
+         // Subimos a uguu/catbox temporalmente
+         const form = new FormData()
          form.append('file', new Blob([buffer]), 'avatar.jpg')
-      } else {
-         // Si no mandan imagen, intentamos conseguir la de su perfil
          try {
-             let ppUrl = await client.profilePictureUrl(m.sender, 'image')
-             const ppRes = await fetch(ppUrl)
-             const ppBuffer = await ppRes.arrayBuffer()
-             form.append('file', new Blob([ppBuffer]), 'avatar.jpg')
-         } catch {
-             // Si no tiene foto, no mandamos archivo (AlyaCore debería manejar el fallback)
-         }
+            const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form, headers: form.getHeaders() })
+            const upData = await upRes.json()
+            if (upData.url) avatarUrl = upData.url
+         } catch {}
+      } else {
+         try {
+             avatarUrl = await client.profilePictureUrl(m.sender, 'image')
+         } catch {}
       }
       
-      const res = await fetch(`https://api.alyacore.xyz/tools/quotesticker?key=${ALYA_KEY}`, {
+      const payload = {
+        type: 'quote',
+        format: 'webp',
+        backgroundColor: '#1b1429',
+        width: 512,
+        height: 768,
+        scale: 2,
+        messages: [{
+            entities: [],
+            avatar: true,
+            from: { id: 1, name: m.pushName || 'Usuario', photo: { url: avatarUrl } },
+            text: text,
+            replyMessage: {}
+        }]
+      };
+
+      const res = await fetch('https://bot.lyo.su/quote/generate', {
           method: 'POST',
-          body: form,
-          headers: { 'User-Agent': 'Mozilla/5.0' }
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
       })
       const data = await res.json()
       
-      if (!data || !data.status || !data.data) {
+      if (!data || !data.ok) {
          await m.react('❌')
          return m.reply(`🙄 *Ay por favor...*\nEl servidor se ahogó procesando tu sticker. Intenta luego si no es mucha molestia. 💅`)
       }
 
-      const stickerUrl = data.data.url || data.data.sticker || data.data
-      
-      await client.sendMessage(m.chat, { sticker: { url: stickerUrl } }, { quoted: m })
+      const stickerBuffer = Buffer.from(data.result.image, 'base64')
+      await client.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: m })
       await m.react('✅')
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en quotesticker.js:", e)
