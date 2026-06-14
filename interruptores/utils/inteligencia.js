@@ -64,7 +64,7 @@ export default {
     else if (porcentaje < 140) comentario = comentariosAlto[Math.floor(Math.random() * comentariosAlto.length)];
     else comentario = comentariosMaximo[Math.floor(Math.random() * comentariosMaximo.length)];
     
-    const texto = `🧠 *TEST DE INTELIGENCIA (IQ)* 🧠\n\nResultados de @${mentioned.split('@')[0]}:\n\n> 📊 *Puntaje IQ:* ${porcentaje}\n> 📝 *Diagnóstico:* ${comentario}`;
+    const texto = `🧠 *TEST DE INTELIGENCIA (IQ)* 🧠\n\nResultados de @${mentioned.split('@')[0]}:\n\n> 📊 *Puntaje IQ:* ${porcentaje}\n> 📝 *Diagnóstico:* ${comentario}\n\n*— Referencia de Puntos —*\n📉 *0-49:* Bruto / Falta de oxígeno\n🤔 *50-99:* Promedio / Sobreviviente\n🤓 *100-139:* Inteligente / Nerdge\n👽 *140-200:* Genio / Mega Mente`;
     
     await client.sendMessage(m.chat, { text: texto, mentions: [mentioned] }, { quoted: m });
   }
