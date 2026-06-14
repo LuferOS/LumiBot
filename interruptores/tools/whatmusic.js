@@ -24,7 +24,6 @@ export default {
          const res = await fetch(`https://api.alyacore.xyz/tools/whatmusic?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       } else if (msg) {
-         // Descargar buffer del mensaje
          const stream = await downloadContentFromMessage(msg, media.message?.audioMessage ? 'audio' : 'video')
          let buffer = Buffer.from([])
          for await (const chunk of stream) {
@@ -33,21 +32,21 @@ export default {
          
          const form = new FormData()
          form.append('file', new Blob([buffer]), 'audio.mp3')
+         const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form, headers: form.getHeaders() })
+         const upData = await upRes.json()
          
-         const res = await fetch(`https://api.alyacore.xyz/tools/whatmusic?key=${ALYA_KEY}`, {
-             method: 'POST',
-             body: form,
-             headers: { 'User-Agent': 'Mozilla/5.0' }
-         })
+         if (!upData.status || !upData.url) throw new Error('Error al subir el audio a la nube')
+         
+         const res = await fetch(`https://api.alyacore.xyz/tools/whatmusic?url=${encodeURIComponent(upData.url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       }
       
-      if (!data || !data.status || !data.data) {
+      if (!data || !data.status) {
          await m.react('❌')
          return m.reply(`🙄 *Mis oídos finos no reconocen este ruido.* 💅`)
       }
 
-      const info = data.data
+      const info = data.data || data
       const title = info.title || info.name || 'Desconocida'
       const artist = info.artists || info.artist || 'Desconocido'
       const album = info.album || 'Desconocido'

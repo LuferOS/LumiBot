@@ -33,21 +33,21 @@ export default {
          
          const form = new FormData()
          form.append('file', new Blob([buffer]), 'image.jpg')
+         const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form, headers: form.getHeaders() })
+         const upData = await upRes.json()
          
-         const res = await fetch(`https://api.alyacore.xyz/tools/ocr?key=${ALYA_KEY}`, {
-             method: 'POST',
-             body: form,
-             headers: { 'User-Agent': 'Mozilla/5.0' }
-         })
+         if (!upData.status || !upData.url) throw new Error('Error al subir la imagen a la nube')
+         
+         const res = await fetch(`https://api.alyacore.xyz/tools/ocr?url=${encodeURIComponent(upData.url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       }
       
-      if (!data || !data.status || !data.data) {
+      if (!data || !data.status) {
          await m.react('❌')
          return m.reply(`🙄 *No encontré ni una sola letra válida en esa imagen.* 💅`)
       }
 
-      const texto = data.data.text || data.data
+      const texto = data.text || data.data?.text || data.data
       
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 📝 *OCR (Texto Extraído)* \n┃━━━━━━━━━━━━━━━\n\n${texto}`
       

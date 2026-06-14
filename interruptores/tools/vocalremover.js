@@ -32,22 +32,22 @@ export default {
          
          const form = new FormData()
          form.append('file', new Blob([buffer]), 'audio.mp3')
+         const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form, headers: form.getHeaders() })
+         const upData = await upRes.json()
          
-         const res = await fetch(`https://api.alyacore.xyz/tools/vocalremover?key=${ALYA_KEY}`, {
-             method: 'POST',
-             body: form,
-             headers: { 'User-Agent': 'Mozilla/5.0' }
-         })
+         if (!upData.status || !upData.url) throw new Error('Error al subir el audio a la nube')
+         
+         const res = await fetch(`https://api.alyacore.xyz/tools/vocalremover?url=${encodeURIComponent(upData.url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       }
       
-      if (!data || !data.status || !data.data) {
+      if (!data || !data.status) {
          await m.react('❌')
          return m.reply(`🙄 *Ay por favor...*\nEl servidor no pudo separar las voces. Seguro el audio está malísimo. 💅`)
       }
 
-      const vocalUrl = data.data.vocal || data.data.vocals || data.data.url
-      const instrumentalUrl = data.data.instrumental || data.data.music
+      const vocalUrl = data.vocal || data.vocals || data.url
+      const instrumentalUrl = data.instrumental || data.music
       
       if (vocalUrl) {
          await client.sendMessage(m.chat, { audio: { url: vocalUrl }, mimetype: 'audio/mpeg', fileName: 'vocal.mp3' }, { quoted: m })

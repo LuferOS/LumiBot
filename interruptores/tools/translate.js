@@ -34,15 +34,15 @@ export default {
     }
     
     try {
-      const res = await fetch(`https://api.alyacore.xyz/tools/translate?text=${encodeURIComponent(text)}&lang=${lang}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
+      const res = await fetch(`https://api.alyacore.xyz/tools/translate?text=${encodeURIComponent(text)}&to=${lang}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
       const data = await res.json()
       
-      if (!data.status || !data.data) {
+      if (!data.status) {
          await m.react('❌')
          return m.reply(`🙄 *Ay por favor...*\nMis neuronas políglotas colapsaron. El traductor está caído o el idioma no existe. 💅`)
       }
 
-      const translation = data.data.translation || data.data.text || data.data
+      const translation = data.translated || data.translation || data.text
       
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 🌐 *TRADUCTOR* (${lang.toUpperCase()})\n┃━━━━━━━━━━━━━━━\n┃ ${translation}\n╰━━━━━━━━━━━━━━━╯`
       

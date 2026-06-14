@@ -32,21 +32,21 @@ export default {
          
          const form = new FormData()
          form.append('file', new Blob([buffer]), 'image.jpg')
+         const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form, headers: form.getHeaders() })
+         const upData = await upRes.json()
          
-         const res = await fetch(`https://api.alyacore.xyz/tools/upscale?key=${ALYA_KEY}`, {
-             method: 'POST',
-             body: form,
-             headers: { 'User-Agent': 'Mozilla/5.0' }
-         })
+         if (!upData.status || !upData.url) throw new Error('Error al subir la imagen a la nube')
+         
+         const res = await fetch(`https://api.alyacore.xyz/tools/upscale?url=${encodeURIComponent(upData.url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
          data = await res.json()
       }
       
-      if (!data || !data.status || !data.data) {
+      if (!data || !data.status) {
          await m.react('❌')
          return m.reply(`🙄 *Ay por favor...*\nEsa imagen está tan borrosa que ni la IA pudo salvarla. Intenta con otra. 💅`)
       }
 
-      const imageUrl = data.data.url || data.data.image || data.data
+      const imageUrl = data.url || data.image || data.data?.url || data.data?.image || data.data
       
       await client.sendMessage(m.chat, { image: { url: imageUrl }, caption: `✨ *Imagen Mejorada por LumiBot* 💅` }, { quoted: m })
       await m.react('✅')
