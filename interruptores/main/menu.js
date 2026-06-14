@@ -167,7 +167,12 @@ stickers: `💅 ✨ **STICKERS Y EDICIÓN A MI ESTILO 🎨** ✨ 💅
 downloads: `💅 ✨ **DESCARGAS (ROBANDO CONTENIDO) 📥** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┣ ⊳ .spotify - Descargar música de Spotify 🎧
-┗ ⊳ .soundcloud - Buscar/Descargar música de SoundCloud 🎵`
+┣ ⊳ .soundcloud - Buscar/Descargar música de SoundCloud 🎵
+┣ ⊳ .facebook - Descargar video de FB 💙
+┣ ⊳ .twitter - Descargar media de X/Twitter 🐦
+┣ ⊳ .instagram - Descargar post/reels de IG 📸
+┣ ⊳ .tiktok - Descargar TikTok sin marca 🎵
+┗ ⊳ .pinterest - Buscar imágenes Aesthetic 📌`
 };
 
 const bodyMenu = `
