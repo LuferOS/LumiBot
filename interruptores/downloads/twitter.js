@@ -1,5 +1,8 @@
 import fetch from 'node-fetch'
 
+const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
+const ALYA_KEY = 'DEPOOL-key60015';
+
 export default {
   command: ['twitter', 'x', 'xdl'],
   category: 'downloader',
@@ -12,18 +15,27 @@ export default {
     }
     
     await m.react('⏳')
+    const targetUrl = args[0]
     
     try {
-      const url = `https://rest.apicausas.xyz/api/v1/descargas/twitter?apikey=causa-60ca3fea34a7af43&url=${encodeURIComponent(args[0])}`
-      const res = await fetch(url)
-      const data = await res.json()
-
-      if (!data.status) {
-        await m.react('❌')
-        return m.reply(`🙄 *Falló la descarga de Twitter* 💅\n> Quizás el tuit es privado o lo borraron.`)
+      const fetchCausas = async () => {
+          const res = await fetch(`https://rest.apicausas.xyz/api/v1/descargas/twitter?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`)
+          const data = await res.json()
+          if (!data.status) throw new Error('Causas fallo status')
+          return { provider: 'causas', data }
       }
 
-      let mediaUrl = data.url || data.download || data.video
+      const fetchAlya = async () => {
+          const res = await fetch(`https://api.alyacore.xyz/dl/twitter?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`)
+          const data = await res.json()
+          if (!data.status) throw new Error('Alya fallo status')
+          return { provider: 'alya', data }
+      }
+
+      const winner = await Promise.any([fetchCausas(), fetchAlya()])
+      const data = winner.data
+
+      let mediaUrl = data.url || data.download || data.video || data.dl || data.data?.dl
       if (data.data && data.data.url) mediaUrl = data.data.url
       if (data.data && data.data.download && data.data.download.url) mediaUrl = data.data.download.url
       if (!mediaUrl && data.data && Array.isArray(data.data) && data.data[0]) {
@@ -32,17 +44,18 @@ export default {
 
       if (!mediaUrl) {
          await m.react('❌')
-         return m.reply(`🙄 *La API no devolvió contenido multimedia válido* 💅`)
+         return m.reply(`🙄 *Las APIs no devolvieron contenido multimedia válido* 💅`)
       }
 
-      const title = data.data?.title || data.title || data.data?.description || 'Twitter_X'
+      const title = data.data?.title || data.title || data.data?.description || data.data?.desc || 'Twitter_X'
       const caption = `╭━━━━━━━━━━━━━━━╮
 ┃ 🐦 *X / TWITTER DOWNLOAD*
 ┃━━━━━━━━━━━━━━━
 ┃ 📌 ${title}
+┃ ⚡ *API:* ${winner.provider === 'causas' ? 'Causas (Fast)' : 'AlyaCore (Fast)'}
 ╰━━━━━━━━━━━━━━━╯`
       
-      const isImage = mediaUrl.match(/\.(jpg|jpeg|png)$/i) || (data.data && data.data.type === 'image')
+      const isImage = mediaUrl.match(/\.(jpg|jpeg|png)$/i) || (data.data && data.data.type === 'image') || (data.type === 'image')
 
       if (isImage) {
         await client.sendMessage(m.chat, { image: { url: mediaUrl }, caption }, { quoted: m })
@@ -54,7 +67,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en twitter.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *Explotó el pájaro azul* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Explotó el pájaro azul (Ambas APIs fallaron)* 💅\n> Error: ${e.message}`)
     }
   }
 }

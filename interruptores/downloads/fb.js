@@ -1,5 +1,8 @@
 import fetch from 'node-fetch'
 
+const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
+const ALYA_KEY = 'DEPOOL-key60015';
+
 export default {
   command: ['fb', 'facebook'],
   category: 'downloader',
@@ -12,21 +15,29 @@ export default {
     }
     
     await m.react('⏳')
+    const targetUrl = args[0]
     
     try {
-      const url = `https://rest.apicausas.xyz/api/v1/descargas/facebook?apikey=causa-60ca3fea34a7af43&url=${encodeURIComponent(args[0])}`
-      const res = await fetch(url)
-      const data = await res.json()
-
-      if (!data.status) {
-        await m.react('❌')
-        return m.reply(`🙄 *Falló la descarga de Facebook* 💅\n> Literal el servidor dijo no, o el video es privado.`)
+      const fetchCausas = async () => {
+          const res = await fetch(`https://rest.apicausas.xyz/api/v1/descargas/facebook?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`)
+          const data = await res.json()
+          if (!data.status) throw new Error('Causas fallo status')
+          return { provider: 'causas', data }
       }
 
-      let videoUrl = data.url || data.download || data.video
+      const fetchAlya = async () => {
+          const res = await fetch(`https://api.alyacore.xyz/dl/facebook?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`)
+          const data = await res.json()
+          if (!data.status) throw new Error('Alya fallo status')
+          return { provider: 'alya', data }
+      }
+
+      const winner = await Promise.any([fetchCausas(), fetchAlya()])
+      const data = winner.data
+
+      let videoUrl = data.url || data.download || data.video || data.dl || data.data?.dl
       if (data.data && data.data.url) videoUrl = data.data.url
       if (data.data && data.data.download && data.data.download.url) videoUrl = data.data.download.url
-      // Algunas APIs devuelven un array para fb si hay sd y hd
       if (!videoUrl && data.data && Array.isArray(data.data) && data.data[0]) {
           videoUrl = data.data.find(v => v.quality?.includes('hd'))?.url || data.data[0].url
       }
@@ -36,11 +47,12 @@ export default {
          return m.reply(`🙄 *La API no devolvió un enlace válido de video* 💅`)
       }
 
-      const title = data.data?.title || data.title || 'Facebook_Video'
+      const title = data.data?.title || data.title || data.data?.title || 'Facebook Video'
       const caption = `╭━━━━━━━━━━━━━━━╮
 ┃ 💙 *FACEBOOK DOWNLOAD*
 ┃━━━━━━━━━━━━━━━
 ┃ 📌 ${title}
+┃ ⚡ *API:* ${winner.provider === 'causas' ? 'Causas (Fast)' : 'AlyaCore (Fast)'}
 ╰━━━━━━━━━━━━━━━╯`
       
       await client.sendMessage(m.chat, { 
@@ -53,7 +65,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en fb.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *Todo explotó bajando de Facebook* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Todo explotó bajando de Facebook (Ambas APIs fallaron)* 💅\n> Error: ${e.message}`)
     }
   }
 }
