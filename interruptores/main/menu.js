@@ -23,6 +23,7 @@ utils: `💅 ✨ **UTILIDADES (PORQUE SOY ÚTIL 🙄)** ✨ 💅
 ┣ ⊳ .meme - Crea un meme a partir de un texto 🤣
 ┣ ⊳ .lyrics - Busca la letra de una canción 🎶
 ┣ ⊳ .wikipedia - Busca información en Wikipedia 📚
+┣ ⊳ .inteligencia - Mide tu nivel de IQ 🧠
 ┗ ⊳ .horario - Qué hora es en el mundo`,
 
 juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
