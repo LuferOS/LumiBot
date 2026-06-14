@@ -2,24 +2,7 @@ import fetch from 'node-fetch'
 import { proto, generateWAMessageFromContent } from '@whiskeysockets/baileys'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'DEPOOL-key60015';
-
-// Credenciales oficiales de Spotify Web API (Proporcionadas por LuferOS)
-const SPOTIFY_CLIENT_ID = 'ed399c1c630143609f31b0ab3917ae47';
-const SPOTIFY_CLIENT_SECRET = '3030fd2f96c54dd2aa164f05c72f0a2b';
-
-async function getSpotifyToken() {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Basic ' + Buffer.from(SPOTIFY_CLIENT_ID + ':' + SPOTIFY_CLIENT_SECRET).toString('base64')
-        },
-        body: 'grant_type=client_credentials'
-    });
-    const data = await response.json();
-    return data.access_token;
-}
+const ALYA_KEY = 'api-lYsN6'; // Usamos la key principal de Alya
 
 export default {
   command: ['spotify', 'sp'],
@@ -33,37 +16,30 @@ export default {
 
       await m.react('🕒')
 
-      // MODO BÚSQUEDA (Si no es un enlace, usa la API oficial de Spotify)
+      // MODO BÚSQUEDA (Si no es un enlace, usa AlyaCore Search)
       if (!text.includes('spotify.com')) {
-          const token = await getSpotifyToken();
-          if (!token) throw new Error('No se pudo generar el token de Spotify Web API.');
-
-          const searchRes = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(text)}&type=track&limit=3`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-          });
+          const searchRes = await fetch(`https://api.alyacore.xyz/search/spotify?query=${encodeURIComponent(text)}&key=${ALYA_KEY}`);
           const searchData = await searchRes.json();
 
-          if (!searchData.tracks || !searchData.tracks.items || searchData.tracks.items.length === 0) {
+          if (!searchData.status || !searchData.data || searchData.data.length === 0) {
               await m.react('✖️')
-              return m.reply(`🙄 *No encontré nada en Spotify oficial con ese nombre* 💅`)
+              return m.reply(`🙄 *No encontré nada en Spotify con ese nombre* 💅`)
           }
 
-          const topResults = searchData.tracks.items;
+          const topResults = searchData.data.slice(0, 3);
           const buttons = topResults.map((track, i) => {
-              const artists = track.artists.map(a => a.name).join(', ');
               return {
                   name: "quick_reply",
                   buttonParamsJson: JSON.stringify({
-                      display_text: `🎵 ${i + 1}: ${track.name.substring(0, 12)} - ${artists.substring(0, 8)}`,
-                      id: `${usedPrefix}${command} ${track.external_urls.spotify}`
+                      display_text: `🎵 ${i + 1}: ${track.title.substring(0, 15)} - ${track.artist.substring(0, 10)}`,
+                      id: `${usedPrefix}${command} ${track.url}`
                   })
               }
           });
 
           let fallbackText = `╭━━━━━━━━━━━━━━━╮\n┃ 🎧 *SPOTIFY SEARCH* \n┃━━━━━━━━━━━━━━━\n┃ 🔍 Resultados para: *${text}*\n`
           topResults.forEach((track, i) => {
-              const artists = track.artists.map(a => a.name).join(', ');
-              fallbackText += `┃ ${i + 1}. ${track.name} - ${artists}\n`
+              fallbackText += `┃ ${i + 1}. ${track.title} - ${track.artist}\n`
           });
           fallbackText += `╰━━━━━━━━━━━━━━━╯\n> 💡 *Usa los botones abajo para descargar, o envía:* ${usedPrefix}${command} [url]`
 
@@ -98,6 +74,7 @@ export default {
       }
 
       const fetchAlya = async () => {
+          // Para descargas podemos usar la key antigua o la nueva, usaré la principal por si acaso
           const url = `https://api.alyacore.xyz/dl/spotify?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`
           const res = await fetch(url)
           const data = await res.json()
