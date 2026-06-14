@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { proto, generateWAMessageFromContent } from '@whiskeysockets/baileys'
+import { proto, generateWAMessageFromContent, generateWAMessageContent } from '@whiskeysockets/baileys'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
 const ALYA_KEY = 'DEPOOL-key60015';
@@ -18,16 +18,15 @@ export default {
     const text = args.join(' ').trim()
     
     try {
-      // MODO BÚSQUEDA TIKTOK
-      if (isSearchCommand || !text.match(/tiktok\.com/i)) {
-          // Buscamos con tikwm porque es mas confiable para búsquedas
+      // MODO BÚSQUEDA TIKTOK (VERSIÓN ORIGINAL CON CARRUSEL)
+      if (isSearchCommand || (!text.match(/tiktok\.com/i) && !cmd.includes('tt'))) {
           const searchRes = await fetch('https://tikwm.com/api/feed/search', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                  'User-Agent': 'Mozilla/5.0'
               },
-              body: new URLSearchParams({ keywords: text, count: '5', cursor: '0', HD: '1' }),
+              body: new URLSearchParams({ keywords: text, count: '3', cursor: '0', HD: '1' }),
           })
           const searchData = await searchRes.json()
 
@@ -37,36 +36,56 @@ export default {
           }
 
           const topResults = searchData.data.videos.slice(0, 3)
-          const buttons = topResults.map((video, i) => {
-              return {
-                  name: "quick_reply",
-                  buttonParamsJson: JSON.stringify({
-                      display_text: `▶️ Opción ${i + 1}: ${video.author?.nickname}`,
-                      id: `.tiktok https://www.tiktok.com/@${video.author?.unique_id}/video/${video.video_id}`
+          const cards = []
+
+          for (const video of topResults) {
+              const url = video.play || video.hdplay || video.wmplay
+              if (!url) continue
+              try {
+                  const { videoMessage } = await generateWAMessageContent(
+                      { video: { url: url } },
+                      { upload: client.waUploadToServer }
+                  )
+
+                  const title = String(video.title || 'Sin titulo').replace(/\s+/g, ' ').slice(0, 64)
+                  cards.push({
+                      body: proto.Message.InteractiveMessage.Body.fromObject({
+                          text: `🎵 ${title}\n👤 @${video.author?.unique_id}`,
+                      }),
+                      footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: 'LumiBot 💅✨' }),
+                      header: proto.Message.InteractiveMessage.Header.fromObject({
+                          title: '',
+                          hasMediaAttachment: true,
+                          videoMessage,
+                      }),
+                      nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] }),
                   })
+              } catch (e) {
+                  console.log("Error generando tarjeta de carrusel:", e)
               }
-          })
+          }
 
-          let fallbackText = `╭━━━━━━━━━━━━━━━╮\n┃ 🎵 *TIKTOK SEARCH* \n┃━━━━━━━━━━━━━━━\n┃ 🔍 Resultados para: *${text}*\n`
-          topResults.forEach((video, i) => {
-              fallbackText += `┃ ${i + 1}. @${video.author?.unique_id} - ❤️ ${video.digg_count}\n┃ 📎 ${video.title?.substring(0, 40)}...\n`
-          })
-          fallbackText += `╰━━━━━━━━━━━━━━━╯\n> 💡 *Usa los botones abajo para descargar, o envía:* .tiktok [enlace]`
+          if (cards.length === 0) {
+              await m.react('✖️')
+              return m.reply(`🙄 *No pude procesar los videos de la búsqueda.* 💅`)
+          }
 
-          const msg = generateWAMessageFromContent(m.chat, {
-              viewOnceMessage: {
-                  message: {
-                      interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-                          body: proto.Message.InteractiveMessage.Body.create({ text: fallbackText }),
-                          footer: proto.Message.InteractiveMessage.Footer.create({ text: 'LumiBot 💅✨' }),
-                          header: proto.Message.InteractiveMessage.Header.create({ title: '', hasMediaAttachment: false }),
-                          nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-                              buttons: buttons
-                          })
-                      })
-                  }
-              }
-          }, { quoted: m })
+          const msg = generateWAMessageFromContent(
+              m.chat,
+              {
+                  viewOnceMessage: {
+                      message: {
+                          interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                              body: proto.Message.InteractiveMessage.Body.create({ text: `🎧 *TIKTOK SEARCH*\n> 🔍 Resultados para: *${text}*` }),
+                              footer: proto.Message.InteractiveMessage.Footer.create({ text: '' }),
+                              header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
+                              carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards }),
+                          }),
+                      },
+                  },
+              },
+              { quoted: m }
+          )
 
           await client.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
           await m.react('✔️')
@@ -76,7 +95,6 @@ export default {
       // MODO DESCARGA (Enlaces)
       const targetUrl = args[0]
       
-      // PROMESAS DE CARRERA (RACE)
       const fetchCausas = async () => {
           const res = await fetch(`https://rest.apicausas.xyz/api/v1/descargas/tiktok?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`)
           const data = await res.json()
@@ -95,19 +113,12 @@ export default {
           return { provider: 'alya', data }
       }
 
-      // La primera que responda exitosamente, gana.
       const winner = await Promise.any([fetchCausas(), fetchAlya()])
       const data = winner.data
 
       const title = data.data?.title || data.title || data.data?.music_info?.title || 'TikTok Video'
-      const caption = `╭━━━━━━━━━━━━━━━╮
-┃ 🎵 *TIKTOK DOWNLOAD*
-┃━━━━━━━━━━━━━━━
-┃ 📌 ${title}
-┃ ⚡ *API:* ${winner.provider === 'causas' ? 'Causas (Fast)' : 'AlyaCore (Fast)'}
-╰━━━━━━━━━━━━━━━╯`
+      const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 🎵 *TIKTOK DOWNLOAD*\n┃━━━━━━━━━━━━━━━\n┃ 📌 ${title}\n┃ ⚡ *API:* ${winner.provider === 'causas' ? 'Causas (Fast)' : 'AlyaCore (Fast)'}\n╰━━━━━━━━━━━━━━━╯`
 
-      // Manejar Audios (MP3)
       if (cmd.includes('mp3')) {
           let audioUrl = data.data?.audio?.url || data.audio || data.data?.music || data.data?.dl || data.dl || data.data?.download?.audio
           if (!audioUrl) return m.reply(`🙄 *No encontré audio extraíble en este TikTok.* 💅`)
@@ -116,7 +127,6 @@ export default {
           return
       }
 
-      // Manejar Imágenes
       let images = data.data?.images || data.images || []
       if (images.length > 0 || cmd.includes('img')) {
           if (images.length === 0) return m.reply(`🙄 *Este TikTok no tiene imágenes (Slide).* 💅`)
@@ -127,7 +137,6 @@ export default {
           return
       }
 
-      // Manejar Video (Por defecto)
       let videoUrl = data.url || data.download || data.video || data.dl || data.data?.dl
       if (data.data && data.data.url) videoUrl = data.data.url
       if (data.data && data.data.download && data.data.download.url) videoUrl = data.data.download.url
