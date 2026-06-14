@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'DEPOOL-key60015';
+const ALYA_KEY = 'api-lYsN6';
 
 export default {
   command: ['soundcloud', 'sc'],

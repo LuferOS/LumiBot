@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'DEPOOL-key60015';
+const ALYA_KEY = 'api-lYsN6';
 
 export default {
   command: ['fb', 'facebook'],
@@ -25,14 +25,21 @@ export default {
           return { provider: 'causas', data }
       }
 
-      const fetchAlya = async () => {
+      const fetchAlyaV1 = async () => {
           const res = await fetch(`https://api.alyacore.xyz/dl/facebook?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`)
           const data = await res.json()
-          if (!data.status) throw new Error('Alya fallo status')
-          return { provider: 'alya', data }
+          if (!data.status) throw new Error('Alya v1 fallo status')
+          return { provider: 'alya-v1', data }
       }
 
-      const winner = await Promise.any([fetchCausas(), fetchAlya()])
+      const fetchAlyaV2 = async () => {
+          const res = await fetch(`https://api.alyacore.xyz/dl/facebookv2?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`)
+          const data = await res.json()
+          if (!data.status) throw new Error('Alya v2 fallo status')
+          return { provider: 'alya-v2', data }
+      }
+
+      const winner = await Promise.any([fetchCausas(), fetchAlyaV1(), fetchAlyaV2()])
       const data = winner.data
 
       let videoUrl = data.url || data.download || data.video || data.dl || data.data?.dl
