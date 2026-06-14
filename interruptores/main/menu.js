@@ -24,7 +24,13 @@ utils: `💅 ✨ **UTILIDADES (PORQUE SOY ÚTIL 🙄)** ✨ 💅
 ┣ ⊳ .lyrics - Busca la letra de una canción 🎶
 ┣ ⊳ .wikipedia - Busca información en Wikipedia 📚
 ┣ ⊳ .inteligencia - Mide tu nivel de IQ 🧠
-┗ ⊳ .horario - Qué hora es en el mundo`,
+┣ ⊳ .horario - Qué hora es en el mundo
+┣ ⊳ .ocr - Extraer texto de imagen 📝
+┣ ⊳ .whatmusic - Descubrir canción (Shazam) 🎵
+┣ ⊳ .vocalremover - Separar voz e instrumental 🎤
+┣ ⊳ .emojimix - Fusionar 2 emojis 🎭
+┣ ⊳ .hostinfo - Info de un dominio/IP 🕵️‍♀️
+┗ ⊳ .version - Ver la versión de LumiBot ⚙️`,
 
 juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
@@ -40,8 +46,9 @@ juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
 ┣ ⊳ .suerte - Descubre tu suerte hoy 🍀
 ┗ ⊳ .ruleta - Ruleta rusa, sobrevive si puedes 🔫`,
 
-anime: `💅 ✨ **REACCIONES ANIME Y SFW 🌸** ✨ 💅
+anime: `💅 ✨ **ANIME Y REACCIONES SFW 🌸** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .anime - Descargar episodios de Anime 🎬
 ┣ ⊳ .hug - Abrazar a alguien 🤗
 ┣ ⊳ .kiss - Dar un besito 😘
 ┣ ⊳ .slap - Bofetada merecida 👋
@@ -148,7 +155,8 @@ nsfw: `💅 ✨ **ZONA +18 (BAJO TU PROPIO RIESGO 😈)** ✨ 💅
 ┣ ⊳ .boobjob - rusa 🍒🍆
 ┣ ⊳ .fap - paja 🤚
 ┣ ⊳ .footjob - paja con los pies 🦶
-┗ ⊳ .squirting - Lluvia 🌧️`,
+┣ ⊳ .squirting - Lluvia 🌧️
+┗ ⊳ .hentaila - Descargar videos de HentaiLA 🎬`,
 
 ai: `💅 ✨ **MI CEREBRO ARTIFICIAL (INTELIGENTE COMO YO 🧠)** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
@@ -157,12 +165,14 @@ ai: `💅 ✨ **MI CEREBRO ARTIFICIAL (INTELIGENTE COMO YO 🧠)** ✨ 💅
 ┣ ⊳ .copilot - Pregúntale a Copilot 🖥️
 ┣ ⊳ .dalle - Crea imágenes loquísimas 🎨
 ┣ ⊳ .chatbot on/off - LumiBot interactúa en el chat 💅✨
-┗ ⊳ .markov on/off - IA Pasiva de Grupo 🧠`,
+┣ ⊳ .markov on/off - IA Pasiva de Grupo 🧠
+┗ ⊳ .gpteditor - DALL-E edita tu imagen 🎨`,
 
 stickers: `💅 ✨ **STICKERS Y EDICIÓN A MI ESTILO 🎨** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┣ ⊳ .brat - Crea un sticker estilo Brat 🟩
-┗ ⊳ .bratv - Crea un sticker animado Brat 🟩🎬`,
+┣ ⊳ .bratv - Crea un sticker animado Brat 🟩🎬
+┗ ⊳ .quotesticker - Crea sticker de cita (quote) 💭`,
 
 downloads: `💅 ✨ **DESCARGAS (ROBANDO CONTENIDO) 📥** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
@@ -172,7 +182,9 @@ downloads: `💅 ✨ **DESCARGAS (ROBANDO CONTENIDO) 📥** ✨ 💅
 ┣ ⊳ .twitter - Descargar media de X/Twitter 🐦
 ┣ ⊳ .instagram - Descargar post/reels de IG 📸
 ┣ ⊳ .tiktok - Descargar TikTok sin marca 🎵
-┗ ⊳ .pinterest - Buscar imágenes Aesthetic 📌`
+┣ ⊳ .pinterest - Buscar imágenes Aesthetic 📌
+┣ ⊳ .deezer - Descargar canciones de Deezer 🎧
+┗ ⊳ .threads - Descargar post/videos de Threads 🧵`
 };
 
 const bodyMenu = `

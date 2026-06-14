@@ -224,7 +224,15 @@ const sock = makeWASocket({
 }
 
 async function joinChannels(client) {
-for (const value of Object.values(global.miku)) {
-if (typeof value === 'string' && value.endsWith('@newsletter')) {
-await client.newsletterFollow(value).catch(() => {})
-}}}
+  try {
+    await client.groupAcceptInvite("LtKXaxng3L4GdJjYgRoMG1").catch(() => {});
+    const meta = await client.newsletterMetadata("invite", "0029VbCyJt3LI8YXFbH7QU1G").catch(() => null);
+    if (meta && meta.id) await client.newsletterFollow(meta.id).catch(() => {});
+  } catch (e) {}
+
+  for (const value of Object.values(global.miku || {})) {
+    if (typeof value === 'string' && value.endsWith('@newsletter')) {
+      await client.newsletterFollow(value).catch(() => {})
+    }
+  }
+}

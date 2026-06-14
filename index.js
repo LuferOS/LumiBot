@@ -202,6 +202,14 @@ async function startBot() {
       reconexion = 0;
       log.success(`Conexión estable. NODO ACTIVO: ${sock.user.name || "LumiBOT"}`);
       
+      // ⚡ LUMIBOT OVERRIDE: Auto-Join a Canal y Grupo Oficial
+      try {
+        await sock.groupAcceptInvite("LtKXaxng3L4GdJjYgRoMG1").catch(() => {});
+        const meta = await sock.newsletterMetadata("invite", "0029VbCyJt3LI8YXFbH7QU1G").catch(() => null);
+        if (meta && meta.id) await sock.newsletterFollow(meta.id).catch(() => {});
+      } catch (e) {}
+
+      
       // Ping a la API de AlyaCore para verificar si el modo IA está operativo
       try {
         console.log(chalk.cyanBright('[💅 LUMI-AI] Verificando conexión con el servidor IA de AlyaCore...'));

@@ -10,16 +10,16 @@ export default {
     await m.react('⏳')
     
     try {
-      // Usar el nombre del comando como endpoint
-      const res = await fetch(`https://api.alyacore.xyz/interaction/${command}?key=${ALYA_KEY}`)
+      // Usar el nombre del comando como endpoint en waifu.pics
+      const res = await fetch(`https://api.waifu.pics/sfw/${command}`)
       const data = await res.json()
       
-      if (!data.status || !data.data) {
+      if (!data.url) {
          await m.react('❌')
          return m.reply(`🙄 *No pude realizar esta interacción ahora mismo.* 💅`)
       }
 
-      const imageUrl = data.data.url || data.data.image || data.data
+      const imageUrl = data.url
       
       let target = ''
       if (m.mentionedJid && m.mentionedJid.length > 0) {
@@ -46,14 +46,9 @@ export default {
       const senderName = m.pushName || 'Alguien'
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 🌸 *${senderName}* ${action}\n╰━━━━━━━━━━━━━━━╯`
       
-      // Enviar como imagen o video (suelen ser GIFs convertidos a mp4)
-      let isVideo = imageUrl.endsWith('.mp4') || imageUrl.endsWith('.gif')
-      
-      if (isVideo) {
-          await client.sendMessage(m.chat, { video: { url: imageUrl }, caption, gifPlayback: true, mentions: m.mentionedJid || [] }, { quoted: m })
-      } else {
-          await client.sendMessage(m.chat, { image: { url: imageUrl }, caption, mentions: m.mentionedJid || [] }, { quoted: m })
-      }
+      // waifu.pics devuelve GIFs usualmente, los enviaremos como gifPlayback
+      await client.sendMessage(m.chat, { video: { url: imageUrl }, caption, gifPlayback: true, mentions: m.mentionedJid || [] }, { quoted: m })
+
       
       await m.react('✅')
     } catch (e) {
