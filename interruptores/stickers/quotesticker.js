@@ -22,6 +22,9 @@ export default {
     await m.react('⏳')
     
     try {
+      let targetSender = m.quoted ? (m.quoted.sender || m.quoted.participant) : m.sender;
+      let targetName = m.quoted ? (m.quoted.pushName || m.quoted.name || targetSender.split('@')[0]) : (m.pushName || 'Usuario');
+      
       let avatarUrl = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Fallback
       if (msg) {
          const stream = await downloadContentFromMessage(msg, 'image')
@@ -39,7 +42,7 @@ export default {
          } catch {}
       } else {
          try {
-             avatarUrl = await client.profilePictureUrl(m.sender, 'image')
+             avatarUrl = await client.profilePictureUrl(targetSender, 'image')
          } catch {}
       }
       
@@ -53,7 +56,7 @@ export default {
         messages: [{
             entities: [],
             avatar: true,
-            from: { id: 1, name: m.pushName || 'Usuario', photo: { url: avatarUrl } },
+            from: { id: 1, name: targetName, photo: { url: avatarUrl } },
             text: text,
             replyMessage: {}
         }]
