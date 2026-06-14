@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import { proto, generateWAMessageFromContent } from '@whiskeysockets/baileys'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
 const ALYA_KEY = 'DEPOOL-key60015';
@@ -8,14 +9,63 @@ export default {
   category: 'downloads',
   run: async (client, m, args, usedPrefix, command) => {
     try {
-      const urlText = args[0]
-      if (!urlText || !urlText.includes('spotify.com')) {
-        return m.reply(`🙄 *Bruh, ingresa un enlace válido de Spotify.* 💅\n> Ejemplo: *${usedPrefix}${command} https://open.spotify.com/track/4PTG3Z6ehGkBF2zI7YgR7C*`)
+      const text = args.join(' ').trim()
+      if (!text) {
+        return m.reply(`🙄 *Bruh, ingresa un enlace de Spotify o el nombre de una canción.* 💅\n> Ejemplo: *${usedPrefix}${command} bad bunny*`)
       }
 
       await m.react('🕒')
-      const targetUrl = urlText
-      
+
+      // MODO BÚSQUEDA (Si no es un enlace)
+      if (!text.includes('spotify.com')) {
+          const searchUrl = `https://rest.apicausas.xyz/api/v1/buscadores/spotify?apikey=${CAUSAS_KEY}&q=${encodeURIComponent(text)}`
+          const searchRes = await fetch(searchUrl)
+          const searchData = await searchRes.json()
+
+          if (!searchData.status || !searchData.data || searchData.data.length === 0) {
+              await m.react('✖️')
+              return m.reply(`🙄 *No encontré nada en Spotify con ese nombre* 💅`)
+          }
+
+          const topResults = searchData.data.slice(0, 3)
+          const buttons = topResults.map((track, i) => {
+              return {
+                  name: "quick_reply",
+                  buttonParamsJson: JSON.stringify({
+                      display_text: `🎵 Opción ${i + 1}: ${track.title?.substring(0, 20)}...`,
+                      id: `${usedPrefix}${command} ${track.url}`
+                  })
+              }
+          })
+
+          let fallbackText = `╭━━━━━━━━━━━━━━━╮\n┃ 🎧 *SPOTIFY SEARCH* \n┃━━━━━━━━━━━━━━━\n┃ 🔍 Resultados para: *${text}*\n`
+          topResults.forEach((track, i) => {
+              fallbackText += `┃ ${i + 1}. ${track.title} - ${track.artist}\n`
+          })
+          fallbackText += `╰━━━━━━━━━━━━━━━╯\n> 💡 *Usa los botones abajo para descargar, o si no te salen, envía:* ${usedPrefix}${command} [url]`
+
+          const msg = generateWAMessageFromContent(m.chat, {
+              viewOnceMessage: {
+                  message: {
+                      interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                          body: proto.Message.InteractiveMessage.Body.create({ text: fallbackText }),
+                          footer: proto.Message.InteractiveMessage.Footer.create({ text: 'LumiBot 💅✨' }),
+                          header: proto.Message.InteractiveMessage.Header.create({ title: '', hasMediaAttachment: false }),
+                          nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+                              buttons: buttons
+                          })
+                      })
+                  }
+              }
+          }, { quoted: m })
+
+          await client.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+          await m.react('✔️')
+          return
+      }
+
+      // MODO DESCARGA (Si es un enlace)
+      const targetUrl = args[0]
       const fetchCausas = async () => {
           const url = `https://rest.apicausas.xyz/api/v1/descargas/spotify?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`
           const res = await fetch(url)
@@ -52,7 +102,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en spotify.js:", e)
       await m.react('✖️')
-      await m.reply(`🙄 *Todo explotó bajando de Spotify (Ambas APIs fallaron)* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Todo explotó* 💅\n> Error: ${e.message}`)
     }
   }
 }
