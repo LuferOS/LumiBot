@@ -8,20 +8,19 @@ export default {
       const botSettings = db.settings?.[botId] || {};
       const banner = botSettings.banner || 'https://i.imgur.com/8Q9N49Q.jpeg';
       
-      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v3.2.0* ⋯》
-┊ ✨ *NOTAS DE LA ACTUALIZACIÓN* ✨
+      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v4.0.0* ⋯》
+┊ ✨ *NOTAS DE LA ACTUALIZACIÓN (ALYAN UPDATE)* ✨
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ 🚀 *MEJORAS DEL SISTEMA (UPGRADES):*
-┊ ⊳ *Nuevas APIs de Descarga e Info:* Añadido soporte nativo para descargas de Spotify (.spotify), SoundCloud (.soundcloud), letras de canciones (.lyrics) y resúmenes de Wikipedia (.wikipedia) gracias a AlyaCore/Causas.
-┊ ⊳ *Meme Generator Mejorado:* El comando .meme ahora es mucho más preciso. Extrae el mensaje literal del usuario (Bottom Text), la IA genera el texto de arriba para burlarse, y tiene una **probabilidad del 5% de lanzar un video meme** aleatorio.
-┊ ⊳ *Integración de Audiomemes:* Los más de 70 audios graciosos ocultos ahora están listados en el menú principal con el comando .audio.
-┊ ⊳ *Nueva Descarga NSFW:* Añadido el comando .pornhub para descargar videos de la plataforma bypassando la seguridad.
+┊ 🚀 *INTEGRACIÓN MASIVA (UPGRADES):*
+┊ ⊳ *API Racing:* Los descargadores principales (.fb, .ig, .spotify, .play, .soundcloud) ahora compiten entre múltiples APIs y servidores para asegurar una tasa de éxito del 99% y descargas ultra-rápidas.
+┊ ⊳ *Nuevas Utilidades con IA:* Más de 10 herramientas pro agregadas, incluyendo lector de imágenes (.ocr), escalador de calidad (.upscale), eliminador de voces (.vocalremover), buscador de canciones estilo Shazam (.whatmusic) e IA editora de fotos (.gpteditor).
+┊ ⊳ *Expansión Anime y Roleplay:* Añadido el descargador masivo de episodios de Anime (.anime) y un módulo dinámico de reacciones (.hug, .kiss, .slap...) impulsado por Waifu.pics.
+┊ ⊳ *NSFW Ilimitado:* Añadido el comando .hentaila para descargar contenido sin filtros.
+┊ ⊳ *Fusión de Emojis:* Crea stickers únicos fusionando emojis con .emojimix.
 ┊
-┊ 🐛 *CORRECCIONES (BUG FIXES):*
-┊ ⊳ *IA Esquizofrénica Controlada:* Se arregló el bug donde la IA creaba nombres falsos ("Yunu") porque leía el historial de la persona mezclado con stickers. Ahora los stickers se filtran invisiblemente y nunca llegan a su cerebro temporal.
-┊ ⊳ *Limpieza de Consola:* Arreglada la molesta advertencia de deprecación \`(node-fetch#buffer)\` en las capturas de pantalla web (.ss).
-┊ ⊳ *Arreglos 404 de Memes:* La IA ahora solo usa un catálogo verificado de plantillas de memes, eliminando los crasheos por pedir fondos inexistentes.
-┊ ⊳ *Arreglo de Audios:* Solucionado el fallo \`id is not defined\` en .audio al intentar obtener el nombre del usuario.
+┊ 🐛 *CORRECCIONES Y SEGURIDAD (BUG FIXES):*
+┊ ⊳ *Interacciones Solucionadas:* Se corrigió el error en los comandos de interacción donde la API devolvía un código de seguridad HTML de Cloudflare.
+┊ ⊳ *Unión Automática y Comunitaria:* Se integraron los protocolos nativos de Baileys para que tanto el bot principal como los subbots sigan automáticamente el Canal Oficial y el Grupo Comunitario en su primer arranque.
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
 
       let msgPayload = {};

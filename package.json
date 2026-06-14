@@ -1,6 +1,6 @@
 {
   "name": "lumibot",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "WhatsApp Bot Multi Device - Powered by LuferOS Security",
   "main": "index.js",
   "type": "module",

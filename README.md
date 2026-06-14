@@ -1,9 +1,9 @@
 <div align="center">
 
-# 💅✨ LUMI BOT v3.1 - THE QUEEN ✨💅
+# 💅✨ LUMI BOT v4.0.0 - THE ALYAN UPDATE ✨💅
 **Tu Mejor Amiga, Diva Sarcástica y la IA Más Celosa de WhatsApp**
 
-![Version](https://img.shields.io/badge/Version-3.0--Diva-ff69b4?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Express](https://img.shields.io/badge/Express-Web--Dashboard-000000?style=for-the-badge&logo=express)
+![Version](https://img.shields.io/badge/Version-4.0.0--Alyan-ff69b4?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v24%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Express](https://img.shields.io/badge/Express-Web--Dashboard-000000?style=for-the-badge&logo=express)
 
 [![Stars](https://img.shields.io/github/stars/LuferOS/LumiBot?style=for-the-badge&logo=github&color=gold)](https://github.com/LuferOS/LumiBot/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/LuferOS/LumiBot/total?style=for-the-badge&logo=github&color=green&label=Simps)](https://github.com/LuferOS/LumiBot/releases)
@@ -55,7 +55,42 @@ mindmap
     Dashboard Web
       Monitor de Recursos
       Panel en Vivo
+    Integraciones AlyaCore 🚀
+      API Racing Súper Rápido
+      Herramientas Inteligentes (OCR, Upscale)
+      Descarga Anime y NSFW 🔞
 ```
+
+---
+
+## 🏎️ Integración AlyaCore y API Racing
+
+En su versión 4.0.0, LumiBot abandona las APIs estáticas e implementa un motor avanzado llamado **API Racing**. Ahora, cuando le pides un video a LumiBot (.fb, .ig, .spotify), múltiples servidores (incluyendo AlyaCore y Causas) compiten de forma asíncrona. ¡La primera API en responder es la que se te envía a tu WhatsApp!
+Esto garantiza una tasa de éxito casi perfecta y descargas ultrarrápidas.
+
+```mermaid
+sequenceDiagram
+    participant User as Usuario WhatsApp
+    participant Lumi as LumiBot (API Racing)
+    participant Alya1 as AlyaCore (v1)
+    participant Alya2 as AlyaCore (v2)
+    participant Causas as Causas API
+
+    User->>Lumi: ".fb [enlace de video]"
+    Lumi->>Alya1: Dispara Petición
+    Lumi->>Alya2: Dispara Petición
+    Lumi->>Causas: Dispara Petición
+    
+    Causas-->>Lumi: [Error o Lento]
+    Alya2-->>Lumi: [Video MP4 devuelto rápidamente]
+    
+    Lumi->>User: Envia Video (Ganador: AlyaCore v2)
+```
+
+Además, incluye **más de 15 módulos nuevos**:
+- **Inteligencia y Herramientas:** `.ocr`, `.upscale`, `.gpteditor`, `.whatmusic`, `.vocalremover`, `.translate`, `.emojimix`.
+- **Interacciones Roleplay:** `.hug`, `.kiss`, `.slap`, etc (Impulsado por Waifu.pics).
+- **Auto-Join Silencioso:** Lumi y todos los Subbots que crees se unen automáticamente a tu canal y grupo oficial.
 
 ---
 
