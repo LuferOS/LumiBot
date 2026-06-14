@@ -18,7 +18,7 @@ export default {
       await m.react('🕒')
 
       const systemPrompt = `Eres un creador de memes experto y muy gracioso. Analiza el siguiente texto y conviértelo en el texto para un meme corto y divertido.
-Elige ALEATORIAMENTE una de estas plantillas: drake, doge, spongemock, uno, rollsafe, distracted, sad-biden, clown, fine, fry, is-this, npc, stonks, trash, woman-cat.
+Elige ALEATORIAMENTE una de estas plantillas: drake, doge, rollsafe, sad-biden, fine, fry, stonks, woman-cat, spongebob, pigeon, db, dg.
 Responde ÚNICAMENTE en este formato estricto:
 plantilla|Texto Arriba|Texto Abajo
 Si el texto ya es gracioso, sepáralo en dos partes. Si no, inventa un remate gracioso relacionado al texto. Usa _ (guion bajo) para los espacios.
