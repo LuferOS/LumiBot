@@ -72,7 +72,13 @@ export default {
           "Son el 'felices para siempre' que Disney nos prometió. 🏰",
           "Literalmente el algoritmo me dijo que los shipeara. 🤖",
           "Su amor es más fuerte que mi firewall. 🛡️",
-          "Ya denle el sí y dejen de perder el tiempo. ⏳"
+          "Ya denle el sí y dejen de perder el tiempo. ⏳",
+          "Se nota a kilómetros que ya quieren cogerse. 🔥",
+          "Esta noche hay acción, yo sé lo que les digo. 😏💦",
+          "Literal, váyanse a lo oscurito porque se comen con la mirada. 👀🔞",
+          "Son como dos conejos, nomás les falta la cama. 🐇",
+          "Ay papá, esa luna de miel va a estar destructiva. 😈",
+          "Ustedes dos juntos son un peligro para las camas del mundo. 🛏️🔥"
         ],
         midHigh: [
           "Hay onda, tensión sexual no resuelta detectada. 😏",
@@ -99,7 +105,12 @@ export default {
           "Solo falta que uno de los dos dé el primer paso. 🚶",
           "Si se atreven, podrían ser la envidia del grupo. 🌟",
           "Están a una peda de confesar todo. 🍺",
-          "Tienen buena química, solo les falta física. 🧪"
+          "Tienen buena química, solo les falta física. 🧪",
+          "Mucha miradita, mucho jaja, pero no veo que tiren pasión. 🙄💅",
+          "Atrévanse a mandarse pack de una vez. 📸🔥",
+          "Dejen el orgullo y váyanse a un motelazo barato. 🏩",
+          "Con un tequilita más y amanecen abrazados sin ropa. 🥃😏",
+          "Se traen unas ganas tremendas, se nota en cómo se escriben. 📝🥵"
         ],
         midLow: [
           "Más falsos que billete de 3 pesos. 💸",
@@ -126,7 +137,11 @@ export default {
           "Tienen la compatibilidad de una piña en la pizza... controversial. 🍕",
           "Están mejor solos que mal acompañados. Literal. 💅",
           "Hay más amor entre un perro y un gato que entre ustedes. 🐕",
-          "Tu mamá no lo/la aprobaría, y yo tampoco. 👵"
+          "Tu mamá no lo/la aprobaría, y yo tampoco. 👵",
+          "Si cogen va a ser más por aburrimiento que por ganas. 🥱",
+          "Tienen la misma pasión sexual que un par de calcetines sucios. 🧦",
+          "Lo de ustedes sería el acostón más triste y rápido de la historia. 🏃",
+          "Ni pa un rapidín en el baño sirven juntos. 🚽🤡"
         ],
         low: [
           "Enemigos naturales. Se acercan y explota el chat. 💣",
@@ -153,7 +168,11 @@ export default {
           "El porcentaje de odio supera al del amor por goleada. 📉",
           "Verlos juntos da más miedo que película de terror a las 3 AM. 👻",
           "Ni un amarre de brujería barata podría juntarlos. 🔮",
-          "Son el claro ejemplo de por qué existen las órdenes de alejamiento. 👮"
+          "Son el claro ejemplo de por qué existen las órdenes de alejamiento. 👮",
+          "Si se tocan, a uno le da gonorrea del asco que se tienen. 🤢",
+          "Tienen menos química sexual que dos maniquíes de plástico. 🧍",
+          "Antes de coger con esta persona, prefieres meter tus genitales en ácido. ☣️",
+          "Cero tensión sexual. Literal se ven con absoluto asco mutuo. 📉💀"
         ]
       };
 
