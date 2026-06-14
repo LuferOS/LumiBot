@@ -21,10 +21,13 @@ export default {
       let data;
       
       if (url && url.startsWith('http')) {
-         const res = await fetch(`https://api.alyacore.xyz/tools/ocr?url=${encodeURIComponent(url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
-         data = await res.json()
+         const res = await fetch(url)
+         const buffer = await res.arrayBuffer()
+         const form = new FormData()
+         form.append('base64Image', 'data:image/jpeg;base64,' + Buffer.from(buffer).toString('base64'))
+         const ocrRes = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: form, headers: { apikey: 'helloworld' } })
+         data = await ocrRes.json()
       } else if (msg) {
-         // Descargar buffer del mensaje
          const stream = await downloadContentFromMessage(msg, 'image')
          let buffer = Buffer.from([])
          for await (const chunk of stream) {
@@ -32,22 +35,17 @@ export default {
          }
          
          const form = new FormData()
-         form.append('file', new Blob([buffer]), 'image.jpg')
-         const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form })
-         const upData = await upRes.json()
-         
-         if (!upData.status || !upData.url) throw new Error('Error al subir la imagen a la nube')
-         
-         const res = await fetch(`https://api.alyacore.xyz/tools/ocr?url=${encodeURIComponent(upData.url)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
-         data = await res.json()
+         form.append('base64Image', 'data:image/jpeg;base64,' + buffer.toString('base64'))
+         const ocrRes = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: form, headers: { apikey: 'helloworld' } })
+         data = await ocrRes.json()
       }
       
-      if (!data || !data.status) {
+      if (!data || data.IsErroredOnProcessing || !data.ParsedResults || data.ParsedResults.length === 0) {
          await m.react('❌')
          return m.reply(`🙄 *No encontré ni una sola letra válida en esa imagen.* 💅`)
       }
 
-      const texto = data.text || data.data?.text || data.data
+      const texto = data.ParsedResults[0].ParsedText || 'Ningún texto reconocido.'
       
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 📝 *OCR (Texto Extraído)* \n┃━━━━━━━━━━━━━━━\n\n${texto}`
       
