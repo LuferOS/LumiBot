@@ -8,20 +8,20 @@ export default {
       const botSettings = db.settings?.[botId] || {};
       const banner = botSettings.banner || 'https://i.imgur.com/8Q9N49Q.jpeg';
       
-      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v3.1.0* ⋯》
+      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v3.2.0* ⋯》
 ┊ ✨ *NOTAS DE LA ACTUALIZACIÓN* ✨
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┊ 🚀 *MEJORAS DEL SISTEMA (UPGRADES):*
-┊ ⊳ *Módulo IA Optimizado:* Se reestructuró la personalidad del chatbot a su comportamiento original (Sádica/Meme). Ahora incluye capacidades de Rol (reacciones con GIFs) integradas.
-┊ ⊳ *Gatillo Inteligente de IA:* Eliminada la respuesta aleatoria. El bot ahora solo analiza y responde a mensajes que lo mencionan directamente o que son respuestas a sus propios mensajes, reduciendo el spam.
-┊ ⊳ *Nuevos Módulos de Extracción:* Añadidos comandos de "Stalking" (.github, .igstalk, .tiktokstalk) con integración a la API de AlyaCore para extraer perfiles completos.
-┊ ⊳ *Módulo de Capturas (SS):* Se reemplazó el proveedor obsoleto (Thum.io) por la red privada de AlyaCore para obtener capturas de pantalla ultra-rápidas y precisas (.ss).
+┊ ⊳ *Nuevas APIs de Descarga e Info:* Añadido soporte nativo para descargas de Spotify (.spotify), SoundCloud (.soundcloud), letras de canciones (.lyrics) y resúmenes de Wikipedia (.wikipedia) gracias a AlyaCore/Causas.
+┊ ⊳ *Meme Generator Mejorado:* El comando .meme ahora es mucho más preciso. Extrae el mensaje literal del usuario (Bottom Text), la IA genera el texto de arriba para burlarse, y tiene una **probabilidad del 5% de lanzar un video meme** aleatorio.
+┊ ⊳ *Integración de Audiomemes:* Los más de 70 audios graciosos ocultos ahora están listados en el menú principal con el comando .audio.
+┊ ⊳ *Nueva Descarga NSFW:* Añadido el comando .pornhub para descargar videos de la plataforma bypassando la seguridad.
 ┊
 ┊ 🐛 *CORRECCIONES (BUG FIXES):*
-┊ ⊳ *Mitigación de Baneos:* Se eliminó el uso forzado de \`externalAdReply\` en módulos como el menú e infobot, evitando que WhatsApp marque los mensajes como spam ("Reenviado muchas veces").
-┊ ⊳ *Manejo de Errores HTTP 429:* Implementado un escudo contra limitación de tasa (Rate Limiting) en las descargas de banners de Imgur. El bot ahora entrega la respuesta en texto plano sin crashear.
-┊ ⊳ *Prevención de Saturación Inicial:* Al encender, el bot ignorará todos los mensajes que fueron enviados mientras estaba apagado, previniendo ráfagas de procesamiento y caídas por sobrecarga.
-┊ ⊳ *Manejo de Fallos Multimedia:* Implementado un "Fallback" en la IA para asegurar que el texto se entregue intacto incluso si WhatsApp rechaza el envío del GIF de rol.
+┊ ⊳ *IA Esquizofrénica Controlada:* Se arregló el bug donde la IA creaba nombres falsos ("Yunu") porque leía el historial de la persona mezclado con stickers. Ahora los stickers se filtran invisiblemente y nunca llegan a su cerebro temporal.
+┊ ⊳ *Limpieza de Consola:* Arreglada la molesta advertencia de deprecación \`(node-fetch#buffer)\` en las capturas de pantalla web (.ss).
+┊ ⊳ *Arreglos 404 de Memes:* La IA ahora solo usa un catálogo verificado de plantillas de memes, eliminando los crasheos por pedir fondos inexistentes.
+┊ ⊳ *Arreglo de Audios:* Solucionado el fallo \`id is not defined\` en .audio al intentar obtener el nombre del usuario.
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
 
       let msgPayload = {};

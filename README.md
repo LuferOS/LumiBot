@@ -171,7 +171,7 @@ Acciones adorables o violentas como: `.hug`, `.kiss`, `.slap`, `.punch`, `.cry`,
 
 ### NSFW (Bajo tu propio riesgo) 😈
 Para los grupos de moral dudosa, Lumi tiene comandos explícitos:
-- Descarga de videos: `.xnxx`, `.xvideos`
+- Descarga de videos: `.xnxx`, `.xvideos`, `.pornhub`
 - Roleplay subido de tono: `.spank`, `.undress`, `.yuri`, `.sixnine`, `.anal`, `.fuck`, `.cumshot`, `.pegging`, `.deepthroat`, `.orgy`, y muchos más.
 
 ---
@@ -190,6 +190,18 @@ Lumi cuenta con más de 100 comandos divididos en categorías. Puedes consultar 
 | `.enhance` | Arregla la resolución de fotos borrosas (IA) |
 | `.read` | Lee a la fuerza mensajes "ViewOnce" (Ver una vez) 👀 |
 | `.tape` | Envía un mensaje anónimo secreto a un canal |
+| `.meme` | Genera un meme dinámico usando IA 🤣 |
+| `.lyrics` | Saca la letra de tu canción favorita 🎶 |
+| `.wikipedia` | Busca resúmenes y datos de Wikipedia 📚 |
+| `.audio` | Accede al menú de más de 70 audiomemes |
+
+### 📥 Descargas (Robando contenido)
+| Comando | Descripción |
+| :--- | :--- |
+| `.spotify` | Descarga la pista musical original desde Spotify 🎧 |
+| `.soundcloud` | Busca y descarga canciones desde SoundCloud 🎵 |
+| `.igstalk` | Stalkea en secreto a perfiles de Instagram 📸 |
+| `.tiktokstalk` | Saca toda la data de alguien en TikTok 🎵 |
 
 ### 🧠 Inteligencia Artificial
 | Comando | Descripción |
