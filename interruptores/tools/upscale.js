@@ -32,7 +32,7 @@ export default {
          
          const form = new FormData()
          form.append('file', new Blob([buffer]), 'image.jpg')
-         const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form, headers: form.getHeaders() })
+         const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form })
          const upData = await upRes.json()
          
          if (!upData.status || !upData.url) throw new Error('Error al subir la imagen a la nube')

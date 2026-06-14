@@ -36,7 +36,7 @@ export default {
          const form = new FormData()
          form.append('file', new Blob([buffer]), 'avatar.jpg')
          try {
-            const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form, headers: form.getHeaders() })
+            const upRes = await fetch('https://api.alyacore.xyz/tools/upload', { method: 'POST', body: form })
             const upData = await upRes.json()
             if (upData.url) avatarUrl = upData.url
          } catch {}
