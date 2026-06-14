@@ -21,6 +21,8 @@ utils: `💅 ✨ **UTILIDADES (PORQUE SOY ÚTIL 🙄)** ✨ 💅
 ┣ ⊳ .igstalk - Stalkea perfil de Instagram 📸
 ┣ ⊳ .tiktokstalk - Stalkea perfil de TikTok 🎵
 ┣ ⊳ .meme - Crea un meme a partir de un texto 🤣
+┣ ⊳ .lyrics - Busca la letra de una canción 🎶
+┣ ⊳ .wikipedia - Busca información en Wikipedia 📚
 ┗ ⊳ .horario - Qué hora es en el mundo`,
 
 juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
@@ -106,6 +108,7 @@ anime: `💅 ✨ **REACCIONES ANIME Y SFW 🌸** ✨ 💅
 
 nsfw: `💅 ✨ **ZONA +18 (BAJO TU PROPIO RIESGO 😈)** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .pornhub - Descargar de Pornhub 🎬
 ┣ ⊳ .xnxx - Descargar de XNXX 🎬
 ┣ ⊳ .xvideos - Descargar de XVideos 🎬
 ┣ ⊳ .waifunsfw - Waifus sin censura 🔞
@@ -158,7 +161,12 @@ ai: `💅 ✨ **MI CEREBRO ARTIFICIAL (INTELIGENTE COMO YO 🧠)** ✨ 💅
 stickers: `💅 ✨ **STICKERS Y EDICIÓN A MI ESTILO 🎨** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┣ ⊳ .brat - Crea un sticker estilo Brat 🟩
-┗ ⊳ .bratv - Crea un sticker animado Brat 🟩🎬`
+┗ ⊳ .bratv - Crea un sticker animado Brat 🟩🎬`,
+
+downloads: `💅 ✨ **DESCARGAS (ROBANDO CONTENIDO) 📥** ✨ 💅
+┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┣ ⊳ .spotify - Descargar música de Spotify 🎧
+┗ ⊳ .soundcloud - Buscar/Descargar música de SoundCloud 🎵`
 };
 
 const bodyMenu = `
