@@ -15,14 +15,23 @@ export default {
         return m.reply(`🙄 *Bruh, responde a un mensaje de texto o escribe algo.* 💅\n> Ejemplo: *${usedPrefix}${command} Literal yo cuando me levanto temprano*`)
       }
 
+      // 5% de probabilidad de video
+      if (Math.random() < 0.05) {
+        await m.react('🕒')
+        const randomVideo = 'https://i.imgur.com/3Z6zQhO.mp4' // Video meme gracioso genérico
+        await client.sendMessage(m.chat, { video: { url: randomVideo }, caption: `✨ *¡JACKPOT! 5% de probabilidad: Video Meme* ✨\n> Literal 💅`, gifPlayback: true }, { quoted: m })
+        return await m.react('✔️')
+      }
+
       await m.react('🕒')
 
-      const systemPrompt = `Eres un creador de memes experto y muy gracioso. Analiza el siguiente texto y conviértelo en el texto para un meme corto y divertido.
+      const systemPrompt = `Eres un creador de memes experto y muy gracioso. Analiza el texto de un usuario y escribe SOLO un texto corto y burlón (máximo 6 palabras) que sirva como "Texto Superior" para burlarte de lo que dijo.
+El texto inferior será exactamente lo que él dijo, así que haz que tenga sentido.
 Elige ALEATORIAMENTE una de estas plantillas: drake, doge, rollsafe, sad-biden, fine, fry, stonks, woman-cat, spongebob, pigeon, db, dg.
 Responde ÚNICAMENTE en este formato estricto:
-plantilla|Texto Arriba|Texto Abajo
-Si el texto ya es gracioso, sepáralo en dos partes. Si no, inventa un remate gracioso relacionado al texto. Usa _ (guion bajo) para los espacios.
-No digas nada más, solo la respuesta en el formato indicado.`
+plantilla|Texto Arriba
+Si no entiendes, pon algo genérico. Usa _ (guion bajo) para los espacios.
+No digas nada más.`
 
       const url = `https://api.alyacore.xyz/ai/gptprompt?text=${encodeURIComponent(targetText.trim())}&prompt=${encodeURIComponent(systemPrompt)}&key=api-lYsN6`
       
@@ -36,12 +45,12 @@ No digas nada más, solo la respuesta en el formato indicado.`
 
       let resultText = data.result.trim()
       let parts = resultText.split('|')
-      if (parts.length < 3) {
-        // Fallback in case AI messes up the format
-        parts = ['drake', 'Cuando_la_IA_se_rompe', 'Pero_igual_tengo_meme']
+      if (parts.length < 2) {
+        parts = ['drake', 'Cuando_dices_estas_cosas']
       }
 
-      let [template, top, bottom] = parts
+      let [template, top] = parts
+      let bottom = targetText.slice(0, 100) // Limitamos a 100 caracteres
       
       const formatText = (t) => t.trim().replace(/\s+/g, '_').replace(/\?/g, '~q').replace(/&/g, '~a').replace(/#/g, '~p').replace(/\//g, '~s')
       
@@ -50,7 +59,7 @@ No digas nada más, solo la respuesta en el formato indicado.`
 
       const memeUrl = `https://api.memegen.link/images/${template}/${top}/${bottom}.png`
 
-      await client.sendMessage(m.chat, { image: { url: memeUrl }, caption: `✨ *Tu meme servido, bb* ✨\n> Factos 💅` }, { quoted: m })
+      await client.sendMessage(m.chat, { image: { url: memeUrl }, caption: `✨ *Tu meme customizado, bb* ✨\n> Factos 💅` }, { quoted: m })
       await m.react('✔️')
 
     } catch (e) {
