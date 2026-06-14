@@ -20,6 +20,7 @@ utils: `💅 ✨ **UTILIDADES (PORQUE SOY ÚTIL 🙄)** ✨ 💅
 ┣ ⊳ .github - Stalkea perfil de GitHub 💻
 ┣ ⊳ .igstalk - Stalkea perfil de Instagram 📸
 ┣ ⊳ .tiktokstalk - Stalkea perfil de TikTok 🎵
+┣ ⊳ .meme - Crea un meme a partir de un texto 🤣
 ┗ ⊳ .horario - Qué hora es en el mundo`,
 
 juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
