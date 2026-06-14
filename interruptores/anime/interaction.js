@@ -1,4 +1,7 @@
 import fetch from 'node-fetch'
+import { spawn } from 'child_process'
+import fs from 'fs'
+import path from 'path'
 
 const ALYA_KEY = 'api-lYsN6';
 
@@ -46,10 +49,29 @@ export default {
       const senderName = m.pushName || 'Alguien'
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 🌸 *${senderName}* ${action}\n╰━━━━━━━━━━━━━━━╯`
       
-      // waifu.pics devuelve GIFs usualmente, los enviaremos como gifPlayback
-      await client.sendMessage(m.chat, { video: { url: imageUrl }, caption, gifPlayback: true, mentions: m.mentionedJid || [] }, { quoted: m })
-
+      // Descargar el GIF y convertir a MP4 para que WhatsApp lo anime correctamente
+      const gifRes = await fetch(imageUrl)
+      const gifBuffer = Buffer.from(await gifRes.arrayBuffer())
       
+      const tempId = Date.now() + '-' + Math.floor(Math.random() * 10000)
+      const tempGif = path.join(process.cwd(), `tmp_${tempId}.gif`)
+      const tempMp4 = path.join(process.cwd(), `tmp_${tempId}.mp4`)
+      
+      fs.writeFileSync(tempGif, gifBuffer)
+      
+      await new Promise((resolve, reject) => {
+          const p = spawn('ffmpeg', ['-y', '-i', tempGif, '-movflags', 'faststart', '-pix_fmt', 'yuv420p', '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2', tempMp4])
+          p.on('close', (code) => {
+              if (code === 0) resolve()
+              else reject(new Error('ffmpeg failed'))
+          })
+      })
+      
+      const mp4Buffer = fs.readFileSync(tempMp4)
+      fs.unlinkSync(tempGif)
+      fs.unlinkSync(tempMp4)
+      
+      await client.sendMessage(m.chat, { video: mp4Buffer, caption, gifPlayback: true, mentions: m.mentionedJid || [] }, { quoted: m })
       await m.react('✅')
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en interaction.js:", e)
