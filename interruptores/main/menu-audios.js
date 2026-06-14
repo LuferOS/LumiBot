@@ -48,7 +48,7 @@ export default {
   command: ['menuaudios', 'menu2', 'menú2', 'memu2', 'menuaudio', 'memuaudios', 'memuaudio', 'audio', 'audios'],
   category: 'menu',
   run: async (client, m) => {
-    const username = client.getName(m.sender)
+    const username = m.pushName || 'Bebé'
     const header = [
       `💙 MENU DE AUDIOS 💙`,
       ``,
