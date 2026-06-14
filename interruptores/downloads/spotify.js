@@ -23,13 +23,15 @@ export default {
 
       let audioUrl = data.url || data.download || data.audio
       if (data.data && data.data.url) audioUrl = data.data.url
+      if (data.data && data.data.download && data.data.download.url) audioUrl = data.data.download.url
 
       if (!audioUrl) {
          await m.react('✖️')
          return m.reply(`🙄 *La API no devolvió un enlace válido de audio* 💅`)
       }
       
-      await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${data.title || 'Spotify_LumiBot'}.mp3` }, { quoted: m })
+      const title = data.data?.title || data.title || 'Spotify_LumiBot'
+      await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m })
       await m.react('✔️')
 
     } catch (e) {

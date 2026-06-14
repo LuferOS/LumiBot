@@ -43,6 +43,7 @@ export default {
 
       let audioUrl = data.url || data.download || data.dl_url || data.audio // Fallback de los nombres más comunes
       if (data.data && data.data.url) audioUrl = data.data.url
+      if (data.data && data.data.download && data.data.download.url) audioUrl = data.data.download.url
 
       if (!audioUrl) {
          await m.react('✖️')
@@ -51,7 +52,8 @@ export default {
 
       const caption = `🎧 *SoundCloud* 🎧\n> Descargado para ti, mi rey 💅`
       
-      await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${data.title || 'Soundcloud_LumiBot'}.mp3` }, { quoted: m })
+      const title = data.data?.title || data.title || 'Soundcloud_LumiBot'
+      await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m })
       await m.react('✔️')
 
     } catch (e) {
