@@ -46,7 +46,7 @@ export default {
          return m.reply(`🙄 *Mis oídos finos no reconocen este ruido.* 💅`)
       }
 
-      const info = data.data || data
+      const info = Array.isArray(data.data) ? data.data[0] : (data.data || data)
       const title = info.title || info.name || 'Desconocida'
       const artist = info.artists || info.artist || 'Desconocido'
       const album = info.album || 'Desconocido'
