@@ -10,8 +10,8 @@ export default {
     await m.react('⏳')
     
     try {
-      // Usar el nombre del comando como endpoint en waifu.pics
-      const res = await fetch(`https://api.waifu.pics/sfw/${command}`)
+      // Usar el nombre del comando como endpoint en otakugifs
+      const res = await fetch(`https://api.otakugifs.xyz/gif?reaction=${command}`)
       const data = await res.json()
       
       if (!data.url) {
