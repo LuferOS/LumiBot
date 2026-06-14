@@ -1,5 +1,8 @@
 import fetch from 'node-fetch'
 
+const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
+const ALYA_KEY = 'DEPOOL-key60015';
+
 export default {
   command: ['spotify', 'sp'],
   category: 'downloads',
@@ -11,23 +14,35 @@ export default {
       }
 
       await m.react('🕒')
-      const url = `https://rest.apicausas.xyz/api/v1/descargas/spotify?apikey=causa-60ca3fea34a7af43&url=${encodeURIComponent(urlText)}`
+      const targetUrl = urlText
       
-      const res = await fetch(url)
-      const data = await res.json()
-
-      if (!data.status) {
-        await m.react('✖️')
-        return m.reply(`🙄 *Falló la descarga de Spotify* 💅\n> Quizás el enlace no es válido o la API está caída.`)
+      const fetchCausas = async () => {
+          const url = `https://rest.apicausas.xyz/api/v1/descargas/spotify?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`
+          const res = await fetch(url)
+          const data = await res.json()
+          if (!data.status) throw new Error('Causas fallo status')
+          return { provider: 'causas', data }
       }
 
-      let audioUrl = data.url || data.download || data.audio
+      const fetchAlya = async () => {
+          const url = `https://api.alyacore.xyz/dl/spotify?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`
+          const res = await fetch(url)
+          const data = await res.json()
+          if (!data.status) throw new Error('Alya fallo status')
+          return { provider: 'alya', data }
+      }
+
+      const winner = await Promise.any([fetchCausas(), fetchAlya()])
+      const data = winner.data
+
+      let audioUrl = data.url || data.download || data.audio || data.dl
       if (data.data && data.data.url) audioUrl = data.data.url
       if (data.data && data.data.download && data.data.download.url) audioUrl = data.data.download.url
+      if (data.data && data.data.dl) audioUrl = data.data.dl
 
       if (!audioUrl) {
          await m.react('✖️')
-         return m.reply(`🙄 *La API no devolvió un enlace válido de audio* 💅`)
+         return m.reply(`🙄 *Las APIs no devolvieron un enlace válido de audio* 💅`)
       }
       
       const title = data.data?.title || data.title || 'Spotify_LumiBot'
@@ -37,7 +52,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en spotify.js:", e)
       await m.react('✖️')
-      await m.reply(`🙄 *Todo explotó bajando de Spotify* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Todo explotó bajando de Spotify (Ambas APIs fallaron)* 💅\n> Error: ${e.message}`)
     }
   }
 }

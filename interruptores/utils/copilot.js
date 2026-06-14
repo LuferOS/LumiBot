@@ -1,5 +1,8 @@
 import fetch from 'node-fetch'
 
+const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
+const ALYA_KEY = 'api-lYsN6';
+
 export default {
   command: ['copilot', 'c'],
   category: 'ai',
@@ -7,26 +10,40 @@ export default {
     try {
       const text = args.join(' ').trim()
       if (!text) {
-        return m.reply(`🙄 *Bruh, literal no pusiste nada* 💅\n> Ejemplo: *${usedPrefix}${command} hola we*`)
+        return m.reply(`🙄 *Bruh, literal no pusiste nada* 💅\n> Ejemplo: *${usedPrefix}${command} xd we*`)
       }
       
       await m.react('🕒')
-      const url = `https://api.alyacore.xyz/ai/copilot?text=${encodeURIComponent(text)}&key=api-lYsN6`
-      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } })
-      const json = await res.json()
+
+      const fetchCausas = async () => {
+          const res = await fetch(`https://rest.apicausas.xyz/api/v1/ia/copilot?apikey=${CAUSAS_KEY}&q=${encodeURIComponent(text)}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
+          const data = await res.json()
+          if (!data.status) throw new Error('Causas fallo status')
+          return { provider: 'causas', data }
+      }
+
+      const fetchAlya = async () => {
+          const res = await fetch(`https://api.alyacore.xyz/ai/copilot?text=${encodeURIComponent(text)}&key=${ALYA_KEY}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })
+          const data = await res.json()
+          if (!data.status) throw new Error('Alya fallo status')
+          return { provider: 'alya', data }
+      }
+
+      const winner = await Promise.any([fetchCausas(), fetchAlya()])
+      const json = winner.data
       
-      if (!json.status || !json.response) {
-        await m.react('✖️')
-        return m.reply(`🙄 *Copilot no quiso contestar* 💅\n> Error en AlyaCore o respuesta vacía.`)
+      let responseText = json.result || json.response || json.data?.result || json.data?.response || json.data
+      if (!responseText || typeof responseText !== 'string') {
+          throw new Error('Formato de respuesta desconocido')
       }
       
-      await client.sendMessage(m.chat, { text: json.response.trim() }, { quoted: m })
+      await client.sendMessage(m.chat, { text: responseText.trim() }, { quoted: m })
       await m.react('✔️')
       
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en copilot.js:", e)
       await m.react('✖️')
-      await m.reply(`🙄 *Todo explotó* 💅\n> Literal algo reventó: ${e.message}`)
+      await m.reply(`🙄 *Todo explotó* 💅\n> Literal las IAs están caídas: ${e.message}`)
     }
   }
 }
