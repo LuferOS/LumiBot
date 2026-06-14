@@ -98,6 +98,36 @@ Además del modelo de lenguaje en la nube, Lumi tiene un cerebro pasivo entrenad
 - Al activarlo, puede escupir oraciones sin sentido lógico pero gramaticalmente correctas para tu grupo. 
 - ¡Puede generar **Stickers Animados (.bratv)** a partir de sus pensamientos matemáticos!
 
+### 3. Arquitectura de Descargas Inteligentes (API Racing)
+LumiBot no confía en un solo proveedor. Para garantizar descargas ultrarrápidas y evitar caídas, implementa un sistema avanzado de **Carrera de APIs (`Promise.any`)** conectado simultáneamente a **AlyaCore** y **Apicausas**.
+
+En comandos complejos como Spotify y TikTok, el flujo incluye interactividad nativa:
+
+#### Diagrama de Spotify (Búsqueda Nativa + Descarga por Carrera)
+```mermaid
+sequenceDiagram
+    participant U as Usuario
+    participant B as LumiBot
+    participant S as Spotify Oficial API
+    participant W as WhatsApp Native UI
+    participant AC as AlyaCore / Causas
+
+    U->>B: .spotify bad bunny
+    B->>S: Autenticación OAuth2 & Búsqueda
+    S-->>B: Resultados Oficiales (Top 3)
+    B->>W: Renderiza Botones Interactivos Nativos
+    W-->>U: Muestra Menú Elegante
+    U->>W: (Click) Opción 1
+    W->>B: Payload Interno (.spotify https://...)
+    Note over B, AC: ¡Inicia Carrera de APIs (Promise.any)!
+    par API 1
+        B->>AC: Petición a AlyaCore
+    and API 2
+        B->>AC: Petición a Apicausas
+    end
+    AC-->>B: Retorna Audio (Gana el más rápido)
+    B->>U: ¡Audio en MP3 entregado!
+```
 #### Flujo de Aprendizaje y Ejecución de Markov
 ```mermaid
 stateDiagram-v2
