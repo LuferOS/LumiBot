@@ -6,7 +6,7 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       if (!args.length) {
-        return m.reply('💙 Especifica el nombre del paquete de stickers.', m, global.miku)
+        return m.reply('🔥 Especifica el nombre del paquete de stickers.', m, global.lumi)
       }
       const packName = args.join(' ').trim().toLowerCase()
       const db = global.db.data
@@ -31,10 +31,10 @@ export default {
       }
 
       if (!pack) {
-        return m.reply('💙 No se encontró un paquete con ese nombre.', m, global.miku)
+        return m.reply('👑 Literalmente Literalmente no encontré un paquete con ese nombre.', m, global.lumi)
       }
       if (!Array.isArray(pack.stickers) || pack.stickers.length < 4) {
-        return m.reply(`💙 El paquete \`${pack.name}\` no tiene suficientes stickers.`, m, global.miku)
+        return m.reply(`🙄 El paquete \`${pack.name}\` no tiene suficientes stickers.`, m, global.lumi)
       }
       const validStickers = pack.stickers.map(s => {
         try {
@@ -45,7 +45,7 @@ export default {
       }).filter(s => s && Buffer.isBuffer(s) && s.length > 0)
 
       if (validStickers.length < 4) {
-        return m.reply('💙 Algunos stickers están corruptos.', m, global.miku)
+        return m.reply('💖 Algunos stickers están corruptos.', m, global.lumi)
       }
 
       const MAX_STICKERS = 50
@@ -65,7 +65,7 @@ export default {
         try {
           const img = new webp.default.Image()
           await img.load(buffer)
-          const json = { 'sticker-pack-id': 'https://github.com/Brauliovh3/HATSUNE-MIKU', 'sticker-pack-name': stickerPackname, 'sticker-pack-publisher': stickerAuthor, emojis: ['🎭'] }
+          const json = { 'sticker-pack-id': 'https://github.com/LuferOS/LumiBot', 'sticker-pack-name': stickerPackname, 'sticker-pack-publisher': stickerAuthor, emojis: ['🎭'] }
           const exifAttr = Buffer.from([0x49, 0x49, 0x2a, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x41, 0x57, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00])
           const jsonBuff = Buffer.from(JSON.stringify(json), 'utf-8')
           const exif = Buffer.concat([exifAttr, jsonBuff])
@@ -81,7 +81,7 @@ export default {
         }
       }))
 
-      await client.sendMessage(m.chat, { stickerPack: { name: pack.name, publisher: `${pack.author} (${name})`, description: pack.desc, cover, stickers: stickerResults }, ...global.miku }, { quoted: m })
+      await client.sendMessage(m.chat, { stickerPack: { name: pack.name, publisher: `${pack.author} (${name})`, description: pack.desc, cover, stickers: stickerResults }, ...global.lumi }, { quoted: m })
       await m.react('✔️')
     } catch (e) {
       await m.react('✖️')

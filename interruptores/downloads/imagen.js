@@ -6,7 +6,7 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     const text = args.join(' ').trim()
     if (!text) {
-      return client.reply(m.chat, `💙 Por favor, ingresa un término de búsqueda.`, m, global.miku)
+      return client.reply(m.chat, `💖 Por favor, ingresa un término de búsqueda.`, m, global.lumi)
     }
 
     const bannedWords = [
@@ -212,7 +212,7 @@ export default {
     const lowerText = text.toLowerCase()
     const nsfwEnabled = global.db.data.chats[m.chat]?.nsfw === true
     if (!nsfwEnabled && bannedWords.some((word) => lowerText.includes(word))) {
-      return m.reply('💙 Este comando no permite búsquedas de contenido +18 o NSFW.', m, global.miku)
+      return m.reply('💅 Este comando no permite búsquedas de contenido +18 o NSFW.', m, global.lumi)
     }
 
     const buildCaption = (r, query, idx, total) => {
@@ -221,13 +221,13 @@ export default {
       const resolution = r?.resolution ? String(r.resolution).trim() : ''
 
       const lines = []
-      lines.push('╭─💙 HATSUNE MIKU • IMAGE SEARCH')
+      lines.push('╭─💅 HATSUNE MIKU • IMAGE SEARCH')
       lines.push(`│ 🖼️ Imagen: ${idx}/${total}`)
       if (title) lines.push(`│ 🏷️ Título: ${title}`)
       if (source) lines.push(`│ 🌐 Fuente: ${source}`)
       if (resolution) lines.push(`│ 📐 Resolución: ${resolution}`)
       lines.push(`│ 🔎 Búsqueda: ${query}`)
-      lines.push('╰──────────────💙')
+      lines.push('╰──────────────💖')
       return lines.join('\n')
     }
 
@@ -243,7 +243,7 @@ export default {
       }
 
       if (checked.length < 2) {
-        return client.reply(m.chat, `💙 Se requieren al menos 2 imágenes válidas para mostrar un álbum.`, m, global.miku)
+        return client.reply(m.chat, `💋 Se requieren al menos 2 imágenes válidas para mostrar un álbum.`, m, global.lumi)
       }
 
       const max = Math.min(checked.length, 10)
@@ -256,7 +256,7 @@ export default {
       await client.sendAlbumMessage(m.chat, medias, { quoted: m })
     } catch (e) {
       await m.reply(
-        `💙 An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`,
+        `💋 An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`,
       )
     }
   },

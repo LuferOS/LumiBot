@@ -178,7 +178,7 @@ downloads: `💅 ✨ **DESCARGAS (ROBANDO CONTENIDO) 📥** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┣ ⊳ .spotify - Descargar música de Spotify 🎧
 ┣ ⊳ .soundcloud - Buscar/Descargar música de SoundCloud 🎵
-┣ ⊳ .facebook - Descargar video de FB 💙
+┣ ⊳ .facebook - Descargar video de FB 💖
 ┣ ⊳ .twitter - Descargar media de X/Twitter 🐦
 ┣ ⊳ .instagram - Descargar post/reels de IG 📸
 ┣ ⊳ .tiktok - Descargar TikTok sin marca 🎵

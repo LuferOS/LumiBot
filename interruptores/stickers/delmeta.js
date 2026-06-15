@@ -6,11 +6,11 @@ export default {
       const db = global.db.data
       const userData = db.users[m.sender] || {}
       if ((!userData.metadatos || userData.metadatos === '') && (!userData.metadatos2 || userData.metadatos2 === '')) {
-        return m.reply('💙 No tienes metadatos asignados.', m, global.miku)
+        return m.reply('🔥 No tienes metadatos asignados.', m, global.lumi)
       }
       db.users[m.sender].metadatos = ''
       db.users[m.sender].metadatos2 = ''
-      await client.sendMessage(m.chat, { text: `💙 Los metadatos de tus stickers se han eliminado correctamente.`, ...global.miku }, { quoted: m })
+      await client.sendMessage(m.chat, { text: `💖 Los metadatos de tus stickers se han eliminado correctamente.`, ...global.lumi }, { quoted: m })
     } catch (e) {
       await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }

@@ -50,10 +50,10 @@ export default {
   run: async (client, m) => {
     const username = m.pushName || 'Bebé'
     const header = [
-      `💙 MENU DE AUDIOS 💙`,
+      `💖 MENU DE AUDIOS 💖`,
       ``,
       `🌱 Hola ${username}`,
-      `💙 Escribe la palabra SIN prefijo para enviar el audio.`,
+      `🙄 Escribe la palabra SIN prefijo para enviar el audio.`,
       ``,
       `🌱 Lista:`,
     ].join('\n')
@@ -63,7 +63,7 @@ export default {
     const parts = chunkText(fullText, 3500)
 
     for (let i = 0; i < parts.length; i++) {
-      const suffix = parts.length > 1 ? `\n\n💙 Parte ${i + 1}/${parts.length}` : ''
+      const suffix = parts.length > 1 ? `\n\n🙄 Parte ${i + 1}/${parts.length}` : ''
       await client.sendMessage(
         m.chat,
         {

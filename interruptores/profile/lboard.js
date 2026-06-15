@@ -23,17 +23,17 @@ export default {
           return { jid: key, name, exp, level, progreso, xp, porcentaje }
         })
       if (users.length === 0)
-        return m.reply(`💙 No hay usuarios registrados con experiencia.`)
+        return m.reply(`💅 No hay usuarios registrados con experiencia.`)
       const sorted = users.sort((a, b) => (b.exp || 0) - (a.exp || 0))
       const page = parseInt(args[0]) || 1
       const pageSize = 10
       const totalPages = Math.ceil(sorted.length / pageSize)
-      if (isNaN(page) || page < 1 || page > totalPages) return m.reply(`💙 La página *${page}* no existe. Hay *${totalPages}* páginas.`)
+      if (isNaN(page) || page < 1 || page > totalPages) return m.reply(`🙄 La página *${page}* no existe. Hay *${totalPages}* páginas.`)
       const start = (page - 1) * pageSize
       const end = start + pageSize
-      let text = `*💙 Top de usuarios con más experiencia 💙*\n\n`
+      let text = `*💅 Top de usuarios con más experiencia 👑*\n\n`
       text += sorted.slice(start, end).map(({ name, exp, level, progreso, xp, porcentaje }, i) => {
-          return `💙 ${start + i + 1} › *${name}*\n     XP → *${exp.toLocaleString()}*  LVL → *${level}*\n     ➨ Progreso → *${progreso} => ${xp}* _(${porcentaje}%)_`
+          return `👑 ${start + i + 1} › *${name}*\n     XP → *${exp.toLocaleString()}*  LVL → *${level}*\n     ➨ Progreso → *${progreso} => ${xp}* _(${porcentaje}%)_`
         }).join('\n\n')
       text += `\n\n> ⌦ Página *${page}* de *${totalPages}*`
       if (page < totalPages)

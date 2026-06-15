@@ -7,19 +7,19 @@ export default {
     try {
       const timeout = args[0] ? msParser(args[0]) : 0
       if (args[0] && !timeout) {
-        return client.reply(m.chat, 'Formato inválido. Usa por ejemplo: 10s, 5m, 2h, 1d', m, global.miku)
+        return client.reply(m.chat, 'Formato inválido. Usa por ejemplo: 10s, 5m, 2h, 1d', m, global.lumi)
       }
       const groupMetadata = await client.groupMetadata(m.chat)
       const groupAnnouncement = groupMetadata.announce
       if (groupAnnouncement === true) {
-        return client.reply(m.chat, `💙 El grupo ya está cerrado.`, m, global.miku)
+        return client.reply(m.chat, `✨ El grupo ya está cerrado.`, m, global.lumi)
       }
       const applyAction = async () => {
         await client.groupSettingUpdate(m.chat, 'announcement')
-        return client.reply(m.chat, `💙 El grupo ha sido cerrado correctamente.`, m, global.miku)
+        return client.reply(m.chat, `🙄 El grupo ha sido cerrado correctamente.`, m, global.lumi)
       }
       if (timeout > 0) {
-        await client.reply(m.chat, `💙 El grupo se cerrará en ${clockString(timeout)}.`, m, global.miku)
+        await client.reply(m.chat, `💋 El grupo se cerrará en ${clockString(timeout)}.`, m, global.lumi)
         setTimeout(async () => {
           try {
             const md = await client.groupMetadata(m.chat)

@@ -29,7 +29,7 @@ export default {
       if (!imgUrl) throw new Error('Ninguna API devolvió imagen 🤡');
       
       let img = Buffer.from(await (await fetch(imgUrl)).arrayBuffer())
-      await client.sendFile(m.chat, img, 'thumbnail.jpg', `✨ Aquí tienes tu *${command.toUpperCase()}* literal arte puro 💅`, m, global.miku)
+      await client.sendFile(m.chat, img, 'thumbnail.jpg', `✨ Aquí tienes tu *${command.toUpperCase()}* literal arte puro 💅`, m, global.lumi)
       await m.react('✔️')
     } catch (e) {
       await m.react('✖️')

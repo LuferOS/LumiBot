@@ -12,6 +12,8 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const fileType = require('file-type');
 import path from 'path';
+import NodeCache from 'node-cache';
+const apiCache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
 import exif from './exif.js';
 import { fileURLToPath } from 'url'
 import GraphemeSplitter from 'grapheme-splitter'
@@ -51,8 +53,13 @@ export async function getBuffer(url, options) {
 
 export async function fetchJson(url, options) {
   try {
-    options ? options : {}
+    options = options || {}
+    const cacheKey = url + JSON.stringify(options);
+    if (apiCache.has(cacheKey)) {
+        return apiCache.get(cacheKey);
+    }
     const res = await axios({ method: 'GET', url: url, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36' }, ...options })
+    apiCache.set(cacheKey, res.data);
     return res.data
   } catch (err) {
     return err
@@ -526,11 +533,11 @@ export async function smsg(client, m, store) {
     const icon = botSettings.banner || ''
     const redes = botSettings.link || 'https://bvh3-industries.vercel.app'
     const dev = global.dev || '© POWERED (ㅎㅊDEPOOLㅊㅎ)'
-    const canales = Object.entries(global.miku)
+    const canales = Object.entries(global.lumi)
   .reduce((acc, [key, value]) => {
     if (key.startsWith('ch')) {
       const index = key.slice(2)
-      const nombre = global.miku[`name${index}`];
+      const nombre = global.lumi[`name${index}`];
       if (nombre) acc.push({ id: value, nombre })
     }
     return acc
@@ -596,7 +603,7 @@ export async function smsg(client, m, store) {
     const namebot2 = config.body || settings.namebot || ''
     const canalId = settings.newsletter_id || ''
     const canalName = settings.nameid || ''
-    const sourceUrl = typeof config.redes === 'string' ? config.redes : typeof settings.link === 'string' ? settings.link : 'https://github.com/Brauliovh3/HATSUNE-MIKU'
+    const sourceUrl = typeof config.redes === 'string' ? config.redes : typeof settings.link === 'string' ? settings.link : 'https://github.com/LuferOS/LumiBot'
     const normalizeJid = (jid) => (jid.includes('@') ? jid : jid + '@s.whatsapp.net')
     const mentions = Array.isArray(mentionedJid) ? mentionedJid.map(normalizeJid) : null
     const content = { extendedTextMessage: { text, contextInfo: { mentionedJid: mentions, externalAdReply: { title: botnam, body: dev, mediaType: 1, renderLargerThumbnail: false, previewType: 'PHOTO', thumbnailUrl: banner, sourceUrl }}}}

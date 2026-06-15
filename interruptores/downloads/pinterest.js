@@ -12,13 +12,29 @@ export default {
     
     try {
       const q = args.join(' ')
-      const url = `https://rest.apicausas.xyz/api/v1/buscadores/pinterest?apikey=causa-60ca3fea34a7af43&q=${encodeURIComponent(q)}`
-      const res = await fetch(url)
-      const data = await res.json()
+      
+      const fetchCausas = async () => {
+          const url = `https://rest.apicausas.xyz/api/v1/buscadores/pinterest?apikey=causa-60ca3fea34a7af43&q=${encodeURIComponent(q)}`
+          const res = await fetch(url)
+          const data = await res.json()
+          if (!data.status) throw new Error('Causas fallo status')
+          return data
+      }
 
-      if (!data.status) {
-        await m.react('❌')
-        return m.reply(`🙄 *Falló la búsqueda en Pinterest* 💅\n> Literal no encontré nada con eso.`)
+      const fetchAlya = async () => {
+          const url = `https://api.alyacore.xyz/api/pinterest?q=${encodeURIComponent(q)}&key=api-lYsN6`
+          const res = await fetch(url)
+          const data = await res.json()
+          if (!data.status) throw new Error('Alya fallo status')
+          return data
+      }
+
+      let data;
+      try {
+          data = await Promise.any([fetchCausas(), fetchAlya()]);
+      } catch (e) {
+          await m.react('❌')
+          return m.reply(`🙄 *Falló la búsqueda en Pinterest* 💅\n> Literal no encontré nada con eso.`)
       }
 
       let images = data.data || data.results || []

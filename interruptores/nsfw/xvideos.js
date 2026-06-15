@@ -1,5 +1,5 @@
 import fetch from "node-fetch"
-import cheerio from "cheerio"
+import * as cheerio from "cheerio"
 import { getBuffer } from "../../nucleo/message.js"
 import { proto, generateWAMessageFromContent, generateWAMessageContent } from "@whiskeysockets/baileys"
 
@@ -11,7 +11,7 @@ export default {
     try {
       try { await client.sendMessage(m.chat, { react: { text: '⏳', key: m.key } }) } catch {}
       const query = args.join(" ")
-      if (!query) return m.reply("💙 Por favor, ingresa el título o URL del video de XVIDEOS.", m, global.miku)
+      if (!query) return m.reply("🙄 Bruh, ingresa el título o URL del video de XVIDEOS.", m, global.lumi)
       const isUrl = query.includes("xvideos.com")
       if (isUrl) {
         const res = await xvideosdl(query)
@@ -31,7 +31,7 @@ export default {
         return
       }
       const res = await search(encodeURIComponent(query))
-      if (!res.length) return m.reply("💙 No se encontraron resultados.", m, global.miku)
+      if (!res.length) return m.reply("🔥 No se encontraron resultados.", m, global.lumi)
 
       const ready = []
       for (const item of res.slice(0, 6)) {
@@ -47,12 +47,12 @@ export default {
         } catch {}
       }
 
-      if (!ready.length) return m.reply("💙 No se pudieron preparar videos de la búsqueda.", m, global.miku)
+      if (!ready.length) return m.reply("✨ No se pudieron preparar videos de la búsqueda.", m, global.lumi)
       await sendSearchVideoCarousel(client, m, 'XVIDEOS', ready)
       try { await client.sendMessage(m.chat, { react: { text: '✅', key: m.key } }) } catch {}
     } catch (e) {
       try { await client.sendMessage(m.chat, { react: { text: '❌', key: m.key } }) } catch {}
-      return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`, m, global.miku)
+      return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`, m, global.lumi)
     }
   },
 }
@@ -75,7 +75,7 @@ async function sendSearchVideoCarousel(client, m, source, videos = []) {
 
       cards.push({
         body: proto.Message.InteractiveMessage.Body.fromObject({
-          text: `💙 ${title}`,
+          text: `✨ ${title}`,
         }),
         footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: '' }),
         header: proto.Message.InteractiveMessage.Header.fromObject({
@@ -96,7 +96,7 @@ async function sendSearchVideoCarousel(client, m, source, videos = []) {
       viewOnceMessage: {
         message: {
           interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-            body: proto.Message.InteractiveMessage.Body.create({ text: `💙 Resultados ${source}` }),
+            body: proto.Message.InteractiveMessage.Body.create({ text: `✨ Resultados ${source}` }),
             footer: proto.Message.InteractiveMessage.Footer.create({ text: '' }),
             header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
             carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards }),

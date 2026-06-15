@@ -9,7 +9,7 @@ export default {
   run: async (client, m, args, usedPrefix, command, text) => {
     try {
       if (!args[0]) {
-        return m.reply(`💙 Ingresa 2 emojis para combinar.\n> Ejemplo: *${usedPrefix + command}* 👻+👀`, m, global.miku);
+        return m.reply(`🙄 Ingresa 2 emojis para combinar.\n> Ejemplo: *${usedPrefix + command}* 👻+👀`, m, global.lumi);
       }
       let [emoji1, emoji2] = text.split('+');
       await m.react('🕒');
@@ -18,11 +18,11 @@ export default {
       const name = user.name || m.sender.split('@')[0];
       const meta1 = user.metadatos ? String(user.metadatos).trim() : '';
       const meta2 = user.metadatos2 ? String(user.metadatos2).trim() : '';
-      let texto1 = meta1 ? meta1 : '💙 HATSUNE MIKU';
+      let texto1 = meta1 ? meta1 : '💋 HATSUNE MIKU';
       let texto2 = meta1 ? (meta2 ? meta2 : '') : `@${name}`;
       const res = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=API_KEY_GEMINI&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`);
       if (!res.results || res.results.length === 0) {
-        throw new Error('💙 No se encontraron stickers para esos emojis.');
+        throw new Error('💋 No se encontraron stickers para esos emojis.');
       }
       for (let result of res.results) {
         const tmpFile = `./tmp/emojimix-${Date.now()}.webp`;

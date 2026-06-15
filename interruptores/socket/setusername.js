@@ -7,8 +7,8 @@ export default {
     const isOwner2 = [idBot, ...(config.owner ? [config.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(m.sender)
     if (!isOwner2) return m.reply(mess.socket)
     const value = args.join(' ').trim()
-    if (!value) return m.reply(`💙 Debes escribir un nombre de usuario valido.\n> Ejemplo: *${usedPrefix + command} Hatsune Miku*`, m, global.miku)
+    if (!value) return m.reply(`💅 O sea, debes escribir un nombre de usuario valido.\n> Ejemplo: *${usedPrefix + command} Hatsune Miku*`, m, global.lumi)
     await client.updateProfileName(value)
-    return m.reply(`💙 El nombre de usuario del bot ha sido actualizado a *${value}*!`, m, global.miku)
+    return m.reply(`👑 El nombre de usuario del bot ha sido actualizado a *${value}*!`, m, global.lumi)
   },
 };

@@ -25,7 +25,14 @@ export default {
           return { provider: 'alya', data }
       }
 
-      const winner = await fetchAlya()
+      const fetchCausas = async () => {
+          const res = await fetch(`https://rest.apicausas.xyz/api/v1/descargas/threads?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`)
+          const data = await res.json()
+          if (!data.status) throw new Error('Causas fallo status')
+          return { provider: 'causas', data }
+      }
+
+      const winner = await Promise.any([fetchCausas(), fetchAlya()])
       const data = winner.data
 
       let mediaUrls = []

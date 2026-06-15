@@ -14,6 +14,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Crear tabla si no existe
 db.serialize(() => {
+  // Optimizaciones de rendimiento táctico
+  db.run(`PRAGMA journal_mode = WAL;`);
+  db.run(`PRAGMA synchronous = NORMAL;`);
+  
   db.run(`CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     chat_id TEXT NOT NULL,

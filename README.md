@@ -17,12 +17,11 @@
 ## 📖 Índice de Contenidos
 1. [💅 ¿Quién es LumiBot?](#-quién-es-lumibot)
 2. [🧠 Arquitectura e Inteligencia Artificial](#-arquitectura-e-inteligencia-artificial)
-3. [📊 Web Dashboard en Vivo](#-web-dashboard-en-vivo)
-4. [🎮 Zonas de Entretenimiento y Juegos](#-zonas-de-entretenimiento-y-juegos)
-5. [🔞 Módulo NSFW & Rol Explícito](#-módulo-nsfw--rol-explícito)
-6. [🛠️ Lista Completa de Comandos](#️-lista-completa-de-comandos)
-7. [⚙️ Guía de Instalación Avanzada](#️-guía-de-instalación-avanzada)
-8. [💾 Estructura de la Base de Datos](#-estructura-de-la-base-de-datos)
+3. [🎮 Zonas de Entretenimiento y Juegos](#-zonas-de-entretenimiento-y-juegos)
+4. [🔞 Módulo NSFW & Rol Explícito](#-módulo-nsfw--rol-explícito)
+5. [🛠️ Lista Completa de Comandos](#️-lista-completa-de-comandos)
+6. [⚙️ Guía de Instalación Avanzada](#️-guía-de-instalación-avanzada)
+7. [💾 Estructura de la Base de Datos](#-estructura-de-la-base-de-datos)
 
 ---
 
@@ -187,33 +186,6 @@ stateDiagram-v2
 ```
 
 ---
-
-## 📊 Web Dashboard en Vivo
-
-> [!TIP]
-> **🌟 Panel de Control Web (Diva Dashboard)**
-> LumiBot levanta un servidor HTTP (`http://localhost:3000`) ofreciendo un panel estético (Dark Glassmorphism) donde puedes monitorizar a Lumi en tiempo real.
-
-El Dashboard muestra:
-1. **Uso de Cuerpazo (RAM):** Cuánta memoria Node.js está consumiendo.
-2. **Tiempo Despierta:** Uptime del bot.
-3. **Métrica de Simps:** Total de usuarios registrados y grupos que domina.
-4. **Memoria del Cerebro:** Cuántos mensajes ha absorbido el Cerebro Markoviano en la base de datos local SQLite.
-
-#### Arquitectura del Panel
-```mermaid
-graph LR
-    A[LumiBot Main Core] -->|Reporta RAM/Uptime| B(Express Server)
-    A -->|Lee usuarios| C[(database.json)]
-    A -->|Lee historial| D[(lumi_markov.db)]
-    C --> B
-    D --> B
-    B -->|WebSocket / HTTP| E[💻 Dashboard en Navegador]
-    E -->|Glassmorphism UI| F((Tu Pantalla))
-    
-    style B fill:#ff69b4,stroke:#333,stroke-width:2px
-    style D fill:#87cefa,stroke:#333
-```
 
 ---
 

@@ -60,16 +60,16 @@ export default {
     const nombreBonito = featureNames[normalizedKey] || `la función *${normalizedKey}*`
     const titulo = featureTitles[normalizedKey] || normalizedKey
     if (!stateArg) {
-      return client.reply(m.chat, `💙 *${titulo}* 💙\n\n🎵 Un administrador puede activar o desactivar ${nombreBonito} utilizando:\n\n💙 _Habilitar ›_ *${usedPrefix + normalizedKey} enable*\n💙 _Deshabilitar ›_ *${usedPrefix + normalizedKey} disable*\n\n💙 *Estado actual ›* ${estado}`, m, global.miku)
+      return client.reply(m.chat, `✨ *${titulo}* 🙄\n\n🎵 Un administrador puede activar o desactivar ${nombreBonito} utilizando:\n\n💅 _Habilitar ›_ *${usedPrefix + normalizedKey} enable*\n💅 _Deshabilitar ›_ *${usedPrefix + normalizedKey} disable*\n\n✨ *Estado actual ›* ${estado}`, m, global.lumi)
     }
     if (!validStates.includes(stateArg)) {
-      return client.reply(m.chat, `💙 Estado no válido. Usa *on*, *off*, *enable* o *disable*\n\nEjemplo:\n${usedPrefix}${normalizedKey} enable`, m, global.miku)
+      return client.reply(m.chat, `👑 Estado no válido. Usa *on*, *off*, *enable* o *disable*\n\nEjemplo:\n${usedPrefix}${normalizedKey} enable`, m, global.lumi)
     }
     const enabled = ['on', 'enable'].includes(stateArg)
     if (chatData[normalizedKey] === enabled) {
-      return client.reply(m.chat, `💙 *${titulo}* ya estaba *${enabled ? 'activado' : 'desactivado'}*.`, m, global.miku)
+      return client.reply(m.chat, `💅 *${titulo}* ya estaba *${enabled ? 'activado' : 'desactivado'}*.`, m, global.lumi)
     }
     chatData[normalizedKey] = enabled
-    return client.reply(m.chat, `💙 Has *${enabled ? 'activado' : 'desactivado'}* ${nombreBonito}.`, m, global.miku)
+    return client.reply(m.chat, `💅 Has *${enabled ? 'activado' : 'desactivado'}* ${nombreBonito}.`, m, global.lumi)
   }
 };

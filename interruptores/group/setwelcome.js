@@ -8,9 +8,9 @@ export default {
     const chat = global.db.data.chats[m.chat]
     const value = text ? text.trim() : ''
     if (!value) {
-      return m.reply(`💙 Debes enviar un mensaje para establecerlo como mensaje de bienvenida.\n> Puedes usar {usuario}, {grupo} y {desc} como variables dinámicas.\n\n🌱 Ejemplo:\n${usedPrefix}setwelcome Bienvenido {usuario} a {grupo}!`, m, global.miku)
+      return m.reply(`🔥 O sea, debes enviar un mensaje para establecerlo como mensaje de bienvenida.\n> Puedes usar {usuario}, {grupo} y {desc} como variables dinámicas.\n\n🌱 Ejemplo:\n${usedPrefix}setwelcome Bienvenido {usuario} a {grupo}!`, m, global.lumi)
     }
     chat.sWelcome = value
-    return m.reply(`💙 Has establecido el mensaje de bienvenida correctamente.`, m, global.miku)
+    return m.reply(`🙄 Has establecido el mensaje de bienvenida correctamente.`, m, global.lumi)
   }
 }

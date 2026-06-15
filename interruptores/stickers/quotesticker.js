@@ -23,7 +23,11 @@ export default {
     
     try {
       let targetSender = m.quoted ? (m.quoted.sender || m.quoted.participant) : m.sender;
-      let targetName = m.quoted ? (m.quoted.pushName || m.quoted.name || targetSender.split('@')[0]) : (m.pushName || 'Usuario');
+      let targetName = m.pushName || 'Usuario';
+      if (m.quoted) {
+          const dbUser = global.db.data.users[targetSender];
+          targetName = dbUser?.name || targetSender.split('@')[0];
+      }
       
       let avatarUrl = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Fallback
       if (msg) {

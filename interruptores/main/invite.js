@@ -22,20 +22,20 @@ export default {
     const cooldown = 600000;
     const nextTime = user.jointime + cooldown;    
     if (new Date() - user.jointime < cooldown) {
-      return m.reply(`💙 Espera *${msToTime(nextTime - new Date())}* para volver a enviar otra invitacion.`);
+      return m.reply(`✨ Espera *${msToTime(nextTime - new Date())}* para volver a enviar otra invitacion.`);
     }
     if (!args || !args.length) {
-      return m.reply('💙 Ingresa el enlace para invitar al bot a tu grupo.');
+      return m.reply('✨ Ingresa el enlace para invitar al bot a tu grupo.');
     }
     const link = args.join(' ');
     const match = link.match(linkRegex);    
     if (!match || !match[1]) {
-      return m.reply('💙 El enlace ingresado no es válido o está incompleto.');
+      return m.reply('✨ El enlace ingresado no es válido o está incompleto.');
     }
     const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
     const botType = isOficialBot ? 'Principal/Owner' : 'Sub Bot';
     const pp = await client.profilePictureUrl(m.sender, 'image').catch(() => 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Hatsune_Miku_logo_%28Project_Sekai%29.svg/1280px-Hatsune_Miku_logo_%28Project_Sekai%29.svg.png');    
-    const sugg = `💙 𝗦𝗢𝗟𝗜𝗖𝗜𝗧𝗨𝗗 𝗥𝗘𝗖𝗜𝗕𝗜𝗗𝗔
+    const sugg = `🙄 𝗦𝗢𝗟𝗜𝗖𝗜𝗧𝗨𝗗 𝗥𝗘𝗖𝗜𝗕𝗜𝗗𝗔
     
 ✩ *Usuario ›* ${global.db.data.users[m.sender].name}
 ✿ *Enlace ›* ${args.join(' ')}
@@ -50,16 +50,16 @@ export default {
       const lista = dueño ? [dueño] : global.owner.map(num => `${num}@s.whatsapp.net`);
       for (const destino of lista) {
         try {
-          await global.client.sendContextInfoIndex(destino, sugg, {}, null, false, null, { banner: pp, title: '💙 Invitación', body: '✿ New invitation to the Sokect.', redes: global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"].link });
+          await global.client.sendContextInfoIndex(destino, sugg, {}, null, false, null, { banner: pp, title: '🔥 Invitación', body: '✿ New invitation to the Sokect.', redes: global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"].link });
         } catch {}
       }
     } else {
       const destino = dueño || botId;
       try {
-        await global.client.sendContextInfoIndex(destino, sugg, {}, null, false, null, { banner: pp, title: '💙 Invitación', body: '✿ New invitation to the Sokect.', redes: global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"].link });
+        await global.client.sendContextInfoIndex(destino, sugg, {}, null, false, null, { banner: pp, title: '👑 Invitación', body: '✿ New invitation to the Sokect.', redes: global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"].link });
       } catch {}
     }    
-    await client.reply(m.chat, '💙 El enlace fue enviado correctamente. ¡Gracias por tu invitación! ฅ^•ﻌ•^ฅ', m);
+    await client.reply(m.chat, '🔥 El enlace fue enviado correctamente. ¡Gracias por tu invitación! ฅ^•ﻌ•^ฅ', m);
     user.jointime = new Date() * 1;
   },
 };

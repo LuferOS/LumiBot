@@ -7,7 +7,7 @@ export default {
     const db = global.db.data
     const chatId = m.chat
     const chatData = db.chats[chatId]
-    if (!chatData || !chatData.users) return m.reply(`💙 Aún no hay registros de actividad en este grupo.`)
+    if (!chatData || !chatData.users) return m.reply(`💖 Aún no hay registros de actividad en este grupo.`)
 
     // Recolectar estadísticas totales de cada usuario
     const stats = Object.entries(chatData.users).map(([jid, user]) => {

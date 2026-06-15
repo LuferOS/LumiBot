@@ -61,7 +61,7 @@ export default {
       
       await client.sendMessage(m.chat, {
         image: image.type === 'buffer' ? image.data : { url: image.data },
-        caption: `🔞 *${displayName}*\n\n💙 Solicitado por: @${m.sender.split('@')[0]}`,
+        caption: `🔞 *${displayName}*\n\n💋 Solicitado por: @${m.sender.split('@')[0]}`,
         mentions: [m.sender]
       }, { quoted: m })
       

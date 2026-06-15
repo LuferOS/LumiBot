@@ -36,7 +36,7 @@ export default {
       if (textToCheck) {
         return client.sendMessage(m.chat, { text: textToCheck, ...options })
       }
-      return m.reply('💙 Por favor, escribe el texto que deseas repetir.')
+      return m.reply('💖 Bruh, escribe el texto que deseas repetir.')
     } catch (e) {
       return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }

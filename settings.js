@@ -30,8 +30,8 @@ global.links = {
   gmail: "nekranmegared@gmail.com"
 }
 
-// Mantenemos la variable 'miku' para no romper dependencias, pero el contenido es nuestro.
-global.miku = {
+// Variables y metadatos base de LumiBot
+global.lumi = {
   contextInfo: {
     externalAdReply: {
       title: "LumiBOT",

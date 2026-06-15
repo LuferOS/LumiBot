@@ -5,7 +5,7 @@ export default {
   category: 'group',
   isAdmin: true,
   run: async (client, m, args, command, text, prefix) => {
-    if (!m.isGroup) return m.reply(`💙 Comando exclusivo de grupos.`)
+    if (!m.isGroup) return m.reply(`💖 Comando exclusivo de grupos.`)
 
     const db = global.db.data
     const chatId = m.chat
@@ -13,7 +13,7 @@ export default {
 
     // Obtener participantes reales de WhatsApp
     const groupMetadata = await client.groupMetadata(chatId).catch(() => null)
-    if (!groupMetadata) return m.reply(`💙 No pude obtener la información del grupo.`)
+    if (!groupMetadata) return m.reply(`💋 No pude obtener la información del grupo.`)
 
     const botJid = client.user?.id?.split(':')[0] + '@s.whatsapp.net'
 

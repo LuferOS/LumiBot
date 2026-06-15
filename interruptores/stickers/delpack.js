@@ -4,23 +4,23 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       if (!args.length) {
-        return m.reply('💙 Especifica el nombre del paquete de stickers.', m, global.miku)
+        return m.reply('👑 Especifica el nombre del paquete de stickers.', m, global.lumi)
       }
       const packName = args.join(' ').trim()
       const db = global.db.data
       if (!db.stickerspack) db.stickerspack = {}
       const packs = db.stickerspack[m.sender]?.packs || []
       if (!packs || packs.length === 0) {
-        return m.reply('💙 No tienes paquetes creados.', m, global.miku)
+        return m.reply('👑 No tienes paquetes creados.', m, global.lumi)
       }
       const packIndex = packs.findIndex(p => p.name.toLowerCase() === packName.toLowerCase())
       if (packIndex === -1) {
-        return m.reply(`💙 No se encontró el paquete de stickers \`${packName}\`.`, m, global.miku)
+        return m.reply(`🔥 Literalmente Literalmente no encontré el paquete de stickers \`${packName}\`.`, m, global.lumi)
       }
       const deletedPack = packs[packIndex]
       packs.splice(packIndex, 1)
       db.stickerspack[m.sender].packs = packs
-      m.reply(`💙 El paquete de stickers \`${deletedPack.name}\` ha sido eliminado.`, m, global.miku)
+      m.reply(`👑 El paquete de stickers \`${deletedPack.name}\` ha sido eliminado.`, m, global.lumi)
     } catch (e) {
       m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }

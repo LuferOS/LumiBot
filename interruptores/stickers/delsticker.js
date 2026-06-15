@@ -4,33 +4,33 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       if (!args.length) {
-        return m.reply('💙 Especifica el nombre del paquete.', m, global.miku)
+        return m.reply('💅 Especifica el nombre del paquete.', m, global.lumi)
       }
       const packName = args.join(' ').trim()
       const db = global.db.data
       if (!db.stickerspack) db.stickerspack = {}
       const packs = db.stickerspack[m.sender]?.packs || []
       if (!packs || packs.length === 0) {
-        return m.reply('💙 No tienes paquetes creados.', m, global.miku)
+        return m.reply('👑 No tienes paquetes creados.', m, global.lumi)
       }
       const pack = packs.find(p => p.name.toLowerCase() === packName.toLowerCase())
       if (!pack) {
-        return m.reply('💙 No se encontró un paquete con ese nombre.', m, global.miku)
+        return m.reply('👑 Literalmente Literalmente no encontré un paquete con ese nombre.', m, global.lumi)
       }
       const quoted = m.quoted
       if (!quoted) {
-        return m.reply('💙 Responde a un sticker para eliminarlo del paquete de stickers.', m, global.miku)
+        return m.reply('🔥 Responde a un sticker para eliminarlo del paquete de stickers.', m, global.lumi)
       }
       const mime = quoted.mimetype || quoted.msg?.mimetype || ''
       if (!/webp/i.test(mime)) {
-        return m.reply('💙 Solo puedes eliminar stickers.', m, global.miku)
+        return m.reply('💋 Solo puedes eliminar stickers.', m, global.lumi)
       }
       if (!pack.stickers || pack.stickers.length === 0) {
-        return m.reply('💙 El paquete no tiene stickers.', m, global.miku)
+        return m.reply('💋 El paquete no tiene stickers.', m, global.lumi)
       }
       let buffer = await quoted.download()
       if (!buffer) {
-        return m.reply('💙 No se pudo obtener el sticker.', m, global.miku)
+        return m.reply('🔥 No se pudo obtener el sticker.', m, global.lumi)
       }
       if (!Buffer.isBuffer(buffer)) {
         buffer = Buffer.from(buffer)
@@ -38,12 +38,12 @@ export default {
       const base64Buffer = buffer.toString('base64')
       const index = pack.stickers.findIndex(stored => stored === base64Buffer)
       if (index === -1) {
-        return m.reply('💙 Ese sticker no está en el paquete.', m, global.miku)
+        return m.reply('💋 Ese sticker no está en el paquete.', m, global.lumi)
       }
       pack.stickers.splice(index, 1)
       pack.lastModified = Date.now().toString()
       db.stickerspack[m.sender].packs = packs
-      m.reply(`💙 El sticker ha sido eliminado del paquete de stickers ${pack.name}!`, m, global.miku)
+      m.reply(`🙄 El sticker ha sido eliminado del paquete de stickers ${pack.name}!`, m, global.lumi)
     } catch (e) {
       m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }

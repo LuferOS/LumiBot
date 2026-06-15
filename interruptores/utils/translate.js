@@ -5,7 +5,7 @@ export default {
   category: 'utils',
   run: async (client, m, args, usedPrefix, command) => {
     const defaultLang = 'es'
-    if (!args[0] && !m.quoted) return m.reply('💙 Ingresa el idioma seguido del texto que quieras traducir.')
+    if (!args[0] && !m.quoted) return m.reply('💋 Ingresa el idioma seguido del texto que quieras traducir.')
     let lang = args[0]
     let text = args.slice(1).join(' ') || m.quoted?.text
     if ((lang || '').length !== 2) {

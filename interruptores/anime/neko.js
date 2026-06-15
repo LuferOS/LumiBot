@@ -14,11 +14,11 @@ export default {
       
       if (!neko || neko === '') throw new Error('No se pudo obtener imagen')
       
-      await client.sendFile(m.chat, neko, 'neko.jpg', `💙 Aquí tienes tu *NEKO* 💙^•ﻌ•^💙`, m, global.miku)
+      await client.sendFile(m.chat, neko, 'neko.jpg', `💋 Aquí tienes tu *NEKO* 💖^•ﻌ•^💅`, m, global.lumi)
       await m.react('✔️')
     } catch (e) {
       await m.react('✖️')
-      await m.reply(`💙 An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`🔥 An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   },
 }

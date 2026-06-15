@@ -61,7 +61,7 @@ export default {
   category: 'tools',
   run: async (client, m, args, usedPrefix, command, text) => {
     if (!m.quoted) {
-      return client.reply(m.chat, `💙 Debes citar un sticker para convertir.`, m);
+      return client.reply(m.chat, `🔥 Debes citar un sticker para convertir.`, m);
     }    
     await m.react('🕒');    
     try {
@@ -69,20 +69,20 @@ export default {
       const buffer = await quoted.download();      
       if (!buffer) {
         await m.react('✖️');
-        return client.reply(m.chat, `💙 No se pudo descargar el sticker.`, m);
+        return client.reply(m.chat, `👑 No se pudo descargar el sticker.`, m);
       }      
       const isAnimated = quoted.msg && quoted.msg.isAnimated;      
       if (isAnimated) {
         const mp4Buffer = await webp2mp4(buffer);
-        await client.sendMessage(m.chat, { video: mp4Buffer, caption: '💙 *Aquí tienes ฅ^•ﻌ•^ฅ*', gifPlayback: true }, { quoted: m });
+        await client.sendMessage(m.chat, { video: mp4Buffer, caption: '👑 *Aquí tienes ฅ^•ﻌ•^ฅ*', gifPlayback: true }, { quoted: m });
       } else {
         const pngBuffer = await webp2png(buffer);
-        await client.sendMessage(m.chat, { image: pngBuffer, caption: '💙 *Aquí tienes ฅ^•ﻌ•^ฅ*' }, { quoted: m });
+        await client.sendMessage(m.chat, { image: pngBuffer, caption: '✨ *Aquí tienes ฅ^•ﻌ•^ฅ*' }, { quoted: m });
       }      
       await m.react('✔️');
     } catch (error) {
       await m.react('✖️');
-      client.reply(m.chat, `💙 Error al convertir el sticker.\n${error.message}`, m);
+      client.reply(m.chat, `🙄 Error al convertir el sticker.\n${error.message}`, m);
     }
   }
 };

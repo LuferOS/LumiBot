@@ -22,7 +22,7 @@ export default {
     const globalUsers = global.db.data.users || {}
     const userss = global.db.data.chats[m.chat].users[userId] || {}
     if (!userss) {
-      return m.reply('💙 El usuario *mencionado* no está *registrado* en el bot')
+      return m.reply('🔥 El usuario *mencionado* no está *registrado* en el bot')
     }
     const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net' || ''
     const settings = global.db.data.settings[idBot] || {}
@@ -60,21 +60,21 @@ export default {
       const { min, xp } = xpRange(nivel, global.multiplier)
       const progreso = exp - min
       const porcentaje = xp > 0 ? Math.floor((progreso / xp) * 100) : 0
-      const profileText = `💙 *Perfil* 🌱 ${name} 🌱${desc}
+      const profileText = `✨ *Perfil* 🌱 ${name} 🌱${desc}
 
-💙 Cumpleaños › *${birth}*
+✨ Cumpleaños › *${birth}*
 🌱 Pasatiempo › *${pasatiempo}*
-💙 Género › *${genero}*
+✨ Género › *${genero}*
 🌱 ${estadoCivil} › *${pareja}*
 
-💙 Nivel › *${nivel}*
+🙄 Nivel › *${nivel}*
 🌱 Experiencia › *${exp.toLocaleString()}*
-💙 Progreso › *${progreso} => ${xp}* _(${porcentaje}%)_
+💋 Progreso › *${progreso} => ${xp}* _(${porcentaje}%)_
 🌱 Puesto › *#${rank}*
 
-💙 Harem › *${haremCount}*
+💋 Harem › *${haremCount}*
 🌱 Valor total › *${haremValue.toLocaleString()}*${favLine}
-💙 Coins totales › *🌱${totalCoins.toLocaleString()} ${currency}*
+✨ Coins totales › *🌱${totalCoins.toLocaleString()} ${currency}*
 🌱 Comandos ejecutados › *${comandos.toLocaleString()}*`
       await client.sendFile(m.chat, 'https://files.catbox.moe/fwzhps.jpg', 'profile.jpg', profileText, m)
     } catch (e) {

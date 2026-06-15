@@ -263,7 +263,7 @@ function embedCoverArt(mp3Buffer, imageBuffer, title) {
 function getMikuMenuText(title, author, duration, views) {
   return (
     `╭──『 *YOUTUBE PLAY* 』──╮\n` +
-    `│ 💙 *Hatsune Miku Edition* 💙\n` +
+    `│ 👑 *Hatsune Miku Edition* 👑\n` +
     `╰────────────────╯\n\n` +
     `🎬 *${String(title).substring(0, 35)}*\n` +
     (author   ? `👤 ${author}\n`                   : '') +
@@ -394,13 +394,13 @@ export async function processDownload(conn, m, videoInfo, option) {
     if (user && !user.monedaDeducted) {
       user.moneda = (user.moneda || 0) - 500
       user.monedaDeducted = true
-      conn.reply(m.chat, '💙 Has utilizado 🌱 500 *Cebollines*', m)
+      conn.reply(m.chat, '💋 Has utilizado 🌱 500 *Cebollines*', m)
     }
     return true
   } catch (error) {
     if (tempFilePath) deleteFile(tempFilePath)
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-    await conn.reply(m.chat, `💙 Error al descargar: ${error.message}`, m)
+    await conn.reply(m.chat, `✨ Error al descargar: ${error.message}`, m)
     throw error
   } finally {
     activeYouTubeDownloads.delete(lockKey)
@@ -465,9 +465,9 @@ export default {
       if (!args.length) {
         return conn.reply(
           m.chat,
-          `💙 *${usedPrefix}${command}* <canción o URL>\n` +
-          `💙 Ejemplo: *${usedPrefix}${command} Let you down Cyberpunk*\n` +
-          `💙 Costo: *🌱 500 cebollines*`,
+          `💅 *${usedPrefix}${command}* <canción o URL>\n` +
+          `👑 Ejemplo: *${usedPrefix}${command} Let you down Cyberpunk*\n` +
+          `🔥 Costo: *🌱 500 cebollines*`,
           m
         )
       }
@@ -503,7 +503,7 @@ export default {
         await conn.sendMessage(m.chat, {
           image: thumbBuf,
           caption: infoText,
-          footer: '💙 Hatsune Miku Bot',
+          footer: '💅 Hatsune Miku Bot',
           buttons: [
             { buttonId: `youtube_audio_${videoId}`, buttonText: { displayText: '🎵 Audio MP3' }, type: 1 },
             { buttonId: `youtube_video_360_${videoId}`, buttonText: { displayText: '🎬 Video 360p' }, type: 1 },

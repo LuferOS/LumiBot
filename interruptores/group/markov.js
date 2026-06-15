@@ -3,7 +3,7 @@ export default {
   category: 'group',
   isAdmin: true,
   run: async (client, m, args, usedPrefix, command) => {
-    if (!m.isGroup) return m.reply(`💙 Este comando es exclusivo para grupos.`);
+    if (!m.isGroup) return m.reply(`🙄 Este comando es exclusivo para grupos.`);
     
     const db = global.db.data;
     const chat = db.chats[m.chat];

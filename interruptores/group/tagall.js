@@ -21,8 +21,8 @@ export default {
       }
       teks += `╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
       
-      // Mantenemos global.miku porque ya le inyectamos tu identidad visual en settings.js
-      return client.reply(m.chat, teks, m, global.miku, { mentions: [m.sender, ...participants.map(p => p.id)] })
+      // Mantenemos global.lumi porque ya le inyectamos tu identidad visual en settings.js
+      return client.reply(m.chat, teks, m, global.lumi, { mentions: [m.sender, ...participants.map(p => p.id)] })
       
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en tagall:", e);

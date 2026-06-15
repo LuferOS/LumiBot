@@ -3,7 +3,7 @@ let WAMessageStubType = (await import('@whiskeysockets/baileys')).default
 import chalk from 'chalk'
 
 // ⚡ LUMIBOT OVERRIDE: Importamos el descifrador de LIDs de tu núcleo
-import { resolveLidToRealJid } from '../nucleo/utils.js'
+import { resolveLidToRealJid } from '../../nucleo/utils.js'
 
 const _welcomeQueue = []
 let _welcomeRunning = false
@@ -130,7 +130,7 @@ export default async (client, m) => {
           })
         }
         
-        // Purga de "global.miku" en eventos administrativos
+        // Purga de "global.lumi" en eventos administrativos
         if (anu.action === 'promote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const usuario = anu.author
           await safeSend(client, anu.id, { text: `[⚡] ⊳ *@${phone}* ahora es *Admin*.\nAcción realizada por: *@${usuario.split('@')[0]}*.`, mentions: [validJid, usuario, ...groupAdmins.map(v => v.id)] })
@@ -168,7 +168,7 @@ export default async (client, m) => {
     const groupMetadata = await client.groupMetadata(id).catch(() => null)
     const groupAdmins = groupMetadata?.participants.filter(p => (p.admin === 'admin' || p.admin === 'superadmin')) || []
     
-    // Purga de "global.miku" en notificaciones
+    // Purga de "global.lumi" en notificaciones
     if (m.messageStubType == 21) {
       await safeSend(client, id, { text: `[⚙️] ⊳ *@${phone}* cambió el nombre del grupo a *${m.messageStubParameters[0]}*`, mentions: [actor, ...groupAdmins.map(v => v.id)] })
     }

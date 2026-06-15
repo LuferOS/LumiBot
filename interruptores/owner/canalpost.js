@@ -241,7 +241,7 @@ export default {
     const botJid = (client.user?.id?.split(':')[0] || client.user?.lid) + '@s.whatsapp.net'
     const settings = global.db.data.settings[botJid] || {}
     const channelId = settings.id || '120363315369913363@newsletter'
-    const channelName = settings.nameid || '💙HATSUNE MIKU CHANNEL💙'
+    const channelName = settings.nameid || '💅HATSUNE MIKU CHANNEL💖'
 
     try {
       const quoted = m.quoted || null
@@ -250,11 +250,11 @@ export default {
       let text = args.join(' ').trim()
 
       if (!channelId?.endsWith('@newsletter')) {
-        return client.reply(m.chat, `Canal no configurado correctamente.\nUsa: ${usedPrefix}setchannel <enlace_o_id_del_canal>`, m, global.miku)
+        return client.reply(m.chat, `Canal no configurado correctamente.\nUsa: ${usedPrefix}setchannel <enlace_o_id_del_canal>`, m, global.lumi)
       }
 
       if (!source && !text) {
-        return client.reply(m.chat, `Uso:\n${usedPrefix}${command} [texto]\n${usedPrefix}${command} [texto] (respondiendo o adjuntando imagen/video/audio/documento)`, m, global.miku)
+        return client.reply(m.chat, `Uso:\n${usedPrefix}${command} [texto]\n${usedPrefix}${command} [texto] (respondiendo o adjuntando imagen/video/audio/documento)`, m, global.lumi)
       }
 
       await m.react('📤')
@@ -264,7 +264,7 @@ export default {
         const postId = source?.key?.id || m?.key?.id || ''
         if (alreadySentPostOnce(postId)) {
           await m.react('✅')
-          return client.reply(m.chat, `Enviado al canal:\n${channelName}`, m, global.miku)
+          return client.reply(m.chat, `Enviado al canal:\n${channelName}`, m, global.lumi)
         }
 
         const buffer = await downloadSourceBuffer(client, source)
@@ -300,17 +300,17 @@ export default {
 
       } else {
         if (!text && quoted?.text) text = quoted.text.trim()
-        if (!text) return client.reply(m.chat, 'No hay texto para publicar.', m, global.miku)
+        if (!text) return client.reply(m.chat, 'No hay texto para publicar.', m, global.lumi)
         await sendToChannelRetry(client, channelId, { text })
       }
 
       await m.react('✅')
-      return client.reply(m.chat, `Enviado al canal:\n${channelName}`, m, global.miku)
+      return client.reply(m.chat, `Enviado al canal:\n${channelName}`, m, global.lumi)
 
     } catch (error) {
       await m.react('❌')
       const msg = String(error?.message || error)
-      return client.reply(m.chat, `Error al publicar en canal.\n${msg}\n\nVerifica:\n- Permiso de publicacion del bot\n- Que ffmpeg este disponible\n- Que la media sea permitida por WhatsApp Channels`, m, global.miku)
+      return client.reply(m.chat, `Error al publicar en canal.\n${msg}\n\nVerifica:\n- Permiso de publicacion del bot\n- Que ffmpeg este disponible\n- Que la media sea permitida por WhatsApp Channels`, m, global.lumi)
     }
   },
 }

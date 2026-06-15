@@ -60,7 +60,7 @@ export default {
   command: ['anal','violar','cum','undress','encuerar','fuck','coger','spank','nalgada','lickpussy','fap','paja','grope','sixnine','69','suckboobs','grabboobs','blowjob','mamada','bj','boobjob','yuri','tijeras','footjob','cummouth','cumshot','handjob','lickass','lickdick'],
   category: 'nsfw',
   run: async (client, m, args, usedPrefix, command) => {
-    if (!global.db.data.chats[m.chat].nsfw) return m.reply(`💙 El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`, m, global.miku);
+    if (!global.db.data.chats[m.chat].nsfw) return m.reply(`💋 El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`, m, global.lumi);
     const currentCommand = Object.keys(alias).find(key => alias[key].includes(command)) || command;
     if (!captions[currentCommand]) return;
     let mentionedJid = m.mentionedJid || [];
@@ -76,7 +76,7 @@ export default {
       const json = await response.json()
       const videoUrl = json?.result || json?.url || json?.data
       if (!videoUrl) {
-        return await m.reply(`💙 No se pudo obtener el video de la API. Inténtalo de nuevo más tarde.`);
+        return await m.reply(`💅 No se pudo obtener el video de la API. Inténtalo de nuevo más tarde.`);
       }
       await client.sendMessage(m.chat, { video: { url: videoUrl }, gifPlayback: true, caption, mentions: [who, m.sender] }, { quoted: m });
     } catch (e) {

@@ -20,7 +20,7 @@ export default {
       const video = await getRandomVideo(randomQuery)
       
       const caption = `╭───────────╮
-│ 💙 *TIKTOK RANDOM*
+│ 🔥 *TIKTOK RANDOM*
 │───────────
 │ 📌 ${video.title}
 ╰───────────╯`
@@ -28,13 +28,13 @@ export default {
       await client.sendMessage(m.chat, { 
         video: { url: video.video_url }, 
         caption,
-        ...global.miku
+        ...global.lumi
       }, { quoted: m })
       
       await m.react('✅')
     } catch (e) {
       await m.react('❌')
-      await m.reply(`💙 *ERROR*\n\nNo se encontraron videos: ${e.message}`, global.miku)
+      await m.reply(`👑 *ERROR*\n\nNo se encontraron videos: ${e.message}`, global.lumi)
     }
   }
 }

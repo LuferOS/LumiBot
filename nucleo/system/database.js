@@ -36,24 +36,30 @@ global.loadDatabase = function loadDatabase() {
   return global.db.data
 }
 
-function hasPendingChanges() {
-  return global.db._snapshot !== JSON.stringify(global.db.data)
-}
+let isSaving = false;
 
-global.saveDatabase = function saveDatabase() {
-  if (!hasPendingChanges()) return
-  fs.writeFileSync(dbFile, JSON.stringify(global.db.data, null, 2))
-  global.db._snapshot = JSON.stringify(global.db.data)
-}
-
-let lastSave = Date.now()
-setInterval(() => {
-  const now = Date.now()
-  const elapsed = now - lastSave
-  if (elapsed >= 1000 && hasPendingChanges()) {
-    global.saveDatabase()
-    lastSave = now
+global.saveDatabase = async function saveDatabase() {
+  if (isSaving) return;
+  
+  // Convertimos a string solo en el momento de guardar para no saturar el CPU
+  const currentSnapshot = JSON.stringify(global.db.data);
+  if (global.db._snapshot === currentSnapshot) return;
+  
+  isSaving = true;
+  try {
+    // Escribimos asíncronamente
+    await fs.promises.writeFile(dbFile, JSON.stringify(global.db.data, null, 2), 'utf8');
+    global.db._snapshot = currentSnapshot;
+  } catch (err) {
+    console.error("[LUMIBOT DB] Error guardando base de datos:", err);
+  } finally {
+    isSaving = false;
   }
-}, 500)
+}
+
+// Subimos el intervalo a 5000ms para evitar congelamientos en el event loop
+setInterval(() => {
+  global.saveDatabase();
+}, 5000)
 
 export default global.db

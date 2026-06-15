@@ -20,7 +20,7 @@ export default {
       const video = await getRandomVideo(randomQuery)
 
       const caption = `╭───────────╮
-│ 💙 *TIKTOK RANDOM*
+│ 💖 *TIKTOK RANDOM*
 │───────────
 │ 🏷️ #llantarmy
 │ 📌 ${video.title}
@@ -31,7 +31,7 @@ export default {
         {
           video: { url: video.video_url },
           caption,
-          ...global.miku,
+          ...global.lumi,
         },
         { quoted: m },
       )
@@ -39,7 +39,7 @@ export default {
       await m.react('✅')
     } catch (e) {
       await m.react('❌')
-      await m.reply(`💙 *ERROR*\n\nNo se encontraron videos: ${e.message}`, global.miku)
+      await m.reply(`💅 *ERROR*\n\nNo se encontraron videos: ${e.message}`, global.lumi)
     }
   },
 }

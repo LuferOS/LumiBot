@@ -14,7 +14,7 @@ export default {
     try {
       text = m.quoted?.text || text;
       if (!text) {
-        // ⚡ LUMIBOT OVERRIDE: Purga final de la variable global.miku
+        // ⚡ LUMIBOT OVERRIDE: Purga final de la variable global.lumi
         return m.reply(`╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingresa texto o responde a un mensaje para generar el sticker animado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
       }
       

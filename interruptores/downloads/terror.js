@@ -27,13 +27,13 @@ export default {
       await client.sendMessage(m.chat, { 
         video: { url: video.no_watermark }, 
         caption,
-        ...global.miku
+        ...global.lumi
       }, { quoted: m })
       
       await m.react('✅')
     } catch (e) {
       await m.react('❌')
-      await m.reply(`💀 *ERROR*\n\nNo se encontraron videos de terror: ${e.message}`, global.miku)
+      await m.reply(`💀 *ERROR*\n\nNo se encontraron videos de terror: ${e.message}`, global.lumi)
     }
   }
 }

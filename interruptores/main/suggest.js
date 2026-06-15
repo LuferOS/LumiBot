@@ -20,13 +20,13 @@ export default {
     const cooldown = global.db.data.users[m.sender].sugCooldown || 0
     const restante = cooldown - now
     if (restante > 0) {
-      return m.reply(` Debes esperar *${msToTime(restante)}* para volver a usar este comando.`, m, global.miku)
+      return m.reply(` Debes esperar *${msToTime(restante)}* para volver a usar este comando.`, m, global.lumi)
     }
     if (!texto) {
-      return m.reply(` Debes *escribir* el *reporte* o *sugerencia*.\n\n> Ejemplo: ${usedPrefix}reporte El bot no responde`, m, global.miku)
+      return m.reply(` Debes *escribir* el *reporte* o *sugerencia*.\n\n> Ejemplo: ${usedPrefix}reporte El bot no responde`, m, global.lumi)
     }
     if (texto.length < 10) {
-      return m.reply(' Tu mensaje es *demasiado corto*. Explica mejor tu reporte/sugerencia (mínimo 10 caracteres)', m, global.miku)
+      return m.reply(' Tu mensaje es *demasiado corto*. Explica mejor tu reporte/sugerencia (mínimo 10 caracteres)', m, global.lumi)
     }
     const fecha = new Date()
     const fechaLocal = fecha.toLocaleDateString('es-MX', {
@@ -37,7 +37,7 @@ export default {
     })
     const esReporte = ['report', 'reporte'].includes(command)
     const tipo  = esReporte ? '⚠️ REPORTE' : '✨ SUGERENCIA'
-    const tipo2 = esReporte ? '💙 Reporte' : '💙 Sugerencia'
+    const tipo2 = esReporte ? '🔥 Reporte' : '👑 Sugerencia'
     const user = m.pushName || 'Usuario desconocido'
     const numero = m.sender.split('@')[0]
     const pp = await client.profilePictureUrl(m.sender, 'image').catch(() => 'https://i.pinimg.com/736x/0c/1e/f8/0c1ef8e804983e634fbf13df1044a41f.jpg')

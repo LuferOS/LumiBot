@@ -5,8 +5,8 @@ export default {
   category: 'nsfw',
   run: async (client, m, args, usedPrefix, command) => {
     try {
-      if (!globalThis.db.data.chats[m.chat]?.nsfw) return m.reply(`💙 El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`, m, global.miku)
-      if (!args[0]) return client.reply(m.chat, `💙 Debes especificar tags para buscar\n> Ejemplo » *${usedPrefix + command} neko*`, m, global.miku)      
+      if (!globalThis.db.data.chats[m.chat]?.nsfw) return m.reply(`🔥 El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`, m, global.lumi)
+      if (!args[0]) return client.reply(m.chat, `✨ Debes especificar tags para buscar\n> Ejemplo » *${usedPrefix + command} neko*`, m, global.lumi)      
       await m.react('🕒')
       const tag = args[0].replace(/\s+/g, '_')
       let mediaList = []
@@ -22,9 +22,9 @@ export default {
         }
       }
       if (!mediaList.length) 
-        return client.reply(m.chat, `💙 No se encontraron resultados para ${tag}`, m, global.miku)
+        return client.reply(m.chat, `💖 No se encontraron resultados para ${tag}`, m, global.lumi)
       const media = mediaList[0]
-      const caption = `💙 Resultados para » ${tag}`
+      const caption = `✨ Resultados para » ${tag}`
       if (media.endsWith('.mp4')) {
         await client.sendMessage(m.chat, { video: { url: media }, caption, mentions: [m.sender] })
       } else {

@@ -11,7 +11,7 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       if (args[0] === '-list') {
-        return client.reply(m.chat, `╭⋯ 🛡️ *MOTOR DE RENDERIZADO LUMIBOT* ⋯》\n┊ ⊳ Responda a una imagen/video con *${usedPrefix + command}*\n┊ ⊳ Inyección de metadatos: *${usedPrefix + command} Pack | Autor*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+        return client.reply(m.chat, `╭⋯ 🛡️ *MOTOR DE RENDERIZADO LUMIBOT* ⋯》\n┊ ⊳ Responda a una imagen/video con *${usedPrefix + command}*\n┊ ⊳ Inyección de metadatos: *${usedPrefix + command} Pack | Autor*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
       }
       
       const quoted = m.quoted ? m.quoted : m;
@@ -128,7 +128,7 @@ export default {
         }
       } else if (/video/.test(mime)) {
         if ((quoted.msg || quoted).seconds > 20) {
-          return m.reply('╭⋯ ❌ *ALERTA DE SISTEMA* ⋯》\n┊ El archivo supera el límite de 20 segundos.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.miku);
+          return m.reply('╭⋯ ❌ *ALERTA DE SISTEMA* ⋯》\n┊ El archivo supera el límite de 20 segundos.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.lumi);
         }
         let buffer = await quoted.download();
         const inputPath = `./tmp/video-${Date.now()}.mp4`;
@@ -138,10 +138,10 @@ export default {
       } else if (urlArg) {
         const url = urlArg;
         if (!url.match(/\.(jpe?g|png|gif|webp|mp4|mov|avi|mkv|webm)(\?.*)?$/i)) {
-          return client.reply(m.chat, '╭⋯ ❌ *ERROR DE FORMATO* ⋯》\n┊ La URL no apunta a un archivo multimedia válido.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.miku);
+          return client.reply(m.chat, '╭⋯ ❌ *ERROR DE FORMATO* ⋯》\n┊ La URL no apunta a un archivo multimedia válido.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.lumi);
         }
         const response = await fetch(url);
-        if (!response.ok) return client.reply(m.chat, '╭⋯ ❌ *ERROR DE RED* ⋯》\n┊ Servidor de origen rechazó la conexión.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.miku);
+        if (!response.ok) return client.reply(m.chat, '╭⋯ ❌ *ERROR DE RED* ⋯》\n┊ Servidor de origen rechazó la conexión.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m, global.lumi);
         const buffer = Buffer.from(await response.arrayBuffer());
         if (url.match(/\.webp(\?.*)?$/i)) {
           await handleWebpBuffer(buffer);
@@ -158,7 +158,7 @@ export default {
           fs.unlinkSync(inputPath);
         }
       } else {
-        return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Requiere imagen, video o URL para ejecutar el renderizado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+        return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Requiere imagen, video o URL para ejecutar el renderizado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
       }
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en sticker.js:", e);

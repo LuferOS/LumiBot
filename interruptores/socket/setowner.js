@@ -11,9 +11,9 @@ export default {
     const text = args.join(' ').trim()
     const actual = config.owner || ''
     if (text.toLowerCase() === 'clear') {
-      if (!actual) return m.reply(`💙 No hay ningún propietario asignado actualmente.`, m, global.miku)
+      if (!actual) return m.reply(`🙄 No hay ningún propietario asignado actualmente.`, m, global.lumi)
       config.owner = ''
-      return m.reply(`💙 Se ha eliminado el propietario del Socket.`, m, global.miku)
+      return m.reply(`💋 Se ha eliminado el propietario del Socket.`, m, global.lumi)
     }
     const mentionedJid = m.mentionedJid || []
     const who2 = mentionedJid.length > 0 ? mentionedJid[0] : (m.quoted ? m.quoted.sender : null)
@@ -21,11 +21,11 @@ export default {
     const limpio = text.replace(/[^0-9]/g, '')
     const nuevo = who || (limpio.length >= 10 ? (limpio.startsWith('52') && limpio.length === 12 ? `52${limpio[2] !== '1' ? '1' : ''}${limpio.slice(2)}@s.whatsapp.net` : `${limpio}@s.whatsapp.net`) : null)
     if (actual && ((!m.quoted && mentionedJid.length === 0 && !text) || (nuevo && actual === nuevo))) {
-      return client.sendMessage(m.chat, { text: `💙 Ya tienes un dueño asignado @${actual.split('@')[0]}.\n\n🌱 Si quieres cambiarlo usa:\n> *${usedPrefix + command}* @${idBot.split('@')[0]}\n\n💙 Si quieres eliminar el dueño asignado usa:\n> *${usedPrefix + command} clear*`, mentions: [actual, idBot], ...global.miku }, { quoted: m })
+      return client.sendMessage(m.chat, { text: `💋 Ya tienes un dueño asignado @${actual.split('@')[0]}.\n\n🌱 Si quieres cambiarlo usa:\n> *${usedPrefix + command}* @${idBot.split('@')[0]}\n\n🙄 Si quieres eliminar el dueño asignado usa:\n> *${usedPrefix + command} clear*`, mentions: [actual, idBot], ...global.lumi }, { quoted: m })
     }
-    if (!nuevo) return client.reply(m.chat, `💙 Debes mencionar al nuevo dueño del Socket.\n> Ejemplo: *${usedPrefix + command}* @${idBot.split('@')[0]}`, m, global.miku, { mentions: [idBot] })
+    if (!nuevo) return client.reply(m.chat, `💖 Debes mencionar al nuevo dueño del Socket.\n> Ejemplo: *${usedPrefix + command}* @${idBot.split('@')[0]}`, m, global.lumi, { mentions: [idBot] })
     const [ownerActual, ownerNuevo] = [actual ? actual.split('@')[0] : null, nuevo.split('@')[0]]
     config.owner = nuevo
-    return client.sendMessage(m.chat, { text: actual && actual !== nuevo ? `💙 El dueño del socket ha sido cambiado de @${ownerActual} a @${ownerNuevo}!` : `💙 Se asignó a @${ownerNuevo} como nuevo propietario de *${config.namebot}*!`, mentions: [nuevo, ...(actual && actual !== nuevo ? [actual] : [])], ...global.miku }, { quoted: m })
+    return client.sendMessage(m.chat, { text: actual && actual !== nuevo ? `✨ El dueño del socket ha sido cambiado de @${ownerActual} a @${ownerNuevo}!` : `✨ Se asignó a @${ownerNuevo} como nuevo propietario de *${config.namebot}*!`, mentions: [nuevo, ...(actual && actual !== nuevo ? [actual] : [])], ...global.lumi }, { quoted: m })
   },
 }

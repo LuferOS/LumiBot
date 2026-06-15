@@ -7,6 +7,6 @@ export default {
   userData.afkReason = args.join(' ')
   const nombre = global.db.data.users[m.sender]?.name || 'Usuario'
   const motivo = args.length ? `${args.join(' ')}` : 'Sin Especificar!'
-  return await client.reply(m.chat, `💙 El Usuario *${nombre}* estará AFK.\n> ○ Motivo » *${motivo}*`, m)
+  return await client.reply(m.chat, `💖 El Usuario *${nombre}* estará AFK.\n> ○ Motivo » *${motivo}*`, m)
   }
 }

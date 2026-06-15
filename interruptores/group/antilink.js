@@ -65,7 +65,7 @@ export default async (client, m) => {
     try {
       // ⚡ LUMIBOT OVERRIDE: Reporte de neutralización táctica
       const aviso = `╭⋯ ⚠️ *AMENAZA NEUTRALIZADA* ⋯》\n┊ ⊳ *Objetivo:* ${userName}\n┊ ⊳ *Infracción:* Spam de ${isChannelLink ? 'canal externo' : 'grupo no autorizado'}\n┊ ⊳ *Acción:* Eliminación de mensaje y expulsión.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
-      await safeSend(client, m.chat, { text: aviso, mentions: [m.sender], ...global.miku })
+      await safeSend(client, m.chat, { text: aviso, mentions: [m.sender], ...global.lumi })
     } catch {}
     
     try {

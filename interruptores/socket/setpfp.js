@@ -18,9 +18,9 @@ export default {
     if (!isOwner2) return m.reply(mess.socket)
     const q = m.quoted || m
     const mime = (q.msg || q).mimetype || q.mediaType || ''
-    if (!/image/g.test(mime)) return m.reply('💙 Debes enviar o citar una imagen para cambiar la foto de perfil del bot.', m, global.miku)
+    if (!/image/g.test(mime)) return m.reply('👑 O sea, debes enviar o citar una imagen para cambiar la foto de perfil del bot.', m, global.lumi)
     const media = await q.download()
-    if (!media) return m.reply('💙 No se pudo descargar la imagen.', m, global.miku)
+    if (!media) return m.reply('✨ No se pudo descargar la imagen.', m, global.lumi)
     const jid = client.user.id.split(':')[0] + '@s.whatsapp.net'
     if (args[1] === 'full') {
       const { img } = await resizeImage(media)
@@ -28,6 +28,6 @@ export default {
     } else {
       await client.updateProfilePicture(jid, media)
     }
-    return m.reply(`💙 Se ha actualizado la foto de perfil de *${config.namebot}*!`, m, global.miku)
+    return m.reply(`💅 Se ha actualizado la foto de perfil de *${config.namebot}*!`, m, global.lumi)
   },
 };

@@ -20,7 +20,7 @@ export default {
     const who = await resolveLidToRealJid(who2, client, m.chat)
     const name = who
     const user = db.users[who]
-    if (!user) return m.reply(`💙 El usuario mencionado no está registrado en el bot.`)
+    if (!user) return m.reply(`🙄 El usuario mencionado no está registrado en el bot.`)
     const users = Object.entries(db.users).map(([key, value]) => ({ ...value, jid: key }))
     const sortedLevel = users.sort((a, b) => (b.level || 0) - (a.level || 0))
     const rank = sortedLevel.findIndex(u => u.jid === who) + 1

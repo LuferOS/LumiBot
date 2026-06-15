@@ -7,13 +7,13 @@ export default {
     const isOwner2 = [idBot, ...(config.owner ? [config.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(m.sender)
     if (!isOwner2) return m.reply(mess.socket)
     const value = args.join(' ').trim()
-    if (!value) return m.reply(`💙 Debes escribir un nombre corto y un nombre largo valido.\n> Ejemplo: *${usedPrefix + command} Miku / Hatsune Miku*`, m, global.miku)
+    if (!value) return m.reply(`🔥 O sea, debes escribir un nombre corto y un nombre largo valido.\n> Ejemplo: *${usedPrefix + command} Miku / Hatsune Miku*`, m, global.lumi)
     const formatted = value.replace(/\s*\/\s*/g, '/')
     let [short, long] = formatted.includes('/') ? formatted.split('/') : [value, value]
-    if (!short || !long) return m.reply('💙 Usa el formato: Nombre Corto / Nombre Largo', m, global.miku)
-    if (/\s/.test(short)) return m.reply('💙 El nombre corto no puede contener espacios.', m, global.miku)
+    if (!short || !long) return m.reply('💖 Usa el formato: Nombre Corto / Nombre Largo', m, global.lumi)
+    if (/\s/.test(short)) return m.reply('✨ El nombre corto no puede contener espacios.', m, global.lumi)
     config.namebot = short.trim()
     config.botname = long.trim()
-    return m.reply(`💙 El nombre del bot ha sido actualizado!\n\n🌱 Nombre corto: *${short.trim()}*\n💙 Nombre largo: *${long.trim()}*`, m, global.miku)
+    return m.reply(`💅 El nombre del bot ha sido actualizado!\n\n🌱 Nombre corto: *${short.trim()}*\n🙄 Nombre largo: *${long.trim()}*`, m, global.lumi)
   },
 };

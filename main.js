@@ -6,8 +6,8 @@ import path from 'path';
 import gradient from 'gradient-string';
 import seeCommands from './nucleo/system/commandLoader.js';
 import initDB from './nucleo/system/initDB.js';
-import antilink from './interruptores/antilink.js';
-import level from './interruptores/level.js';
+import antilink from './interruptores/group/antilink.js';
+import level from './interruptores/group/level.js';
 import { getGroupAdmins } from './nucleo/message.js';
 import { insertMessage } from './nucleo/system/markov_db.js';
 

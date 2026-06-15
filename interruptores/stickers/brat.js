@@ -24,7 +24,7 @@ export default {
     try {
       text = m.quoted?.text || text;
       if (!text) {
-        return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingresa texto o responde a un mensaje para generar el sticker.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+        return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingresa texto o responde a un mensaje para generar el sticker.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
       }
       
       await m.react('🕒');

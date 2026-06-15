@@ -111,11 +111,11 @@ export default {
       }
 
       const url = global.loli[Math.floor(Math.random() * global.loli.length)]
-      await client.sendFile(m.chat, url, 'loli.jpg', `💙 Aquí tienes tu *LOLI* 💙^•ﻌ•^💙`, m, global.miku)
+      await client.sendFile(m.chat, url, 'loli.jpg', `💋 Aquí tienes tu *LOLI* 💖^•ﻌ•^💖`, m, global.lumi)
       await m.react('✔️')
     } catch (e) {
       await m.react('✖️')
-      await m.reply(`💙 An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`🔥 An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   },
 }

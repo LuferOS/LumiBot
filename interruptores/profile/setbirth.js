@@ -8,14 +8,14 @@ export default {
     const user = global.db.data.users[m.sender]
     const currentYear = new Date().getFullYear()
     const input = args.join(' ')
-    if (!input)return m.reply(`💙 Debes ingresar una fecha válida para tu cumpleaños.\n💙 Ejemplos:\n> ${usedPrefix + command} *01/01/2000* (día/mes/año)\n> ${usedPrefix + command} *01/01* (día/mes/año)`)    
+    if (!input)return m.reply(`💅 O sea, debes ingresar una fecha válida para tu cumpleaños.\n💅 Ejemplos:\n> ${usedPrefix + command} *01/01/2000* (día/mes/año)\n> ${usedPrefix + command} *01/01* (día/mes/año)`)    
     const birth = validarFechaNacimiento(input, currentYear, usedPrefix, command)
-    if (typeof birth === 'string' && birth.startsWith('💙'))
+    if (typeof birth === 'string' && birth.startsWith('💅'))
       return m.reply(birth)
     if (!birth)
-      return m.reply(`💙 Fecha inválida. Usa › *${usedPrefix + command} 01/01/2000*`)
+      return m.reply(`👑 Fecha inválida. Usa › *${usedPrefix + command} 01/01/2000*`)
     user.birth = birth
-    return m.reply(`💙 Se ha establecido tu fecha de nacimiento como: *${user.birth}*`)
+    return m.reply(`🔥 Se ha establecido tu fecha de nacimiento como: *${user.birth}*`)
   },
 }
 
@@ -36,10 +36,10 @@ function validarFechaNacimiento(text, currentYear, usedPrefix, command) {
   const año = fecha.year()
   const edad = currentYear - año
   if (año > currentYear) {
-    return `💙 El año no puede ser mayor a ${currentYear}. Ejemplo: ${usedPrefix + command} 01/12/${currentYear}`
+    return `💋 El año no puede ser mayor a ${currentYear}. Ejemplo: ${usedPrefix + command} 01/12/${currentYear}`
   }
   if (edad > 120) {
-    return `💙 La fecha establecida es invalida.`
+    return `🔥 La fecha establecida es invalida.`
   }
   if (!fecha.isValid()) return null
   const diaSemana = fecha.format('dddd')

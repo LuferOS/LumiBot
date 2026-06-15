@@ -64,7 +64,7 @@ export default {
   category: 'stickers',
   run: async (client, m, args, usedPrefix, command, text) => {
     try {
-      if (!text) return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingresa un término de búsqueda o URL válida de sticker.ly.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+      if (!text) return client.reply(m.chat, `╭⋯ ❌ *LUMIBOT - SINTAXIS* ⋯》\n┊ Ingresa un término de búsqueda o URL válida de sticker.ly.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
       await m.react('🕒');
       
       const db = global.db.data;
@@ -77,12 +77,12 @@ export default {
       
       if (url) {
         const detail = await downloadPack(url);
-        if (!detail || !detail.status || detail.error === 500) return client.reply(m.chat, `╭⋯ ❌ *ERROR DE EXTRACCIÓN* ⋯》\n┊ El paquete está dañado, protegido o no existe.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
-        if (!detail.detalles) return client.reply(m.chat, `╭⋯ ❌ *ERROR DE RUTA* ⋯》\n┊ No se encontraron datos en la URL especificada.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+        if (!detail || !detail.status || detail.error === 500) return client.reply(m.chat, `╭⋯ ❌ *ERROR DE EXTRACCIÓN* ⋯》\n┊ El paquete está dañado, protegido o no existe.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
+        if (!detail.detalles) return client.reply(m.chat, `╭⋯ ❌ *ERROR DE RUTA* ⋯》\n┊ No se encontraron datos en la URL especificada.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
         packData = detail.detalles;
       } else {
         const search = await searchPacks(text);
-        if (!search.status || !search.resultados?.length) return client.reply(m.chat, `╭⋯ ❌ *BÚSQUEDA FALLIDA* ⋯》\n┊ Cero coincidencias para: *${text}*.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+        if (!search.status || !search.resultados?.length) return client.reply(m.chat, `╭⋯ ❌ *BÚSQUEDA FALLIDA* ⋯》\n┊ Cero coincidencias para: *${text}*.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
         
         const relevantPacks = filterRelevantPacks(search.resultados, text);
         const packsToTry = relevantPacks.length > 0 ? relevantPacks : search.resultados;
@@ -102,12 +102,12 @@ export default {
           intentos++;
         }
         
-        if (!detail) return client.reply(m.chat, `╭⋯ ❌ *FALLO DE RED* ⋯》\n┊ Los servidores rechazaron la descarga del paquete.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+        if (!detail) return client.reply(m.chat, `╭⋯ ❌ *FALLO DE RED* ⋯》\n┊ Los servidores rechazaron la descarga del paquete.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
         packData = detail;
       }
       
       const { name: packName, author, stickers, thumbnailUrl } = packData;
-      if (!stickers?.length) return client.reply(m.chat, `╭⋯ ❌ *PAQUETE CORRUPTO* ⋯》\n┊ Archivo sin datos visuales válidos.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+      if (!stickers?.length) return client.reply(m.chat, `╭⋯ ❌ *PAQUETE CORRUPTO* ⋯》\n┊ Archivo sin datos visuales válidos.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
       
       const MAX_STICKERS = 50;
       const selectedStickers = stickers.slice(0, MAX_STICKERS);
@@ -138,7 +138,7 @@ export default {
         })).then(results => results.filter(r => r !== null))
       ]);
       
-      if (!stickerResults.length) return client.reply(m.chat, `╭⋯ ❌ *FALLO DE CONVERSIÓN* ⋯》\n┊ FFMPEG no pudo procesar los metadatos de las imágenes.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.miku);
+      if (!stickerResults.length) return client.reply(m.chat, `╭⋯ ❌ *FALLO DE CONVERSIÓN* ⋯》\n┊ FFMPEG no pudo procesar los metadatos de las imágenes.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
       
       // ⚡ LUMIBOT OVERRIDE: Firma Táctica en el Pack
       await client.sendMessage(m.chat, { 
@@ -149,7 +149,7 @@ export default {
           cover, 
           stickers: stickerResults 
         }, 
-        ...global.miku 
+        ...global.lumi 
       }, { quoted: m });
       
       await m.react('✔️');

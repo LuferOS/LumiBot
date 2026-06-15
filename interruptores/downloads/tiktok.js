@@ -20,6 +20,8 @@ export default {
     try {
       // MODO BÚSQUEDA TIKTOK (VERSIÓN ORIGINAL CON CARRUSEL)
       if (isSearchCommand || (!text.match(/tiktok\.com/i) && !cmd.includes('tt'))) {
+          const statusMsg = await client.sendMessage(m.chat, { text: '⏳ *Buscando videos en TikTok...* 💅' }, { quoted: m });
+          
           const searchRes = await fetch('https://tikwm.com/api/feed/search', {
               method: 'POST',
               headers: {
@@ -32,16 +34,23 @@ export default {
 
           if (!searchData.data || !searchData.data.videos || searchData.data.videos.length === 0) {
               await m.react('✖️')
-              return m.reply(`🙄 *No encontré videos en TikTok con ese nombre* 💅`)
+              await client.sendMessage(m.chat, { text: `🙄 *No encontré videos en TikTok con ese nombre* 💅`, edit: statusMsg.key })
+              return;
           }
+
+          await client.sendMessage(m.chat, { text: '📥 *Descargando videos y armando el carrusel...* 💅', edit: statusMsg.key });
 
           const topResults = searchData.data.videos.slice(0, 3)
           const cards = []
 
+          let uploadedCount = 0;
           for (const video of topResults) {
               const url = video.play || video.hdplay || video.wmplay
               if (!url) continue
               try {
+                  uploadedCount++;
+                  await client.sendMessage(m.chat, { text: `🚀 *Subiendo video ${uploadedCount}/${topResults.length} a los servidores...* 💅`, edit: statusMsg.key });
+                  
                   const { videoMessage } = await generateWAMessageContent(
                       { video: { url: url } },
                       { upload: client.waUploadToServer }
@@ -67,8 +76,11 @@ export default {
 
           if (cards.length === 0) {
               await m.react('✖️')
-              return m.reply(`🙄 *No pude procesar los videos de la búsqueda.* 💅`)
+              await client.sendMessage(m.chat, { text: `🙄 *No pude procesar los videos de la búsqueda.* 💅`, edit: statusMsg.key })
+              return;
           }
+
+          await client.sendMessage(m.chat, { text: '✅ *¡Carrusel listo!* 💅\n> Enviando panel interactivo...', edit: statusMsg.key });
 
           const msg = generateWAMessageFromContent(
               m.chat,

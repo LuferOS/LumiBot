@@ -1,6 +1,6 @@
 import "./settings.js";
 import main from './main.js';
-import events from './interruptores/events.js';
+import events from './interruptores/group/events.js';
 import { Browsers, makeWASocket, makeCacheableSignalKeyStore, useMultiFileAuthState, fetchLatestBaileysVersion, jidDecode, DisconnectReason } from "@whiskeysockets/baileys";
 import cfonts from 'cfonts';
 import pino from "pino";
@@ -43,11 +43,11 @@ function normalizePhoneForPairing(input) {
 
 const { say } = cfonts;
 console.clear();
-console.log(chalk.cyanBright('\n[🛡️] Inicializando Secuencia de Arranque...'));
-say('LumiBOT\nSYSTEM', {
+console.log(chalk.magentaBright('\n[💅] Despertando a la reina LumiBOT...'));
+say('LumiBOT\nQUEEN', {
   font: 'block',
   align: 'center',
-  gradient: ['cyan', 'blue']
+  gradient: ['magenta', '#ff1493']
 });
 say('POWERED BY LUFEROS SECURITY', {
   font: 'console',
@@ -263,9 +263,49 @@ cleanCache();
   await loadBots();
 })();
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function getJSFiles(dir, files = []) {
+  if (fs.existsSync(dir)) {
+    const dirents = fs.readdirSync(dir, { withFileTypes: true });
+    for (const dirent of dirents) {
+      const res = path.resolve(dir, dirent.name);
+      if (dirent.isDirectory()) {
+        getJSFiles(res, files);
+      } else if (res.endsWith('.js')) {
+        files.push(dirent.name);
+      }
+    }
+  }
+  return files;
+}
+
 (async () => {
+  console.log(chalk.blueBright('\n[🛫] PREFLIGHT CHECK: Iniciando diagnósticos de vuelo...'));
+  await sleep(500);
+  
+  console.log(chalk.gray('[📂] Escaneando estructura de módulos...'));
+  let allFiles = getJSFiles(path.join(process.cwd(), 'interruptores'));
+  allFiles = allFiles.concat(getJSFiles(path.join(process.cwd(), 'nucleo')));
+  
+  // Imprimir rápido para el efecto matrix
+  for (const file of allFiles) {
+      process.stdout.write(chalk.cyanBright(`[📦] Verificando integridad: ${file} `));
+      await sleep(15);
+      process.stdout.write(chalk.greenBright(`[OK]\n`));
+  }
+
+  console.log(chalk.blueBright('\n[🛫] PREFLIGHT CHECK: Calibrando turbinas principales...'));
+  await sleep(600);
+  console.log(chalk.cyanBright('[📡] Inicializando satélites de red y matrices de escudos...'));
+  await sleep(600);
+  console.log(chalk.yellowBright('[⚡] Calentando núcleo de Inteligencia Artificial...'));
+  await sleep(600);
   global.loadDatabase();
-  console.log(chalk.gray('[+] Base de datos sincronizada.'));
+  console.log(chalk.greenBright('[✔️] Base de datos sincronizada. Check de sistemas: 100% OK.'));
+  await sleep(600);
+  console.log(chalk.magentaBright('[💅] Protocolo "Queen" activado. Despegue autorizado. Ejecutando motores de red...'));
+  await sleep(800);
   await startBot();
 })();
 

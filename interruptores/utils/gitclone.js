@@ -6,7 +6,7 @@ export default {
   command: ['gitclone', 'git'],
   category: 'github',
   run: async (client, m, args, usedPrefix, command, text) => {
-    if (!text) return client.reply(m.chat, '💙 Por favor, proporciona un enlace o nombre del repositorio de GitHub.', m)
+    if (!text) return client.reply(m.chat, '🔥 Por favor, proporciona un enlace o nombre del repositorio de GitHub.', m)
     try {
       await m.react('🕒')
       let info = ''
@@ -27,7 +27,7 @@ export default {
       } else {
         const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(text)}`)
         const json = await res.json()
-        if (!json.items.length) return client.reply(m.chat, '💙 No se encontraron resultados.', m)
+        if (!json.items.length) return client.reply(m.chat, '🔥 No se encontraron resultados.', m)
         if (json.items.length === 1) {
           const repo = json.items[0]
           const zipRes = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/zipball`)

@@ -6,7 +6,7 @@ export default {
   category: 'internet',
   run: async (client, m, args) => {
     if (!args || !args[0]) {
-      return m.reply('💙 Por favor, Ingrese el título de un vídeo.')
+      return m.reply('🙄 Bruh, Ingrese el título de un vídeo.')
     }
     const ress = await yts(`${args[0]}`)
     const armar = ress.all
@@ -17,14 +17,14 @@ export default {
             return `➩ *Título ›* *${v.title}* 
 
 > 🌱 *Duración ›* ${v.timestamp}
-> 💙 *Subido ›* ${v.ago}
+> 💖 *Subido ›* ${v.ago}
 > 🌱 *Vistas ›* ${v.views}
-> 💙 *Url ›* ${v.url}`.trim()
+> 💖 *Url ›* ${v.url}`.trim()
           case 'channel':
             return `
-> 💙 Canal › *${v.name}*
-> 💙 Url › ${v.url}
-> 💙 Subscriptores › ${v.subCountLabel} (${v.subCount})
+> 🙄 Canal › *${v.name}*
+> 💋 Url › ${v.url}
+> 🙄 Subscriptores › ${v.subCountLabel} (${v.subCount})
 > 🌱 Videos totales › ${v.videoCount}`.trim()
         }}).filter((v) => v).join('\n\n╾۪〬─ ┄۫╌ ׄ┄┈۪ ─〬 ׅ┄╌ ۫┈ ─ׄ─۪〬 ┈ ┄۫╌ ┈┄۪ ─ׄ〬╼\n\n')
     client.sendMessage(m.chat, { image: Ibuff, caption: teks2 }, { quoted: m }).catch((e) => {

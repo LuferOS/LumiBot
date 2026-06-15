@@ -57,9 +57,9 @@ export default {
     try {
       if (!globalThis.db.data.chats[m.chat]?.nsfw) {
         return m.reply(
-          `💙 El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`,
+          `✨ El contenido *NSFW* está desactivado en este grupo.\n\nUn *administrador* puede activarlo con el comando:\n» *${usedPrefix}nsfw on*`,
           m,
-          global.miku
+          global.lumi
         )
       }
 
@@ -69,7 +69,7 @@ export default {
         m.chat,
         {
           image: image.type === 'buffer' ? image.data : { url: image.data },
-          caption: '💙 *TETA NSFW*',
+          caption: '🔥 *TETA NSFW*',
           mentions: [m.sender],
         },
         { quoted: m }
@@ -80,7 +80,7 @@ export default {
       await m.reply(
         `> Ocurrió un error al ejecutar el comando *${usedPrefix}teta*.\n> [Error: *${e.message}*]`,
         m,
-        global.miku
+        global.lumi
       )
     }
   },

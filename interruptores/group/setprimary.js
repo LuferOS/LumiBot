@@ -27,27 +27,27 @@ export default {
       const who2 = mentioned.length > 0 ? mentioned[0] : m.quoted?.sender || false
      const who = await resolveLidToRealJid(who2, client, m.chat);
       if (!who2) {
-        return client.reply(m.chat, `💙 Por favor menciona un bot para convertirlo en primario.`, m, global.miku)
+        return client.reply(m.chat, `✨ Por favor menciona un bot para convertirlo en primario.`, m, global.lumi)
       }
       const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(() => {}) : ''
       const groupParticipants = groupMetadata?.participants?.map((p) => p.phoneNumber || p.jid || p.id || p.lid) || []
       const mainBotJid = global.client.user.id.split(':')[0] + '@s.whatsapp.net'
       const allowedBots = getAllowedBots(mainBotJid)
       if (!allowedBots.includes(who)) {
-        return client.reply(m.chat, `💙 El usuario mencionado no es una instancia de Sub-Bot.`, m, global.miku)
+        return client.reply(m.chat, `🔥 El usuario mencionado no es una instancia de Sub-Bot.`, m, global.lumi)
       }
       if (!groupParticipants.includes(who)) {
-        return client.reply(m.chat, ` El bot mencionado no está presente en este grupo.`, m, global.miku)
+        return client.reply(m.chat, ` El bot mencionado no está presente en este grupo.`, m, global.lumi)
       }
       if (chat.primaryBot === who) {
-        return client.reply(m.chat, ` @${who.split('@')[0]} ya es el Bot principal del Grupo.`, m, global.miku, { mentions: [who] })
+        return client.reply(m.chat, ` @${who.split('@')[0]} ya es el Bot principal del Grupo.`, m, global.lumi, { mentions: [who] })
       }
       chat.primaryBot = who
       await client.reply(m.chat, ` Se ha establecido a @${who.split('@')[0]} como bot primario de este grupo.
-> Ahora todos los comandos de este grupo serán ejecutados por @${who.split('@')[0]}.`, m, global.miku, { mentions: [who] })
+> Ahora todos los comandos de este grupo serán ejecutados por @${who.split('@')[0]}.`, m, global.lumi, { mentions: [who] })
     } catch (e) {
       console.error(e)
-      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`, null, global.miku)
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`, null, global.lumi)
     }
   },
 };

@@ -2,7 +2,7 @@ import axios from 'axios'
 import path from 'path'
 import { lookup } from 'mime-types'
 import { getBuffer } from '../../nucleo/message.js'
-import cheerio from 'cheerio'
+import * as cheerio from 'cheerio'
 
 export default {
   command: ['mediafire', 'mf'],
@@ -13,9 +13,9 @@ export default {
     if (!text) {
       return client.reply(
         m.chat,
-        `💙 Por favor, ingresa un enlace de *MediaFire* o una palabra clave.\n\n🌱 Ejemplo: *${usedPrefix + command} https://www.mediafire.com/file/xxxx/archivo.zip/file*`,
+        `🔥 Por favor, ingresa un enlace de *MediaFire* o una palabra clave.\n\n🌱 Ejemplo: *${usedPrefix + command} https://www.mediafire.com/file/xxxx/archivo.zip/file*`,
         m,
-        global.miku,
+        global.lumi,
       )
     }
 
@@ -29,9 +29,9 @@ export default {
         await m.react('❌')
         return client.reply(
           m.chat,
-          `💙 Enlace no válido para *${usedPrefix + command}*.\n\n🌱 Solo se aceptan enlaces de *MediaFire*.\n💙 Ejemplo: *${usedPrefix + command} https://www.mediafire.com/file/xxxx/archivo.zip/file*`,
+          `🙄 Enlace no válido para *${usedPrefix + command}*.\n\n🌱 Solo se aceptan enlaces de *MediaFire*.\n💋 Ejemplo: *${usedPrefix + command} https://www.mediafire.com/file/xxxx/archivo.zip/file*`,
           m,
-          global.miku,
+          global.lumi,
         )
       }
 
@@ -43,23 +43,23 @@ export default {
 
         if (!data?.status || !data.results?.length) {
           await m.react('❌')
-          return client.reply(m.chat, '💙 No se encontraron resultados para tu búsqueda.', m, global.miku)
+          return client.reply(m.chat, '👑 No se encontraron resultados para tu búsqueda.', m, global.lumi)
         }
 
-        let caption = `💙 *MEDIAFIRE SEARCH* 💙\n\n`
-        caption += `💙 *Resultados encontrados:* ${data.results.length}\n\n`
+        let caption = `💖 *MEDIAFIRE SEARCH* 👑\n\n`
+        caption += `🙄 *Resultados encontrados:* ${data.results.length}\n\n`
 
         data.results.forEach((r, i) => {
-          caption += `${i % 2 === 0 ? '💙' : '🌱'} *${i + 1}. Nombre:* ${r.filename}\n`
-          caption += `${i % 2 === 0 ? '🌱' : '💙'} *Peso:* ${r.filesize}\n`
-          caption += `${i % 2 === 0 ? '💙' : '🌱'} *Enlace:* ${r.url}\n`
-          caption += `${i % 2 === 0 ? '🌱' : '💙'} *Fuente:* ${r.source_title}\n\n`
+          caption += `${i % 2 === 0 ? '💅' : '🌱'} *${i + 1}. Nombre:* ${r.filename}\n`
+          caption += `${i % 2 === 0 ? '🌱' : '💅'} *Peso:* ${r.filesize}\n`
+          caption += `${i % 2 === 0 ? '💖' : '🌱'} *Enlace:* ${r.url}\n`
+          caption += `${i % 2 === 0 ? '🌱' : '💅'} *Fuente:* ${r.source_title}\n\n`
         })
 
-        caption += `💙 *HATSUNE MIKU* 💙`
+        caption += `✨ *HATSUNE MIKU* 👑`
 
         await m.react('✅')
-        return client.reply(m.chat, caption, m, global.miku)
+        return client.reply(m.chat, caption, m, global.lumi)
       }
 
       const scraped = await mediafireDl(text)
@@ -67,9 +67,9 @@ export default {
         await m.react('❌')
         return client.reply(
           m.chat,
-          `💙 El enlace de *MediaFire* es inválido o ya no está disponible.\n\n🌱 Verifica el link e inténtalo de nuevo.`,
+          `💅 El enlace de *MediaFire* es inválido o ya no está disponible.\n\n🌱 Verifica el link e inténtalo de nuevo.`,
           m,
-          global.miku,
+          global.lumi,
         )
       }
 
@@ -77,16 +77,16 @@ export default {
       const ext = path.extname(title) || (scraped.type ? `.${scraped.type}` : '')
       const tipo = lookup((ext || '').toLowerCase()) || 'application/octet-stream'
 
-      const info = `💙🌱 *MEDIAFIRE DOWNLOAD* 🌱💙
+      const info = `💖🌱 *MEDIAFIRE DOWNLOAD* 🌱🔥
 
-💙 *Nombre:* ${title}
+🙄 *Nombre:* ${title}
 🌱 *Tipo:* ${tipo}
-${scraped.size ? `💙 *Peso:* ${scraped.size}\n` : ''}${scraped.uploaded ? `🌱 *Subido:* ${scraped.uploaded}\n` : ''}
-💙 *HATSUNE MIKU* 💙`
+${scraped.size ? `🙄 *Peso:* ${scraped.size}\n` : ''}${scraped.uploaded ? `🌱 *Subido:* ${scraped.uploaded}\n` : ''}
+🔥 *HATSUNE MIKU* 💖`
 
       await client.sendContextInfoIndex(m.chat, info, {}, m, true, null, {
         banner: 'https://i.pinimg.com/736x/0c/1e/f8/0c1ef8e804983e634fbf13df1044a41f.jpg',
-        title: '💙 Mediafire 🌱',
+        title: '🔥 Mediafire 🌱',
         body: '✰ Descarga De MF',
         redes: global.db.data.settings[client.user.id.split(':')[0] + '@s.whatsapp.net'].link
       })
@@ -102,15 +102,15 @@ ${scraped.size ? `💙 *Peso:* ${scraped.size}\n` : ''}${scraped.uploaded ? `�
       await m.react('❌')
       return client.reply(
         m.chat,
-        `💙 *ERROR* 🌱
+        `🙄 *ERROR* 🌱
 
-💙 Ocurrió un error al ejecutar *${usedPrefix + command}*
+💖 Ocurrió un error al ejecutar *${usedPrefix + command}*
 
 🌱 *Error:* ${e.message}
 
-💙 Inténtalo de nuevo o contacta soporte.`,
+💅 Inténtalo de nuevo o contacta soporte.`,
         m,
-        global.miku,
+        global.lumi,
       )
     }
   }

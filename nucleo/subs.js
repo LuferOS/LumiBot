@@ -2,7 +2,7 @@ import { Browsers, makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersio
 import qrcode from "qrcode"
 import NodeCache from 'node-cache';
 import main from '../main.js'
-import events from '../interruptores/events.js'
+import events from '../interruptores/group/events.js'
 import pino from 'pino';
 import fs from 'fs';
 import chalk from 'chalk';
@@ -230,7 +230,7 @@ async function joinChannels(client) {
     if (meta && meta.id) await client.newsletterFollow(meta.id).catch(() => {});
   } catch (e) {}
 
-  for (const value of Object.values(global.miku || {})) {
+  for (const value of Object.values(global.lumi || {})) {
     if (typeof value === 'string' && value.endsWith('@newsletter')) {
       await client.newsletterFollow(value).catch(() => {})
     }
