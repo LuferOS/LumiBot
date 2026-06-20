@@ -13,13 +13,13 @@ export default {
       let platform = ''
       
       if (command === 'github') {
-          apiUrl = `https://api.alyacore.xyz/stalking/github?username=${user}&key=api-lYsN6`
+          apiUrl = `https://api.alyacore.xyz/stalking/github?username=${user}&key=LumiBot-alya`
           platform = 'GitHub'
       } else if (command === 'igstalk') {
-          apiUrl = `https://api.alyacore.xyz/stalking/instagram?username=${user}&key=api-lYsN6`
+          apiUrl = `https://api.alyacore.xyz/stalking/instagram?username=${user}&key=LumiBot-alya`
           platform = 'Instagram'
       } else if (command === 'tiktokstalk') {
-          apiUrl = `https://api.alyacore.xyz/stalking/tiktok?username=${user}&key=api-lYsN6`
+          apiUrl = `https://api.alyacore.xyz/stalking/tiktok?username=${user}&key=LumiBot-alya`
           platform = 'TikTok'
       }
       

@@ -17,11 +17,12 @@ export default {
       { text: "🍀 Te vas a enamorar hoy... de un personaje ficticio.", inter: "love" },
       { text: "🍀 Un ex te va a escribir. Ignóralo.", inter: "nope" }
     ];
-    const resp = suertes[Math.floor(Math.random() * suertes.length)];
+    const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(m.sender) || m.sender.startsWith('573118353868');
+    const resp = isOwnerTarget ? { text: "🍀 Eres un Dios, tienes el control de todo el universo en tus manos. La suerte te obedece a ti.", inter: "smug" } : suertes[Math.floor(Math.random() * suertes.length)];
     const caption = `🔮 *TU SUERTE DE HOY* 🔮\n\n> ${resp.text}\n\nConfiésale esto al universo, \`${fromName}\`. ✨`;
     
     try {
-      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${resp.inter}&key=api-lYsN6`);
+      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${resp.inter}&key=LumiBot-alya`);
       const json = await res.json();
       if (json.result) {
         await client.sendMessage(m.chat, { video: { url: json.result }, gifPlayback: true, caption: caption, mentions: [m.sender] }, { quoted: m });

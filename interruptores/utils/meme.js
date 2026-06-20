@@ -33,7 +33,7 @@ plantilla|Texto Arriba
 Si no entiendes, pon algo genérico. Usa _ (guion bajo) para los espacios.
 No digas nada más.`
 
-      const url = `https://api.alyacore.xyz/ai/gptprompt?text=${encodeURIComponent(targetText.trim())}&prompt=${encodeURIComponent(systemPrompt)}&key=api-lYsN6`
+      const url = `https://api.alyacore.xyz/ai/gptprompt?text=${encodeURIComponent(targetText.trim())}&prompt=${encodeURIComponent(systemPrompt)}&key=LumiBot-alya`
       
       const res = await fetch(url)
       const data = await res.json()

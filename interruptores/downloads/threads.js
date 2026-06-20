@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
-
+import { lumiAnim } from '../../nucleo/utils.js'
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['threads', 'tds'],
@@ -15,6 +15,7 @@ export default {
     }
     
     await m.react('⏳')
+    let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando de Threads...* 💅'], 800);
     const targetUrl = args[0]
     
     try {
@@ -54,11 +55,13 @@ export default {
       }
 
       if (mediaUrls.length === 0) {
-         await m.react('❌')
-         return m.reply(`🙄 *AlyaCore no devolvió contenido multimedia válido de Threads* 💅`)
+         if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+         await m.react('✖️')
+         return m.reply(`🙄 *Las APIs no devolvieron ningún medio válido de Threads* 💅`)
       }
 
-      const title = data.data?.title || data.title || data.data?.username || 'Threads Post'
+      if (animMsg) await client.sendMessage(m.chat, { text: '📦 *Enviando archivos desde Threads...* 💅', edit: animMsg.key });
+      const title = data.data?.title || data.title || data.data?.description || 'Threads Post'
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 🧵 *THREADS DOWNLOAD*\n┃━━━━━━━━━━━━━━━\n┃ 📌 ${title}\n┃ ⚡ *API:* AlyaCore\n╰━━━━━━━━━━━━━━━╯`
       
       for (let i = 0; i < mediaUrls.length; i++) {
@@ -71,12 +74,12 @@ export default {
            await client.sendMessage(m.chat, { video: { url: urlToDownload }, caption: i === 0 ? caption : '', mimetype: 'video/mp4' }, { quoted: m })
          }
       }
-      
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       await m.react('✅')
     } catch (e) {
-      console.error("[LUMIBOT DEBUG] Error en threads.js:", e)
-      await m.react('❌')
-      await m.reply(`🙄 *Error descargando de Threads* 💅\n> Error: ${e.message}`)
+      if (typeof animMsg !== 'undefined' && animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+      await m.react('✖️')
+      m.reply(`🙄 *Hubo un error.* Intenta con otro enlace. 💅\n> ${e.message}`)
     }
   }
 }

@@ -350,7 +350,7 @@ export default {
     const caption = `🔥 *RETO EXTREMO* 🔥\n\n> ${resp.text}\n\nSi no lo cumples, todo el grupo te va a funar. 💅`;
     
     try {
-      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${resp.inter}&key=api-lYsN6`);
+      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${resp.inter}&key=LumiBot-alya`);
       const json = await res.json();
       if (json.result) {
         await client.sendMessage(m.chat, { video: { url: json.result }, gifPlayback: true, caption: caption }, { quoted: m });

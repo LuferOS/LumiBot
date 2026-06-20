@@ -44,3 +44,16 @@ export async function resolveLidToRealJid(lid, client, groupChatId) {
 
   return lidCache.set(input, input), input
 }
+
+export async function lumiAnim(client, m, textArray, delay = 1000) {
+  try {
+    const statusMsg = await client.sendMessage(m.chat, { text: textArray[0] }, { quoted: m });
+    for (let i = 1; i < textArray.length; i++) {
+      await new Promise(r => setTimeout(r, delay));
+      await client.sendMessage(m.chat, { text: textArray[i], edit: statusMsg.key });
+    }
+    return statusMsg;
+  } catch (err) {
+    return null;
+  }
+}

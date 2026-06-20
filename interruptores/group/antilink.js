@@ -63,7 +63,7 @@ export default async (client, m) => {
     const userName = global.db.data.users[m.sender]?.name || 'Operativo'
     
     try {
-      // ⚡ LUMIBOT OVERRIDE: Reporte de neutralización táctica
+      // ⚡ LUMIBOT OVERRIDE: Reporte de neutralización de Queen
       const aviso = `╭⋯ ⚠️ *AMENAZA NEUTRALIZADA* ⋯》\n┊ ⊳ *Objetivo:* ${userName}\n┊ ⊳ *Infracción:* Spam de ${isChannelLink ? 'canal externo' : 'grupo no autorizado'}\n┊ ⊳ *Acción:* Eliminación de mensaje y expulsión.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
       await safeSend(client, m.chat, { text: aviso, mentions: [m.sender], ...global.lumi })
     } catch {}

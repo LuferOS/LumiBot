@@ -18,7 +18,7 @@ export default {
     }
     
     const txt = `*🔐 PROTOCOLO DE SEGURIDAD*\n\n` +
-      `Se ha generado una clave táctica de ${length} caracteres:\n\n` +
+      `Se ha generado una clave de diva de ${length} caracteres:\n\n` +
       `\`${password}\`\n\n` +
       `_Aviso: No guardamos registros de las claves generadas. Cópiela y destrúyala._`;
       

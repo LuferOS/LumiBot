@@ -1,4 +1,4 @@
-// Función para dormir el hilo (Retraso Táctico)
+// Función para dormir el hilo (Retraso de Diva)
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {

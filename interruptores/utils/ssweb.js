@@ -10,7 +10,7 @@ export default {
       if (!url.startsWith('http')) url = 'https://' + url
       await m.react('🕒')
       
-      const imgUrl = `https://api.alyacore.xyz/tools/ssweb?url=${encodeURIComponent(url)}&key=api-lYsN6`
+      const imgUrl = `https://api.alyacore.xyz/tools/ssweb?url=${encodeURIComponent(url)}&key=LumiBot-alya`
       let ssArrayBuffer = await (await fetch(imgUrl)).arrayBuffer()
       let ss = Buffer.from(ssArrayBuffer)
       

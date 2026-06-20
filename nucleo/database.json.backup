@@ -1,0 +1,174 @@
+{
+  "users": {
+    "573118353868@s.whatsapp.net": {
+      "name": "LuferOS Dev",
+      "exp": 77,
+      "level": 4,
+      "usedcommands": 2,
+      "pasatiempo": "",
+      "description": "",
+      "marry": "",
+      "genre": "",
+      "birth": "",
+      "metadatos": null,
+      "metadatos2": null,
+      "minxp": 72,
+      "maxxp": 126
+    },
+    "573115706792@s.whatsapp.net": {
+      "name": "Daniel",
+      "exp": 0,
+      "level": 0,
+      "usedcommands": 0,
+      "pasatiempo": "",
+      "description": "",
+      "marry": "",
+      "genre": "",
+      "birth": "",
+      "metadatos": null,
+      "metadatos2": null
+    },
+    "573135180876@s.whatsapp.net": {
+      "name": "wa.me/DuarteXV.xyz",
+      "exp": 0,
+      "level": 0,
+      "usedcommands": 0,
+      "pasatiempo": "",
+      "description": "",
+      "marry": "",
+      "genre": "",
+      "birth": "",
+      "metadatos": null,
+      "metadatos2": null
+    },
+    "584226403054@s.whatsapp.net": {
+      "name": "Lixia🕷️",
+      "exp": 0,
+      "level": 0,
+      "usedcommands": 0,
+      "pasatiempo": "",
+      "description": "",
+      "marry": "",
+      "genre": "",
+      "birth": "",
+      "metadatos": null,
+      "metadatos2": null
+    }
+  },
+  "chats": {
+    "120363427729491179@g.us": {
+      "users": {
+        "573118353868@s.whatsapp.net": {
+          "stats": {
+            "2026-06-15": {
+              "msgs": 8,
+              "cmds": 2,
+              "audios": 0,
+              "stickers": 1,
+              "media": 0
+            }
+          },
+          "usedTime": "2026-06-15T22:28:48.410Z",
+          "lastCmd": 1781562528410,
+          "coins": 0,
+          "bank": 0,
+          "afk": -1,
+          "afkReason": "",
+          "characters": []
+        },
+        "573115706792@s.whatsapp.net": {
+          "stats": {
+            "2026-06-15": {
+              "msgs": 1,
+              "cmds": 0,
+              "audios": 0,
+              "stickers": 1,
+              "media": 0
+            }
+          },
+          "usedTime": null,
+          "lastCmd": 0,
+          "coins": 0,
+          "bank": 0,
+          "afk": -1,
+          "afkReason": "",
+          "characters": []
+        },
+        "573135180876@s.whatsapp.net": {
+          "stats": {
+            "2026-06-15": {
+              "msgs": 1,
+              "cmds": 0,
+              "audios": 0,
+              "stickers": 0,
+              "media": 0
+            }
+          },
+          "usedTime": null,
+          "lastCmd": 0,
+          "coins": 0,
+          "bank": 0,
+          "afk": -1,
+          "afkReason": "",
+          "characters": []
+        },
+        "584226403054@s.whatsapp.net": {
+          "stats": {
+            "2026-06-15": {
+              "msgs": 2,
+              "cmds": 0,
+              "audios": 0,
+              "stickers": 1,
+              "media": 0
+            }
+          },
+          "usedTime": null,
+          "lastCmd": 0,
+          "coins": 0,
+          "bank": 0,
+          "afk": -1,
+          "afkReason": "",
+          "characters": []
+        }
+      },
+      "isBanned": false,
+      "welcome": false,
+      "goodbye": false,
+      "sWelcome": "",
+      "sGoodbye": "",
+      "nsfw": false,
+      "alerts": true,
+      "gacha": true,
+      "economy": true,
+      "adminonly": false,
+      "primaryBot": null,
+      "antilinks": true,
+      "mutedUsers": {}
+    }
+  },
+  "settings": {
+    "573106218015@s.whatsapp.net": {
+      "self": false,
+      "prefix": [
+        "/",
+        "!",
+        ".",
+        "#"
+      ],
+      "commandsejecut": 2,
+      "id": "120363169294281316@newsletter",
+      "nameid": "🛡️ LUMIBOT SECURITY 🛡️",
+      "type": "Owner",
+      "link": "https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G",
+      "banner": "https://i.imgur.com/8Q9N49Q.jpeg",
+      "icon": "https://i.imgur.com/8Q9N49Q.jpeg",
+      "currency": "💎 Créditos",
+      "audios": true,
+      "namebot": "LumiBOT",
+      "botname": "LumiBOT",
+      "owner": "573118353868@s.whatsapp.net"
+    }
+  },
+  "characters": {},
+  "stickerspack": {}
+}

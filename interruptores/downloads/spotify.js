@@ -1,8 +1,9 @@
 import fetch from 'node-fetch'
 import { proto, generateWAMessageFromContent } from '@whiskeysockets/baileys'
+import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'api-lYsN6'; // Usamos la key principal de Alya
+const ALYA_KEY = 'LumiBot-alya'; // Usamos la key principal de Alya
 
 export default {
   command: ['spotify', 'sp'],
@@ -65,6 +66,8 @@ export default {
 
       // MODO DESCARGA (Si es un enlace, sigue usando la carrera Alya vs Causas)
       const targetUrl = args[0]
+      let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando canción de Spotify...* 💅'], 1000);
+
       const fetchCausas = async () => {
           const url = `https://rest.apicausas.xyz/api/v1/descargas/spotify?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`
           const res = await fetch(url)
@@ -96,10 +99,12 @@ export default {
       }
       
       const title = data.data?.title || data.title || 'Spotify_LumiBot'
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m })
       await m.react('✔️')
 
     } catch (e) {
+      if (typeof animMsg !== 'undefined' && animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       console.error("[LUMIBOT DEBUG] Error en spotify.js:", e)
       await m.react('✖️')
       await m.reply(`🙄 *Todo explotó* 💅\n> Error: ${e.message}`)

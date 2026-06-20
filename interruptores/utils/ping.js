@@ -51,7 +51,7 @@ export default {
     const sysUptime = formatUptime(os.uptime());
     const botUptime = formatUptime(process.uptime());
 
-    const txt = `*🟢 TELEMETRÍA TÁCTICA*\n\n` +
+    const txt = `*🟢 ESTADO DE LA QUEEN*\n\n` +
       `*Reacción Interna:* ${execTime} ms\n` +
       `*Desfase de Reloj:* ${clockDrift}\n` +
       `*API Causas:* ${pingCausas}\n` +

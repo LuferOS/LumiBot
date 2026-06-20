@@ -26,7 +26,7 @@ export default {
       const meta1 = user.metadatos ? String(user.metadatos).trim() : '';
       const meta2 = user.metadatos2 ? String(user.metadatos2).trim() : '';
       
-      // ⚡ LUMIBOT OVERRIDE: Marca de agua táctica para video
+      // ⚡ LUMIBOT OVERRIDE: Marca de agua de Queen para video
       let texto1 = meta1 ? meta1 : 'LumiBOT Security';
       let texto2 = meta1 ? (meta2 ? meta2 : '') : `Operador: ${name}`;
       

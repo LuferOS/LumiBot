@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
 const ALYA_KEY = 'DEPOOL-key60015';
@@ -16,6 +17,7 @@ export default {
     
     await m.react('⏳')
     const targetUrl = args[0]
+    let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando Tweet...* 💅'], 1000);
     
     try {
       const fetchCausas = async () => {
@@ -48,26 +50,29 @@ export default {
       }
 
       const title = data.data?.title || data.title || data.data?.description || data.data?.desc || 'Twitter_X'
-      const caption = `╭━━━━━━━━━━━━━━━╮
-┃ 🐦 *X / TWITTER DOWNLOAD*
-┃━━━━━━━━━━━━━━━
-┃ 📌 ${title}
-┃ ⚡ *API:* ${winner.provider === 'causas' ? 'Causas (Fast)' : 'AlyaCore (Fast)'}
-╰━━━━━━━━━━━━━━━╯`
-      
       const isImage = mediaUrl.match(/\.(jpg|jpeg|png)$/i) || (data.data && data.data.type === 'image') || (data.type === 'image')
 
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+      
       if (isImage) {
-        await client.sendMessage(m.chat, { image: { url: mediaUrl }, caption }, { quoted: m })
+        await client.sendMessage(m.chat, { 
+          image: { url: mediaUrl }, 
+          caption: `╭⋯ 🐦 *X DOWNLOAD* ⋯》\n┊ ⊳ *Toma tu imagen.* 💅\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
+        }, { quoted: m })
       } else {
-        await client.sendMessage(m.chat, { video: { url: mediaUrl }, caption, mimetype: 'video/mp4' }, { quoted: m })
+        await client.sendMessage(m.chat, { 
+          video: { url: mediaUrl }, 
+          caption: `╭⋯ 🐦 *X DOWNLOAD* ⋯》\n┊ ⊳ *Toma tu video.* 💅\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`,
+          mimetype: 'video/mp4'
+        }, { quoted: m })
       }
       
       await m.react('✅')
     } catch (e) {
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       console.error("[LUMIBOT DEBUG] Error en twitter.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *Explotó el pájaro azul (Ambas APIs fallaron)* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Hubo un error.* Intenta con otro enlace. 💅\n> ${e.message}`)
     }
   }
 }

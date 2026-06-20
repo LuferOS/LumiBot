@@ -13,7 +13,7 @@ export default {
       
       let target = m.quoted ? m.quoted.sender : m.sender;
       
-      // ⚡ LUMIBOT OVERRIDE: Avatar táctico por defecto en lugar de la waifu
+      // ⚡ LUMIBOT OVERRIDE: Avatar de Diva por defecto en lugar de la waifu
       const pp = await client.profilePictureUrl(target).catch(() => 'https://i.imgur.com/8Q9N49Q.jpeg');
       
       const db = global.db.data;
@@ -53,7 +53,7 @@ export default {
       const meta1 = user.metadatos ? String(user.metadatos).trim() : '';
       const meta2 = user.metadatos2 ? String(user.metadatos2).trim() : '';
       
-      // ⚡ LUMIBOT OVERRIDE: Marca de agua táctica
+      // ⚡ LUMIBOT OVERRIDE: Marca de agua de Queen
       let texto1 = meta1 ? meta1 : 'LumiBOT Security';
       let texto2 = meta1 ? (meta2 ? meta2 : '') : `Operador: ${name}`;
       

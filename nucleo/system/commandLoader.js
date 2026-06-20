@@ -10,7 +10,7 @@ global.plugins = {};
 const pluginCache = new Map();
 const commandsFolder = path.join(__dirname, "../../interruptores");
 
-// ⚡ LUMIBOT OVERRIDE: Motor de Verificación de Integridad Táctica
+// ⚡ LUMIBOT OVERRIDE: Motor de Verificación de Integridad de la Queen
 function verifyIntegrity(comando, pluginName) {
   if (!comando) {
     throw new Error("Estructura vacía o exportación 'default' ausente.");

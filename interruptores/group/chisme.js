@@ -27,7 +27,7 @@ export default {
       // Pick a gossipy interaction
       const inters = ['coffee', 'laugh', 'smug', 'peek', 'tickle', 'cringe'];
       const inter = inters[Math.floor(Math.random() * inters.length)];
-      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=api-lYsN6`);
+      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=LumiBot-alya`);
       const json = await res.json();
       if (json.result) {
         await client.sendMessage(m.chat, { video: { url: json.result }, gifPlayback: true, caption: caption, mentions: [randomUser] }, { quoted: m });

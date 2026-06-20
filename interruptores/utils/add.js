@@ -20,7 +20,19 @@ export default {
 
         // 🧹 Limpieza y normalización del número
         let numeroObjetivo = args[0].replace(/[^0-9]/g, '')
-        if (numeroObjetivo.length === 10 && numeroObjetivo.startsWith('3')) numeroObjetivo = '57' + numeroObjetivo
+        
+        // Auto-completar prefijos comunes si el usuario no los pone
+        if (numeroObjetivo.length === 10) {
+            if (numeroObjetivo.startsWith('3')) numeroObjetivo = '57' + numeroObjetivo // Colombia
+            else if (numeroObjetivo.startsWith('9')) numeroObjetivo = '51' + numeroObjetivo // Perú
+            else if (numeroObjetivo.startsWith('1')) numeroObjetivo = '1' + numeroObjetivo // USA
+            else if (numeroObjetivo.startsWith('6') || numeroObjetivo.startsWith('7')) numeroObjetivo = '34' + numeroObjetivo // España
+            else if (numeroObjetivo.startsWith('4')) numeroObjetivo = '58' + numeroObjetivo // Venezuela (412, 414, etc)
+        }
+        
+        // Formato interno de WhatsApp para algunos países
+        if (numeroObjetivo.startsWith("52") && !numeroObjetivo.startsWith("521") && numeroObjetivo.length >= 12) numeroObjetivo = "521" + numeroObjetivo.slice(2);
+        if (numeroObjetivo.startsWith("54") && !numeroObjetivo.startsWith("549") && numeroObjetivo.length >= 11) numeroObjetivo = "549" + numeroObjetivo.slice(2);
         
         const jid = `${numeroObjetivo}@s.whatsapp.net`
         const nombreNuevo = args.slice(1).join(' ').toUpperCase()

@@ -14,7 +14,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Crear tabla si no existe
 db.serialize(() => {
-  // Optimizaciones de rendimiento táctico
+  // Optimizaciones de rendimiento de Queen
   db.run(`PRAGMA journal_mode = WAL;`);
   db.run(`PRAGMA synchronous = NORMAL;`);
   
@@ -53,7 +53,7 @@ export function insertMessage(chatId, senderJid, senderName, messageText, timest
         if (err) {
           reject(err);
         } else {
-          // Log táctico
+          // Log chismoso
           const shortMsg = messageText.length > 30 ? messageText.substring(0, 30) + '...' : messageText;
           console.log(chalk.gray(`[🧠 MARKOV-DB] Recolectando -> [${senderName || 'Desconocido'}]: ${shortMsg}`));
           resolve(this.lastID);

@@ -5,7 +5,7 @@ export default {
   category: 'fun',
   run: async (client, m, args, usedPrefix, command) => {
     try {
-      if (!m.isGroup) return m.reply('╭⋯ ⚠️ ERROR TÁCTICO ⋯》\n┊ Este escáner es exclusivo para sectores grupales.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》')
+      if (!m.isGroup) return m.reply('╭⋯ ⚠️ ERROR DE DIVA ⋯》\n┊ Este escáner es exclusivo para sectores grupales.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》')
 
       await m.react('🔬')
 
@@ -35,7 +35,7 @@ export default {
 
       habladores.sort((a, b) => b.count - a.count)
 
-      // 2. CONSTRUCCIÓN DEL REPORTE TÁCTICO
+      // 2. CONSTRUCCIÓN DEL REPORTE CHISMOSO
       let report = `╭⋯ 🕵️‍♂️ INFORME DE INTELIGENCIA SOCIAL ⋯》\n`
       report += `┊ SECTOR: ${groupMetadata.subject}\n`
       report += `┊ NODOS ANALIZADOS: ${participants.length}\n`

@@ -28,7 +28,7 @@ export default {
       const base64Audio = buffer.toString('base64')
       const audioMime = mime.split(';')[0] || 'audio/ogg' 
 
-      // Instrucciones tácticas
+      // Instrucciones de Queen
       const prompt = `Actúa como un transcriptor experto. Tu tarea es doble:
 1. Transcribe EXACTAMENTE lo que dice el audio, palabra por palabra.
 2. Luego, deja una línea en blanco, escribe "📝 *Resumen:*" y haz un resumen claro y directo de lo que trata.

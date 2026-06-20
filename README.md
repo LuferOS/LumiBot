@@ -1,14 +1,14 @@
 <div align="center">
 
-# 💅✨ LUMI BOT v4.0.0 - THE ALYAN UPDATE ✨💅
-**Tu Mejor Amiga, Diva Sarcástica y la IA Más Celosa de WhatsApp**
+# 💅✨ LUMI BOT v5.0.0 - DIVA ENGINE UPDATE ✨💅
+**Tu Mejor Amiga, Diva Sarcástica, y la Policía Tóxica de WhatsApp**
 
-![Version](https://img.shields.io/badge/Version-4.0.0--Alyan-ff69b4?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v24%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![Express](https://img.shields.io/badge/Express-Web--Dashboard-000000?style=for-the-badge&logo=express)
+![Version](https://img.shields.io/badge/Version-5.0.0--Diva-ff69b4?style=for-the-badge&logo=github) ![Node](https://img.shields.io/badge/Node.js-v24%2B-green?style=for-the-badge&logo=node.js) ![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp) ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite)
 
 [![Stars](https://img.shields.io/github/stars/LuferOS/LumiBot?style=for-the-badge&logo=github&color=gold)](https://github.com/LuferOS/LumiBot/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/LuferOS/LumiBot/total?style=for-the-badge&logo=github&color=green&label=Simps)](https://github.com/LuferOS/LumiBot/releases)
 
-<p><i>La bot definitiva que no solo administra tu grupo, sino que juzga tu ropa, lee el contexto, recuerda tus errores y tira el mejor chisme con inteligencia artificial.</i></p>
+<p><i>La bot definitiva que no solo administra tu grupo, sino que juzga tu ropa, se roba tus secretos, hace berrinches si no le regalas cosas, y expone las infidelidades públicamente.</i></p>
 
 ---
 
@@ -34,30 +34,26 @@ Además de hacer todo lo que un bot normal hace (descargar música, administrar 
 ```mermaid
 mindmap
   root((LumiBot 💅))
-    IA Activa
-      Perfilar Usuarios
-      Filtro de Aburrimiento
-      Respuestas Sarcásticas
-      Integración LLM (AlyaCore)
-    Cerebro Matemático
-      Cadenas de Markov
-      Aprendizaje Estadístico
-      Generación de Stickers Bratv
-    Entretenimiento
-      Juegos de Rol SFW / NSFW
-      Generador Dinámico de Chismes
-      Descargas de TikTok / YT
-    Seguridad & Admin
-      Detector de Fantasmas
-      Ranking de Simps
-      Control de Roles
-    Dashboard Web
-      Monitor de Recursos
-      Panel en Vivo
-    Integraciones AlyaCore 🚀
+    Motor de Diva (V5)
+      Sistema de Ánimo (Mood)
+      Berrinches Aleatorios
+      Regalos y Economy (.mimar)
+    Policía Tóxica (V5)
+      Bodas Oficiales (.casarse)
+      Registro de Infieles
+      Intercepción de Comandos Sucios
+    Gossip Network (V5)
+      Escucha Pasiva de Chismes
+      Revelación Anónima (.chisme)
+      Reacciones Orgánicas Celosas
+    Cerebro IA
+      Perfilado de Usuarios
+      Respuesta Activa (.chatbot)
+      Cadena de Markov (.markov)
+    Módulos Clásicos
       API Racing Súper Rápido
-      Herramientas Inteligentes (OCR, Upscale)
-      Descarga Anime y NSFW 🔞
+      NSFW y Hentai Ilimitado 🔞
+      Juegos y Roleplay
 ```
 
 ---
@@ -185,6 +181,36 @@ stateDiagram-v2
     RenderizarVideoFFmpeg --> [*]
 ```
 
+## 💅 El Motor de Diva y la Policía Tóxica (Novedad v5.0)
+
+En esta nueva versión, LumiBot ya no es solo una IA que responde. Ahora tiene **emociones, hace berrinches, crea relaciones y destruye hogares**.
+
+### 1. Sistema de Ánimo Dinámico (Mood Engine)
+Cada vez que un usuario pide un comando, Lumi pierde paciencia. Si llega a un nivel bajo de ánimo (Berrinche), tiene una gran probabilidad de **negarse a ejecutar el comando** soltando quejas. Para arreglarlo, los usuarios deben comprarle regalos virtuales con `.mimar`.
+
+### 2. La Policía Tóxica (Detector de Cuernos)
+Lumi intercepta todos los comandos interactivos. Así funciona:
+
+```mermaid
+sequenceDiagram
+    participant Esposo as Usuario Casado
+    participant Lumi as 💅 Policía Tóxica
+    participant SQLite as Database (marriages)
+    participant Amante as Tercera Persona
+
+    Esposo->>Lumi: ".beso @Amante"
+    Note over Lumi: Interceptor Before()
+    Lumi->>SQLite: ¿Está casado?
+    SQLite-->>Lumi: Sí, con @EsposaOriginal
+    Lumi->>Lumi: Compara target (@Amante) vs Pareja (@EsposaOriginal)
+    Note over Lumi: ¡INFIDELIDAD DETECTADA!
+    Lumi->>SQLite: +1 Punto de Infiel a @Esposo
+    Lumi-->>Esposo: [Comando Bloqueado] "🚨 ¡ESCÁNDALO! @Esposo está de infiel..."
+```
+
+### 3. La Red de Chismes Global
+Lumi escucha todos los mensajes en busca de palabras clave (`infiel`, `terminamos`, `pack`, etc.). Si encuentra un mensaje "jugoso", lo guarda anónimamente en SQLite. Cualquiera puede usar el comando `.chisme` para que Lumi exponga un secreto aleatorio robado de otro chat.
+
 ---
 
 ---
@@ -193,8 +219,11 @@ stateDiagram-v2
 
 El módulo de juegos ha sido programado de forma dinámica. En lugar de usar arrays estáticos aburridos, Lumi usa **generadores de plantillas dinámicas** (Template Builders).
 
+* **`.casarse` / `.divorcio`**: Crea un lazo oficial en la base de datos con otra persona.
+* **`.mimar`**: Envíale regalos virtuales a Lumi para subir su barra de paciencia/ánimo.
+* **`.infieles`**: El muro de la vergüenza, descubre quiénes son los peores rompehogares del grupo.
 * **`.funar`**: Destruye la moral de alguien con más de 2000 combinaciones aleatorias de insultos, chismes y situaciones vergonzosas.
-* **`.chisme`**: Inventa rumores jugosos y tóxicos sobre los integrantes del grupo ("Me contaron que @usuario hace X en secreto").
+* **`.chisme`**: Extrae un secreto jugoso, previamente robado por Lumi de alguna otra charla (totalmente anónimo).
 * **`.ruina`**, **`.8ball`**, **`.ship`**: Toda la diversión clásica para emparejar y humillar públicamente a tus amigos.
 
 ---
@@ -310,13 +339,14 @@ LumiBot está diseñado para correr en servidores VPS (Ubuntu/Debian), Pterodact
 
 LumiBot usa dos mecanismos de memoria distintos:
 
-1. **La Base de Datos Principal (`database.json`)**
-   Aquí se guarda todo el progreso de RPG, economía, inventarios, chats registrados, configuraciones y baneos de usuarios. Este archivo usa el adaptador de Baileys para memoria en archivo plano (LowDB).
+1. **La Base de Datos Principal (`database.json` -> SQL `database.sqlite`)**
+   Ahora todo opera en un archivo de base de datos SQLite multi-thread ultra veloz, gracias al motor WAL. Esto reemplaza el lento LowDB para las operaciones de Top Mensajes y los registros.
 
-2. **El Cerebro de SQLite (`lumi_markov.db`)**
-   Esta es una base de datos relacional ultrarrápida usada **exclusivamente** para el registro pasivo de mensajes y contexto de IA.
-   - **Tabla `messages`:** Almacena `id`, `chat_id`, `sender_jid`, `sender_name`, `message_text`, `timestamp`.
-   - Soporta cientos de miles de registros indexados para consultas de texto casi instantáneas (requerido para el perfilado de usuarios del `.chatbot`).
+2. **La Red Neuronal Pasiva (`lumi_markov.db`)**
+   Usada exclusivamente para Cadenas de Markov y el análisis de perfilamiento de IA.
+
+3. **La Base de Datos de Diva (`bot_state` / `gossip` / `marriages`)**
+   Alojada en el mismo archivo SQLite de núcleo, guarda las relaciones de la comunidad, el ánimo del bot y la colección de chismes obtenidos de forma pasiva.
 
 > [!WARNING]
 > **Privacidad:** El archivo `.gitignore` está configurado para **NUNCA** subir `database.json`, `lumi_markov.db` ni la carpeta `Sessions/` a GitHub. Si remueves esto, expondrás las conversaciones de todos tus grupos al internet público. 

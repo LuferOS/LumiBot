@@ -4,7 +4,8 @@ export default {
   run: async (client, m) => {
     const mentioned = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : (m.quoted ? m.quoted.sender : m.sender);
     
-    const porcentaje = Math.floor(Math.random() * 101);
+    const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(mentioned) || mentioned.startsWith('573118353868');
+    const porcentaje = isOwnerTarget ? 0 : Math.floor(Math.random() * 101);
     const comentariosBajo = [
       "💅 Literal tienes dignidad, aplausos.",
       "😎 Eres inalcanzable, tu amor propio está intacto.",

@@ -45,7 +45,7 @@ export default {
           try {
             pfpCache[msg.sender_jid] = await sock.profilePictureUrl(msg.sender_jid, 'image');
           } catch (e) {
-            pfpCache[msg.sender_jid] = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Default táctico
+            pfpCache[msg.sender_jid] = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Default de Queen
           }
         }
         pfp = pfpCache[msg.sender_jid];

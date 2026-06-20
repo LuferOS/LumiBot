@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import { proto, generateWAMessageFromContent, generateWAMessageContent } from '@whiskeysockets/baileys'
+import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
 const ALYA_KEY = 'DEPOOL-key60015';
@@ -104,8 +105,9 @@ export default {
           return
       }
 
-      // MODO DESCARGA (Enlaces)
+      // MODO DESCARGA (Si es un enlace)
       const targetUrl = args[0]
+      let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando TikTok...* 💅'], 1000);
       
       const fetchCausas = async () => {
           const res = await fetch(`https://rest.apicausas.xyz/api/v1/descargas/tiktok?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`)
@@ -134,6 +136,7 @@ export default {
       if (cmd.includes('mp3')) {
           let audioUrl = data.data?.audio?.url || data.audio || data.data?.music || data.data?.dl || data.dl || data.data?.download?.audio
           if (!audioUrl) return m.reply(`🙄 *No encontré audio extraíble en este TikTok.* 💅`)
+          if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
           await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg' }, { quoted: m })
           await m.react('✅')
           return
@@ -142,8 +145,9 @@ export default {
       let images = data.data?.images || data.images || []
       if (images.length > 0 || cmd.includes('img')) {
           if (images.length === 0) return m.reply(`🙄 *Este TikTok no tiene imágenes (Slide).* 💅`)
+          if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
           for (let img of images) {
-              await client.sendMessage(m.chat, { image: { url: img }, caption }, { quoted: m })
+              await client.sendMessage(m.chat, { image: { url: img }, caption: `╭⋯ 🎵 *TIKTOK DOWNLOAD* ⋯》\n┊ ⊳ *Toma tu imagen.* 💅\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》` }, { quoted: m })
           }
           await m.react('✅')
           return
@@ -159,12 +163,14 @@ export default {
          return m.reply(`🙄 *Las APIs no devolvieron un video válido* 💅`)
       }
 
-      await client.sendMessage(m.chat, { video: { url: videoUrl }, caption, mimetype: 'video/mp4' }, { quoted: m })
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+      await client.sendMessage(m.chat, { video: { url: videoUrl }, caption: `╭⋯ 🎵 *TIKTOK DOWNLOAD* ⋯》\n┊ ⊳ *Toma tu video.* 💅\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, mimetype: 'video/mp4' }, { quoted: m })
       await m.react('✅')
     } catch (e) {
+      if (typeof animMsg !== 'undefined' && animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       console.error("[LUMIBOT DEBUG] Error en tiktok.js:", e)
       await m.react('❌')
-      await m.reply(`🙄 *Murió el proceso de TikTok* 💅\n> Error: ${e.message}`)
+      await m.reply(`🙄 *Hubo un error.* Intenta con otro enlace. 💅\n> ${e.message}`)
     }
   }
 }

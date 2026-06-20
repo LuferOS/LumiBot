@@ -12,16 +12,14 @@ export default {
     
     if (cmd === 'on') {
       chat.chatbot = true;
-      chat.markov = true;
       db.chats[m.chat] = chat;
-      return m.reply('💅 ✨ *MODO DIVA Y CEREBRO MARKOV ACTIVADOS* ✨ 💅\n> Ahora sí, prepárense que voy a opinar en todo este chisme y aprenderé de ustedes.');
+      return m.reply('💅 ✨ *MODO DIVA (CHATBOT) ACTIVADO* ✨ 💅\n> Prepárense que voy a opinar en todo este chisme.');
     } else if (cmd === 'off') {
       chat.chatbot = false;
-      chat.markov = false;
       db.chats[m.chat] = chat;
-      return m.reply('💅 ✨ *SISTEMAS DE IA DESACTIVADOS* ✨ 💅\n> Me callo por completo. Cero respuestas automáticas y modo Diva apagado. Me avisan si pasa algo.');
+      return m.reply('💅 ✨ *MODO DIVA (CHATBOT) DESACTIVADO* ✨ 💅\n> Me callo por completo. Cero respuestas automáticas (El Cerebro Markov funciona por separado).');
     } else {
-      return m.reply(`🙄 *A ver, pon atención:* \n> Escribe \`.chatbot on\` para activarme o \`.chatbot off\` para callarme por completo. Ahorita estoy: *${chat.chatbot || chat.markov ? 'HABLANDO' : 'CALLADA'}*`);
+      return m.reply(`🙄 *A ver, pon atención:* \n> Escribe \`.chatbot on\` para activarme o \`.chatbot off\` para callarme por completo. Ahorita estoy: *${chat.chatbot ? 'HABLANDO' : 'CALLADA'}*`);
     }
   }
 }

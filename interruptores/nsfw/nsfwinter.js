@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { resolveLidToRealJid } from "../../nucleo/utils.js"
 
-const _0xanimeKey = 'api-lYsN6';
+const _0xanimeKey = 'LumiBot-alya';
 
 const captions = {
   spank: (from, to) => from === to ? 'se dio una nalgada a sí mismo.' : 'le dio una buena nalgada a',

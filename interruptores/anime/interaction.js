@@ -3,7 +3,7 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['hug', 'kiss', 'pat', 'slap', 'punch', 'bite', 'lick', 'poke', 'cuddle', 'dance'],
@@ -24,29 +24,30 @@ export default {
 
       const imageUrl = data.url
       
+      let who = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : (m.quoted ? m.quoted.sender : null)
       let target = ''
-      if (m.mentionedJid && m.mentionedJid.length > 0) {
-          target = `@${m.mentionedJid[0].split('@')[0]}`
-      } else if (args[0]) {
+      if (who) {
+          target = global.db.data.users[who]?.name || `@${who.split('@')[0]}`
+      } else if (args.length > 0) {
           target = args.join(' ')
       }
 
       let action = ''
       switch(command) {
-          case 'hug': action = `abraza a ${target || 'alguien'}`; break;
-          case 'kiss': action = `le da un beso a ${target || 'alguien'}`; break;
-          case 'pat': action = `le da palmaditas a ${target || 'alguien'}`; break;
-          case 'slap': action = `abofetea a ${target || 'alguien'}`; break;
-          case 'punch': action = `golpea a ${target || 'alguien'}`; break;
-          case 'bite': action = `muerde a ${target || 'alguien'}`; break;
-          case 'lick': action = `lame a ${target || 'alguien'}`; break;
-          case 'poke': action = `toca a ${target || 'alguien'}`; break;
-          case 'cuddle': action = `se acurruca con ${target || 'alguien'}`; break;
-          case 'dance': action = `baila ${target ? 'con ' + target : 'felizmente'}`; break;
-          default: action = `hace algo con ${target || 'alguien'}`
+          case 'hug': action = target ? `abraza a ${target}` : `se abraza a sí mism@`; break;
+          case 'kiss': action = target ? `le da un beso a ${target}` : `se manda un beso al aire`; break;
+          case 'pat': action = target ? `le da palmaditas a ${target}` : `se acaricia la cabeza`; break;
+          case 'slap': action = target ? `abofetea a ${target}` : `se da una bofetada a sí mism@`; break;
+          case 'punch': action = target ? `golpea a ${target}` : `lanza un puñetazo al aire`; break;
+          case 'bite': action = target ? `muerde a ${target}` : `se muerde a sí mism@`; break;
+          case 'lick': action = target ? `lame a ${target}` : `se lame de curiosidad`; break;
+          case 'poke': action = target ? `toca a ${target}` : `se pokea a sí mism@`; break;
+          case 'cuddle': action = target ? `se acurruca con ${target}` : `se acurruca solit@`; break;
+          case 'dance': action = target ? `baila con ${target}` : `baila felizmente`; break;
+          default: action = target ? `hace algo con ${target}` : `hace algo sol@`
       }
 
-      const senderName = m.pushName || 'Alguien'
+      const senderName = m.pushName || global.db.data.users[m.sender]?.name || 'Alguien'
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 🌸 *${senderName}* ${action}\n╰━━━━━━━━━━━━━━━╯`
       
       // Descargar el GIF y convertir a MP4 para que WhatsApp lo anime correctamente

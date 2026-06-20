@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import { downloadContentFromMessage } from '@whiskeysockets/baileys'
 
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['whatmusic', 'shazam'],

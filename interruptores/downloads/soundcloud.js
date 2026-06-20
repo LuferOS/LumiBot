@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
-
+import { lumiAnim } from '../../nucleo/utils.js'
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['soundcloud', 'sc'],
@@ -14,6 +14,7 @@ export default {
       }
 
       await m.react('🕒')
+      let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '🔍 *Buscando pistas musicales...* 💅'], 800);
       let targetUrl = ''
       
       // Si es un enlace de soundcloud
@@ -26,12 +27,15 @@ export default {
         const searchData = await searchRes.json()
         
         if (!searchData.status || !searchData.data || searchData.data.results.length === 0) {
+          if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
           await m.react('✖️')
           return m.reply(`🙄 *No encontré nada en SoundCloud con ese nombre* 💅`)
         }
         
         targetUrl = searchData.data.results[0].url
       }
+      
+      if (animMsg) await client.sendMessage(m.chat, { text: '📥 *Descargando audio de SoundCloud...* 💅', edit: animMsg.key });
       
       const fetchCausas = async () => {
           const url = `https://rest.apicausas.xyz/api/v1/descargas/soundcloud?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`
@@ -58,16 +62,19 @@ export default {
       if (data.data && data.data.dl) audioUrl = data.data.dl
 
       if (!audioUrl) {
+         if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
          await m.react('✖️')
          return m.reply(`🙄 *Las APIs no devolvieron un enlace válido de audio* 💅`)
       }
 
       const title = data.data?.title || data.title || 'Soundcloud_LumiBot'
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m })
       await m.react('✔️')
 
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en soundcloud.js:", e)
+      if (typeof animMsg !== 'undefined' && animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       await m.react('✖️')
       await m.reply(`🙄 *Falló la descarga de SoundCloud (Ambas APIs)* 💅\n> Literal no pude sacar el audio: ${e.message}`)
     }

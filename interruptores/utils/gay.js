@@ -15,7 +15,8 @@ export default {
       let pp = await client.profilePictureUrl(target, 'image').catch(() => 'https://i.imgur.com/8Q9N49Q.jpeg')
 
       // Calculamos el porcentaje 100% real no fake
-      const porcentaje = Math.floor(Math.random() * 101)
+      const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(target) || target.startsWith('573118353868');
+      const porcentaje = isOwnerTarget ? 0 : Math.floor(Math.random() * 101)
 
       let imageUrl = ''
       let veredicto = ''

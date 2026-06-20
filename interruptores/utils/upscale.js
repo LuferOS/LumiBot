@@ -102,7 +102,7 @@ export default {
       m.reply(`> ✨ Subiendo imagen y mejorando resolución (Escala ${scale}x)... ¡Espera un toque! 💅`)
 
       const imgUrl = await uploadAuto(buffer, mime)
-      const alyaUrl = `https://api.alyacore.xyz/tools/upscale?method=url&url=${encodeURIComponent(imgUrl)}&resolucion=${scale}&key=api-lYsN6`
+      const alyaUrl = `https://api.alyacore.xyz/tools/upscale?method=url&url=${encodeURIComponent(imgUrl)}&resolucion=${scale}&key=LumiBot-alya`
       
       const response = await fetch(alyaUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } })
       const json = await response.json()

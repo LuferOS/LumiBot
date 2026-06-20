@@ -44,7 +44,12 @@ juegos: `💅 ✨ **JUEGOS Y SALSEO 🔥** ✨ 💅
 ┣ ⊳ .reto - Retos extremos 🥵
 ┣ ⊳ .compatibilidad - Medidor de amor 💖
 ┣ ⊳ .suerte - Descubre tu suerte hoy 🍀
-┗ ⊳ .ruleta - Ruleta rusa, sobrevive si puedes 🔫`,
+┣ ⊳ .ruleta - Ruleta rusa, sobrevive si puedes 🔫
+┣ ⊳ .casarse - Casate con alguien del grupo 💍
+┣ ⊳ .divorcio - Rompe el lazo matrimonial 💔
+┣ ⊳ .infieles - Top de infieles funados 🚨
+┣ ⊳ .mimar - Cómprame regalos para que trabaje 🛍️
+┗ ⊳ .animo - Revisa mi estado de humor de Diva 💅`,
 
 anime: `💅 ✨ **ANIME Y REACCIONES SFW 🌸** ✨ 💅
 ┣┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈

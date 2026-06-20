@@ -64,26 +64,7 @@ const sock = makeWASocket({
   sock.isInit = false
   sock.ev.on('creds.update', saveCreds)
 
-  if (isCode && caption && client && chatId && commandFlags[senderId]) {
-    try {
-      await m.reply(caption)
-      m.react('⏳')
-      setTimeout(async () => {
-        try {
-          let codeGen = await sock.requestPairingCode(phone, 'ABCD1234');
-          codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
-          const msgCode = await m.reply(codeGen);
-          m.react('✅')
-          delete commandFlags[senderId];
-          setTimeout(async () => {
-            try {
-              await client.sendMessage(chatId, { delete: msgCode.key });
-            } catch {}
-          }, 60000);
-        } catch {}
-      }, 2000)
-    } catch {}
-  }
+  // Esperamos a que Baileys esté listo para generar el código (en el evento connection.update)
 
   sock.decodeJid = (jid) => {
     if (!jid) return jid
@@ -98,16 +79,35 @@ const sock = makeWASocket({
       if (isNewLogin) sock.isInit = false
       if (qr && isCode && phone && client && chatId && commandFlags[senderId]) {
         try {
-          let codeGen = await sock.requestPairingCode(phone, 'ABCD1234');
-          codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
-          const msgCode = await m.reply(codeGen);
-          delete commandFlags[senderId];
-          setTimeout(async () => {
-            try {
-              await client.sendMessage(chatId, { delete: msgCode.key });
-            } catch {}
-          }, 60000);
-        } catch {}
+          m.react('⏳').catch(() => {});
+          
+          // Lanzar la generación de código y el envío del mensaje en paralelo para velocidad extrema
+          const [codeGenRaw, msgCaption] = await Promise.all([
+             sock.requestPairingCode(phone).catch(e => {
+                 console.error('[LUMIBOT] Error requestPairingCode:', e);
+                 return null;
+             }),
+             m.reply(caption)
+          ]);
+
+          if (codeGenRaw) {
+            const codeGen = codeGenRaw.match(/.{1,4}/g)?.join("-") || codeGenRaw;
+            const msgCode = await m.reply(codeGen);
+            m.react('✅').catch(() => {});
+            delete commandFlags[senderId];
+            
+            setTimeout(async () => {
+              try {
+                await client.sendMessage(chatId, { delete: msgCode.key });
+              } catch {}
+            }, 60000);
+          } else {
+            m.reply("╭⋯ ❌ *ERROR DE ENLACE* ⋯》\n┊ WhatsApp rechazó la petición del código.\n┊ ⊳ El número podría ser inválido o bloqueado.\n┊ Inténtalo de nuevo en unos minutos. 🙄\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》");
+            delete commandFlags[senderId];
+          }
+        } catch (e) {
+          console.error('[LUMIBOT] Error en bloque de vinculación:', e);
+        }
       }
       if (qr && !isCode && client && chatId && commandFlags[senderId]) {
         try {

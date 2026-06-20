@@ -1,7 +1,8 @@
 import fetch from 'node-fetch'
+import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['fb', 'facebook'],
@@ -16,6 +17,7 @@ export default {
     
     await m.react('⏳')
     const targetUrl = args[0]
+    let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando video de Facebook...* 💅'], 1000);
     
     try {
       const fetchCausas = async () => {
@@ -66,24 +68,16 @@ export default {
       }
 
       const title = data.data?.title || data.title || data.data?.title || 'Facebook Video'
-      const caption = `╭━━━━━━━━━━━━━━━╮
-┃ 🙄 *FACEBOOK DOWNLOAD*
-┃━━━━━━━━━━━━━━━
-┃ 📌 ${title}
-┃ ⚡ *API:* ${winner.provider === 'causas' ? 'Causas (Fast)' : 'AlyaCore (Fast)'}
-╰━━━━━━━━━━━━━━━╯`
-      
-      await client.sendMessage(m.chat, { 
-        video: { url: videoUrl }, 
-        caption,
-        mimetype: 'video/mp4'
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+      await client.sendMessage(m.chat, {
+        video: { url: videoUrl },
+        caption: `╭⋯ 🎥 *FACEBOOK DOWNLOAD* ⋯》\n┊ ⊳ *Toma tu video.* 💅\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
       }, { quoted: m })
-      
       await m.react('✅')
     } catch (e) {
-      console.error("[LUMIBOT DEBUG] Error en fb.js:", e)
-      await m.react('❌')
-      await m.reply(`🙄 *Las descargas de Facebook están temporalmente caídas a nivel global.* 💅\n> Hubo un parche de seguridad en FB que rompió todas las APIs (Alya, Causas, NPM). Usa Snapsave.app en tu navegador por ahora.\n> 🚩 Excusas técnicas: *${e.message}*`)
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+      await m.react('✖️')
+      m.reply(`🙄 *Hubo un error.* Intenta con otro enlace. 💅\n> ${e.message}`)
     }
   }
 }

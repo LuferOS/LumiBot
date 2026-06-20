@@ -8,7 +8,7 @@ export default {
       const participants = groupInfo.participants
       const pesan = args.join(' ')
       
-      let teks = `╭⋯ 📢 *LLAMADO TÁCTICO GENERAL* ⋯》\n`
+      let teks = `╭⋯ 📢 *LLAMADO DE QUEEN GENERAL* ⋯》\n`
       teks += `┊ ⊳ *Motivo:* ${pesan || 'Convocatoria obligatoria de escuadrón.'}\n`
       teks += `┊ ⊳ *Operativos:* ${participants.length}\n`
       teks += `┊ ⊳ *Comandante:* @${m.sender.split('@')[0]}\n`

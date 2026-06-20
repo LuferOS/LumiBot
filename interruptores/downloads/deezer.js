@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
-
+import { lumiAnim } from '../../nucleo/utils.js'
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['deezer', 'dz'],
@@ -12,6 +12,7 @@ export default {
     }
     
     await m.react('⏳')
+    let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '🔍 *Buscando pistas musicales en Deezer...* 💅'], 800);
     const targetUrl = args.join(' ')
     
     try {
@@ -32,19 +33,22 @@ export default {
       if (data.data && data.data.dl) audioUrl = data.data.dl
 
       if (!audioUrl) {
-         await m.react('❌')
+         if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+         await m.react('✖️')
          return m.reply(`🙄 *AlyaCore no devolvió un enlace válido de Deezer* 💅`)
       }
 
+      if (animMsg) await client.sendMessage(m.chat, { text: '📥 *Descargando audio de Deezer...* 💅', edit: animMsg.key });
       const title = data.data?.title || data.title || 'Deezer Audio'
       const caption = `╭━━━━━━━━━━━━━━━╮\n┃ 🎧 *DEEZER DOWNLOAD*\n┃━━━━━━━━━━━━━━━\n┃ 📌 ${title}\n┃ ⚡ *API:* AlyaCore\n╰━━━━━━━━━━━━━━━╯`
       
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m })
       await m.react('✅')
     } catch (e) {
-      console.error("[LUMIBOT DEBUG] Error en deezer.js:", e)
-      await m.react('❌')
-      await m.reply(`🙄 *Error descargando de Deezer* 💅\n> Error: ${e.message}`)
+      if (typeof animMsg !== 'undefined' && animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+      await m.react('✖️')
+      m.reply(`🙄 *Hubo un error.* Intenta de nuevo. 💅\n> ${e.message}`)
     }
   }
 }

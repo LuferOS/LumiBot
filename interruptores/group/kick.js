@@ -1,34 +1,25 @@
 export default {
-  command: ['kick'],
-  category: 'grupo',
-  isAdmin: true,
-  botAdmin: true,
-  run: async (client, m, args, usedPrefix, command) => {
-    if (!m.mentionedJid[0] && !m.quoted) {
-      return m.reply('《✧》 Etiqueta o responde al *mensaje* de la *persona* que quieres eliminar')
+    command: ['kick', 'sacar', 'ban'],
+    category: 'grupo',
+    isAdmin: true,
+    botAdmin: true,
+    run: async (client, m, args, usedPrefix, command) => {
+        let target = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : args[0] ? args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net' : null;
+        
+        if (!target) return m.reply("🙄 Tienes que etiquetar o responder al mensaje del infeliz que quieres echar.");
+        
+        // Evitar sacar al bot o al creador
+        if (target === client.user.id.split(':')[0] + '@s.whatsapp.net') return m.reply("🙄 ¿En serio me quieres sacar a mí? Qué patético.");
+        const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(target) || target.startsWith('573118353868');
+        if (isOwnerTarget) return m.reply("💅 Ni loca toco a mi papá LuferOS ni a ningún Owner.");
+
+        await m.reply(`╭⋯ 🥾 *EXPULSIÓN DE DIVA* ⋯》\n┊ Adiós @${target.split('@')[0]}, nadie te va a extrañar.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, { mentions: [target] });
+        
+        try {
+            await client.groupParticipantsUpdate(m.chat, [target], "remove");
+        } catch (e) {
+            console.error("Error al expulsar:", e);
+            m.reply("❌ Ocurrió un error al intentar expulsarlo. Tal vez tiene antiban o hubo un fallo de red.");
+        }
     }
-    let user = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted.sender
-    const groupInfo = await client.groupMetadata(m.chat)
-    const ownerGroup = groupInfo.owner || m.chat.split`-`[0] + '@s.whatsapp.net'
-    const ownerBot = global.owner[0][0] + '@s.whatsapp.net'
-    const participant = groupInfo.participants.find((p) => p.phoneNumber === user || p.jid === user || p.id === user || p.lid === user)
-    if (!participant) {
-      return client.reply(m.chat, `💋 *@${user.split('@')[0]}* ya no está en el grupo.`, m, global.lumi, { mentions: [user] })
-    }
-    if (user === client.decodeJid(client.user.id)) {
-      return m.reply('💖 No puedo eliminar al *bot* del grupo')
-    }
-    if (user === ownerGroup) {
-      return m.reply('👑 No puedo eliminar al *propietario* del grupo')
-    }
-    if (user === ownerBot) {
-      return m.reply('💅 No puedo eliminar al *propietario* del bot')
-    }
-    try {
-      await client.groupParticipantsUpdate(m.chat, [user], 'remove')
-      client.reply(m.chat, `🔰 @${user.split('@')[0]} *eliminado* correctamente`, m, global.lumi, { mentions: [user] })
-    } catch (e) {
-      return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
-    }
-  },
-};
+}

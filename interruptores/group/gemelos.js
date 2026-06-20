@@ -40,7 +40,7 @@ export default {
       try {
         const inters = ['hug', 'highfive', 'handhold', 'cuddle', 'stare', 'laugh', 'smug', 'dance'];
         const inter = inters[Math.floor(Math.random() * inters.length)];
-        const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=api-lYsN6`);
+        const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=LumiBot-alya`);
         const json = await res.json();
         if (json.result) {
           await client.sendMessage(m.chat, { video: { url: json.result }, gifPlayback: true, caption: texto, mentions: [m.sender, twin] }, { quoted: m });

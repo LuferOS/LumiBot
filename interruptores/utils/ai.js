@@ -33,7 +33,8 @@ export default {
       }
 
       // 2. CÁLCULO BIOMÉTRICO (100% Real no Fake por el Exynos 1580 xd)
-      const belleza = Math.floor(Math.random() * 101)
+      const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(target) || target.startsWith('573118353868');
+      const belleza = isOwnerTarget ? 100 : Math.floor(Math.random() * 101)
       let diagnostico = ''
 
       // 3. FRASES RANDOM DE INTERNET (Estilo adolescente)
@@ -79,7 +80,7 @@ export default {
         diagnostico = frasesLow[Math.floor(Math.random() * frasesLow.length)]
       }
 
-      // 4. INTERFAZ TÁCTICA
+      // 4. INTERFAZ DE DIVA
       const caption = `╭⋯ 🔬 *ESCÁNER DE BELLEZA v2.0* ⋯》
 ┊ ⊳ *Objetivo:* @${phone}
 ┊ ⊳ *Nivel de facha:* ${belleza}%

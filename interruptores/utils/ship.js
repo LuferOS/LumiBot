@@ -6,7 +6,7 @@ export default {
   run: async (client, m, args) => {
     try {
       if (!m.isGroup) {
-        return m.reply(`╭⋯ ⚠️ *ERROR TÁCTICO* ⋯》
+        return m.reply(`╭⋯ ⚠️ *ERROR DE DIVA* ⋯》
 ┊ Bro, esto es para emparejar gente en grupos.
 ┊ En privado solo estamos tú y yo, no te pases. 💅
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
@@ -39,7 +39,8 @@ export default {
       const phone2 = user2.split('@')[0];
 
       // Cálculo del algoritmo del amor
-      const porcentaje = Math.floor(Math.random() * 101);
+      const isOwnerInvolved = global.owner.map(num => num + '@s.whatsapp.net').includes(user1) || user1.startsWith('573118353868') || global.owner.map(num => num + '@s.whatsapp.net').includes(user2) || user2.startsWith('573118353868');
+      const porcentaje = isOwnerInvolved ? 100 : Math.floor(Math.random() * 101);
       let diagnostico = '';
       let corazones = '';
       let inter = '';
@@ -198,7 +199,7 @@ export default {
         inter = inters[Math.floor(Math.random() * inters.length)];
       }
 
-      // Interfaz Táctica LuferOS Decorada
+      // Interfaz Amorosa LuferOS Decorada
       const caption = `╭⋯ 🔬 *ESCÁNER DE COMPATIBILIDAD* ⋯》
 ┊ ⊳ *Objetivo 1:* @${phone1}
 ┊ ⊳ *Objetivo 2:* @${phone2}
@@ -209,7 +210,7 @@ export default {
 > ⚡ *Powered by LuferOS AI*`;
 
       try {
-        const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=api-lYsN6`);
+        const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=LumiBot-alya`);
         const json = await res.json();
         if (json.result) {
           await client.sendMessage(m.chat, { video: { url: json.result }, gifPlayback: true, caption: caption, mentions: [user1, user2] }, { quoted: m });

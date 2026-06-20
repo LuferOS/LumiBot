@@ -72,7 +72,7 @@ export default {
       // Recargamos archivos y obtenemos el reporte local
       const changedFiles = await reloadCommandsAndGetChanges(path.join(__dirname, '..'))
 
-      // Decodificamos la nomenclatura táctica
+      // Decodificamos la nomenclatura de Queen
       const versionLetra = global.db.data.botVersion.split('.').pop()
       let tipoRama = 'Desconocido'
       if (versionLetra === 'A') tipoRama = 'Actualización Grande'
@@ -83,7 +83,7 @@ export default {
         ? changedFiles.map(f => `┊ ⊳ ${f}`).join('\n') 
         : '┊ ⊳ Ninguna modificación reciente (últimas 24h)'
 
-      const msg = `╭⋯ 🚀 *RECARGA TÁCTICA LOCAL* ⋯》\n┊ ⊳ *Estado:* Módulos sincronizados en memoria.\n┊ ⊳ *Versión del Núcleo:* ${global.db.data.botVersion}\n┊ ⊳ *Despliegue:* ${tipoRama}\n┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n┊ 📝 *Archivos alterados recientemente:*\n${logFiles}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
+      const msg = `╭⋯ 🚀 *RECARGA DE DIVA LOCAL* ⋯》\n┊ ⊳ *Estado:* Módulos sincronizados en memoria.\n┊ ⊳ *Versión del Núcleo:* ${global.db.data.botVersion}\n┊ ⊳ *Despliegue:* ${tipoRama}\n┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n┊ 📝 *Archivos alterados recientemente:*\n${logFiles}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
 
       await client.sendMessage(m.chat, { text: msg }, { quoted: m })
       await m.react('✔️')

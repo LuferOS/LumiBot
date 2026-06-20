@@ -6,6 +6,9 @@ export default {
   run: async (client, m, args) => {
     const mentioned = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : (m.quoted ? m.quoted.sender : m.sender);
     
+    const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(mentioned) || mentioned.startsWith('573118353868');
+    if (isOwnerTarget) return m.reply(`💅 Literal mi papá LuferOS y los dueños tienen el futuro asegurado, su única ruina sería perder el tiempo contigo. 💅✨`);
+    
     const ruinas = [
       "literal vas a arruinar tu vida volviendo con tu ex 💅🤡",
       "vas a gastar todos tus ahorros en algo que no necesitas por estrés 💸",
@@ -74,7 +77,7 @@ export default {
     try {
       const inters = ['cry', 'sad', 'cringe', 'scared', 'angry', 'trip', 'nope', 'laugh'];
       const inter = inters[Math.floor(Math.random() * inters.length)];
-      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=api-lYsN6`);
+      const res = await fetch(`https://api.alyacore.xyz/sfw/interaction?inter=${inter}&key=LumiBot-alya`);
       const json = await res.json();
       if (json.result) {
         await client.sendMessage(m.chat, { video: { url: json.result }, gifPlayback: true, caption: caption, mentions: [mentioned] }, { quoted: m });

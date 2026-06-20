@@ -140,7 +140,7 @@ export default {
       
       if (!stickerResults.length) return client.reply(m.chat, `╭⋯ ❌ *FALLO DE CONVERSIÓN* ⋯》\n┊ FFMPEG no pudo procesar los metadatos de las imágenes.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m, global.lumi);
       
-      // ⚡ LUMIBOT OVERRIDE: Firma Táctica en el Pack
+      // ⚡ LUMIBOT OVERRIDE: Firma de Diva en el Pack
       await client.sendMessage(m.chat, { 
         stickerPack: { 
           name: packName, 

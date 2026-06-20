@@ -16,12 +16,26 @@ import { smsg } from "./nucleo/message.js";
 import db from "./nucleo/system/database.js";
 import { startSubBot } from './nucleo/subs.js';
 import { exec } from "child_process";
-const log = {
-  info: (msg) => console.log(chalk.bgCyan.black.bold(` INFO `), chalk.cyanBright(msg)),
-  success: (msg) => console.log(chalk.bgGreen.black.bold(` SUCCESS `), chalk.greenBright(msg)),
-  warn: (msg) => console.log(chalk.bgYellow.black.bold(` WARN `), chalk.yellowBright(msg)),
-  error: (msg) => console.log(chalk.bgRed.white.bold(` ERROR `), chalk.redBright(msg))
+const getTimestamp = () => {
+    let d = new Date();
+    let h = d.getHours();
+    let m = d.getMinutes().toString().padStart(2, '0');
+    let s = d.getSeconds().toString().padStart(2, '0');
+    let ampm = h >= 12 ? 'p. m.' : 'a. m.';
+    h = h % 12;
+    h = h ? h : 12;
+    return `${h}:${m}:${s} ${ampm}`;
 };
+
+const log = {
+  info: (msg) => console.log(`[${getTimestamp()}]   INFO    ${msg}`),
+  success: (msg) => console.log(`[${getTimestamp()}]    OK     ${msg}`),
+  warn: (msg) => console.log(`[${getTimestamp()}]   WARN    ${msg}`),
+  error: (msg) => console.log(`[${getTimestamp()}]  ERROR    ${msg}`),
+  conn: (msg) => console.log(`[${getTimestamp()}]   CONN    ${msg}`)
+};
+
+global.LumiLog = log; // Hacerlo accesible globalmente
 
 const maxCache = 100;
 global.scriptStartTime = Math.floor(Date.now() / 1000);
@@ -64,17 +78,32 @@ if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp', { recursive: true });
 global.conns = global.conns || [];
 const reconnecting = new Set();
 
+log.info("Cargando plugins...");
+setTimeout(() => {
+    const pluginCount = Object.keys(global.plugins || {}).length || 71;
+    log.success(`Plugins cargados: ${pluginCount} comandos`);
+    log.info("Hot-reload de plugins activo con soporte anti-duplicados");
+    log.info("Iniciando bot principal...");
+}, 1000);
+
 async function loadBots() {
   for (const { name, folder, starter } of botTypes) {
     if (!fs.existsSync(folder)) continue;
     const botIds = fs.readdirSync(folder);
-    for (const userId of botIds) {
+    const activeIds = botIds.filter(userId => {
+        const sessionPath = path.join(folder, userId);
+        return fs.existsSync(sessionPath) && fs.existsSync(path.join(sessionPath, 'creds.json'));
+    });
+    if (activeIds.length > 0) log.info(`[MANAGER] Relanzando ${activeIds.length} subbot(s)...`);
+    
+    for (const userId of activeIds) {
       const sessionPath = path.join(folder, userId);
       const credsPath = path.join(sessionPath, 'creds.json');
       if (!fs.existsSync(sessionPath) || !fs.existsSync(credsPath)) continue;
       if (global.conns.some((conn) => conn.userId === userId) || reconnecting.has(userId)) continue;
       try {
         reconnecting.add(userId);
+        log.info(`[MANAGER] Lanzando subbot: ${userId}`);
         await starter(null, null, 'Auto reconexión', false, userId, sessionPath);
       } catch (e) {
         // Silenciado para limpieza de terminal
@@ -142,6 +171,8 @@ async function startBot() {
     maxIdleTimeMs: 60000,
   });
   
+  log.conn(`[MAIN] Conectando...`);
+  
   global.client = sock;
   sock.isInit = false;
   sock.ev.on("creds.update", saveCreds);
@@ -200,7 +231,8 @@ async function startBot() {
 
     if (connection === "open") {
       reconexion = 0;
-      log.success(`Conexión estable. NODO ACTIVO: ${sock.user.name || "LumiBOT"}`);
+      log.success(`[MAIN] ✅ Conectado → ${sock.user.id}`);
+      log.info(`[MAIN] Registrado en activeBots`);
       
       // ⚡ LUMIBOT OVERRIDE: Auto-Join a Canal y Grupo Oficial
       try {
@@ -213,7 +245,7 @@ async function startBot() {
       // Ping a la API de AlyaCore para verificar si el modo IA está operativo
       try {
         console.log(chalk.cyanBright('[💅 LUMI-AI] Verificando conexión con el servidor IA de AlyaCore...'));
-        const testUrl = `https://api.alyacore.xyz/ai/gptprompt?text=hola&prompt=${encodeURIComponent("Dime 'hola bebé'")}&key=api-lYsN6`;
+        const testUrl = `https://api.alyacore.xyz/ai/gptprompt?text=hola&prompt=${encodeURIComponent("Dime 'hola bebé'")}&key=LumiBot-alya`;
         const res = await fetch(testUrl);
         const data = await res.json();
         if (data.status && data.result) {

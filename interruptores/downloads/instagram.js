@@ -1,7 +1,8 @@
 import fetch from 'node-fetch'
+import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['instagram', 'ig'],
@@ -16,6 +17,7 @@ export default {
     
     await m.react('⏳')
     const targetUrl = args[0]
+    let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando post de Instagram...* 💅'], 1000);
     
     try {
       const fetchCausas = async () => {
@@ -81,6 +83,7 @@ export default {
       
       await m.react('✅')
     } catch (e) {
+      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       console.error("[LUMIBOT DEBUG] Error en instagram.js:", e)
       await m.react('❌')
       await m.reply(`🙄 *Error descargando de Instagram (Ambas APIs fallaron)* 💅\n> Error: ${e.message}`)

@@ -23,7 +23,7 @@ export default {
       inviteCode = await client.groupInviteCode(m.chat).catch(() => null)
       const formatParticipants = (participants) => participants && participants.length > 0 ? participants.map((user, i) => `${i + 1}. @${user.id?.split("@")[0]}${user.admin === "superadmin" ? " (superadmin)" : user.admin === "admin" ? " (admin)" : ""}`).join("\n") : "No encontrado"
       
-      let caption = `╭⋯ 📡 *RECONOCIMIENTO TÁCTICO: GRUPO* ⋯》\n\n` +
+      let caption = `╭⋯ 💅 *ESCANEO DE DIVA: GRUPO* ⋯》\n\n` +
       `🆔 *Identificador del grupo:*\n${res.id || "No encontrado"}\n\n` +
       `👑 *Creador:*\n${res.owner ? `@${res.owner?.split("@")[0]}` : "No encontrado"} ${res.creation ? `el ${formatDate(res.creation)}` : "(Fecha no encontrada)"}\n\n` +
       `🏷️ *Nombre:*\n${res.subject || "No encontrado"}\n\n` +
@@ -58,7 +58,7 @@ export default {
       pp = await client.profilePictureUrl(id, 'image').catch(() => null)
       const formatParticipants = (participants) => participants && participants.length > 0 ? participants.map((user, i) => `${i + 1}. @${user.id?.split("@")[0]}${user.admin === "superadmin" ? " (superadmin)" : user.admin === "admin" ? " (admin)" : ""}`).join("\n") : "No encontrado"
       
-      let caption = `╭⋯ 📡 *RECONOCIMIENTO TÁCTICO: INVITACIÓN* ⋯》\n\n` +
+      let caption = `╭⋯ 💅 *ESCANEO DE DIVA: INVITACIÓN* ⋯》\n\n` +
       `🆔 *Identificador del grupo:*\n${id || "No encontrado"}\n\n` +
       `👑 *Creado por:*\n${owner ? `@${owner?.split("@")[0]}` : "No encontrado"} ${creation ? `el ${formatDate(creation)}` : "(Fecha no encontrada)"}\n\n` +
       `🏷️ *Nombre:*\n${subject || "No encontrado"}\n\n` +
@@ -103,7 +103,7 @@ export default {
         mentionedJid: mentions,
         externalAdReply: {
           title: "🛡️ ESCÁNER DE RED LUMIBOT",
-          body: "Operación de Reconocimiento Táctico",
+          body: "Operación de Chismosa",
           thumbnailUrl: pp ? pp : thumb,
           sourceUrl: args[0] ? args[0] : inviteCode ? `https://chat.whatsapp.com/${inviteCode}` : "",
           mediaType: 1,
@@ -134,7 +134,7 @@ export default {
               mentionedJid: Array.isArray(client.parseMention(caption)) ? client.parseMention(caption) : [],
               externalAdReply: {
                 title: "🛡️ ESCÁNER DE CANALES LUMIBOT",
-                body: "Reconocimiento Táctico Completado",
+                body: "Escaneo de Diva Completado",
                 thumbnailUrl: pp,
                 sourceUrl: args[0],
                 mediaType: 1,

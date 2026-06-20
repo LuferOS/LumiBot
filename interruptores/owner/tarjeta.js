@@ -1,7 +1,7 @@
 export default {
   command: ['tarjeta', 'card', 'ownerinfo', 'creador', 'owner', 'luferos'],
   isOwner: false, // Lo dejé en false para que cualquiera pueda pedir tu tarjeta y saber quién manda
-  description: 'Muestra la tarjeta de contacto táctico del Administrador (LuferOS)',
+  description: 'Muestra la tarjeta de contacto de la Queen del Administrador (LuferOS)',
   run: async (client, m, args, usedPrefix, command) => {
     try {
       // ⚡ LUMIBOT OVERRIDE: VCard reescrito para el Comandante

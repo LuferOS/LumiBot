@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { lumiAnim } from '../../nucleo/utils.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -11,7 +12,7 @@ const __dirname = path.dirname(__filename)
 const _h=[82,101,115,116,46,97,112,105,99,97,117,115,97,115,46,120,121,122].map(c=>String.fromCharCode(c)).join('')
 const NEW_API_BASE = process.env.NEW_API_BASE || `https://${_h}`
 const NEW_API_KEY = process.env.NEW_API_KEY || [68,69,80,79,79,76,45,107,101,121,50,53,50,53,56,48].map(c=>String.fromCharCode(c)).join('')
-const ALYA_KEY = process.env.ALYA_KEY || 'api-lYsN6'
+const ALYA_KEY = process.env.ALYA_KEY || 'LumiBot-alya'
 const ALYA_TIMEOUT_MS = Number(process.env.ALYA_TIMEOUT_MS || 15000)
 const ALYA_RETRIES = Number(process.env.ALYA_RETRIES || 2)
 const ALYA_RETRY_DELAY_MS = Number(process.env.ALYA_RETRY_DELAY_MS || 800)
@@ -296,6 +297,7 @@ export async function processDownload(conn, m, videoInfo, option) {
   }
   activeYouTubeDownloads.set(lockKey, { startedAt: Date.now(), sender: m.sender })
   await conn.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
+  let animMsg = await lumiAnim(conn, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando multimedia de YouTube...* 💅'], 1000);
   const isAudio    = option === 1 || option === 4
   const asDocument = option === 3 || option === 4
   const fileName   = String(videoInfo.title || 'descarga').replace(/[^\w\s]/gi, '').trim().substring(0, 50) || 'descarga'
@@ -389,6 +391,7 @@ export async function processDownload(conn, m, videoInfo, option) {
         }
       }
     }
+    if (animMsg) await conn.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
     const user = global.db?.data?.users?.[m.sender]
     if (user && !user.monedaDeducted) {
@@ -398,10 +401,10 @@ export async function processDownload(conn, m, videoInfo, option) {
     }
     return true
   } catch (error) {
-    if (tempFilePath) deleteFile(tempFilePath)
+    if (animMsg) await conn.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-    await conn.reply(m.chat, `✨ Error al descargar: ${error.message}`, m)
-    throw error
+    await conn.reply(m.chat, `❌ Error al procesar tu descarga: ${error.message || 'Desconocido'}. Intenta de nuevo.`, m)
+    return false
   } finally {
     activeYouTubeDownloads.delete(lockKey)
   }

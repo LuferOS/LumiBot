@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 
-const ALYA_KEY = 'api-lYsN6';
+const ALYA_KEY = 'LumiBot-alya';
 
 export default {
   command: ['hentaila', 'hla'],

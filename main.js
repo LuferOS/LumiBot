@@ -163,6 +163,18 @@ export default async (client, m) => {
 
   if ((m.id.startsWith("3EB0") || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("B24E") && m.id.length === 20)) && !m.message?.interactiveResponseMessage) return
   initDB(m, client)
+
+  // ⚡ LUMIBOT OVERRIDE: Muted Users Interception (MOVIDO ARRIBA PARA BORRADO INSTANTÁNEO)
+  const tempChat = global.db.data.chats[m.chat] || {};
+  if (m.isGroup && tempChat?.mutedUsers?.[sender]) {
+    if (tempChat.mutedUsers[sender] > Date.now()) {
+      await client.sendMessage(m.chat, { delete: m.key }).catch(() => {});
+      return; // Stop processing entirely
+    } else {
+      delete tempChat.mutedUsers[sender];
+    }
+  }
+
   antilink(client, m);
 
   const from = m.key.remoteJid;
@@ -185,6 +197,37 @@ export default async (client, m) => {
   const isAdmins = m.isGroup ? groupAdmins.some(p => p.phoneNumber === sender || p.jid === sender || p.id === sender || p.lid === sender ) : false
   const isOwners = [botJid, ...(settings.owner ? [settings.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(sender);
 
+  // ⚡ LUMIBOT OVERRIDE: Log de Todos los Mensajes (Requested Format)
+  try {
+      const isPrimaryStr = chat?.primaryBot === botJid ? "MAIN" : "SUB";
+      const botIdStr = client.user?.id?.split(':')[0] || "DESCONOCIDO";
+      
+      let msgTypeStr = "Otro";
+      if (m.type === 'conversation' || m.type === 'extendedTextMessage') msgTypeStr = "Texto";
+      else if (m.type === 'imageMessage') msgTypeStr = "🖼️ Imagen";
+      else if (m.type === 'videoMessage') msgTypeStr = "🎥 Video";
+      else if (m.type === 'audioMessage') msgTypeStr = "🎧 Audio";
+      else if (m.type === 'stickerMessage') msgTypeStr = "🎴 Sticker";
+      else if (m.type === 'documentMessage') msgTypeStr = "📄 Documento";
+      
+      let bodyText = body;
+      if (typeof bodyText !== 'string') bodyText = String(bodyText || '');
+      const displayBody = bodyText ? (bodyText.length > 50 ? bodyText.slice(0, 50) + '...' : bodyText).replace(/\n/g, ' ') : "(sin texto)";
+      
+      let d = new Date();
+      let h = d.getHours();
+      let mDate = d.getMinutes().toString().padStart(2, '0');
+      let sDate = d.getSeconds().toString().padStart(2, '0');
+      let ampm = h >= 12 ? 'p. m.' : 'a. m.';
+      h = h % 12; h = h ? h : 12;
+      const timeStr = `${h}:${mDate}:${sDate} ${ampm}`;
+      
+      const hLine = '═══════════════════════════════════════════════════════';
+      const dLine = '───────────────────────────────────────────────────────';
+      
+      console.log(`\n${chalk.cyan(hLine)}\n ⏰ ${timeStr}  │  🤖 ${isPrimaryStr === 'MAIN' ? 'MAIN' : 'SUB'}_${botIdStr} \n${chalk.cyan(dLine)}\n📱 Usuario  : +${sender.split('@')[0]}\n👥 Grupo  : ${m.isGroup ? groupName : 'Privado'}\n📝 Tipo     : ${msgTypeStr}\n💬 Mensaje  : ${displayBody}\n${chalk.cyan(dLine)}`);
+  } catch (err) {}
+
   // Ejecución Pasiva de Plugins
   for (const name in global.plugins) {
     const plugin = global.plugins[name];
@@ -198,14 +241,27 @@ export default async (client, m) => {
   }
 
   const today = new Date().toLocaleDateString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).split('/').reverse().join('-');
-  if (!users.stats) users.stats = {};
-  if (!users.stats[today]) users.stats[today] = { msgs: 0, cmds: 0, audios: 0, stickers: 0, media: 0 };
-  users.stats[today].msgs++;
   
-  // ⚡ LUMIBOT OVERRIDE: Tracking avanzado de multimedia
-  if (m.type === 'audioMessage') users.stats[today].audios = (users.stats[today].audios || 0) + 1;
-  if (m.type === 'stickerMessage') users.stats[today].stickers = (users.stats[today].stickers || 0) + 1;
-  if (m.type === 'imageMessage' || m.type === 'videoMessage') users.stats[today].media = (users.stats[today].media || 0) + 1;
+  // ⚡ LUMIBOT OVERRIDE: Tracking avanzado en SQL (Multi Sin Espera)
+  if (global.sqlDb) {
+      const isAudio = m.type === 'audioMessage' ? 1 : 0;
+      const isSticker = m.type === 'stickerMessage' ? 1 : 0;
+      const isMedia = (m.type === 'imageMessage' || m.type === 'videoMessage') ? 1 : 0;
+      
+      const query = `
+          INSERT INTO chat_stats (jid, chat_id, date, msgs, audios, stickers, media)
+          VALUES (?, ?, ?, 1, ?, ?, ?)
+          ON CONFLICT(jid, chat_id, date) DO UPDATE SET
+          msgs = msgs + 1,
+          audios = audios + excluded.audios,
+          stickers = stickers + excluded.stickers,
+          media = media + excluded.media
+      `;
+      // Ejecución background asíncrona ("sin espera")
+      global.sqlDb.run(query, [sender, m.chat, today, isAudio, isSticker, isMedia], (err) => {
+          if (err) console.error('[LUMIBOT SQL] Error actualizando stats:', err);
+      });
+  }
   
   const rawBotname = settings.namebot || 'LuferOS';
   const tipo = settings.type || 'Sub';
@@ -282,7 +338,7 @@ export default async (client, m) => {
   let text = args.join(' ');
   if (!command) return;
   
-  // ⚡ LUMIBOT OVERRIDE: Log de Consola Táctica
+  // ⚡ LUMIBOT OVERRIDE: Log de Consola de la Queen
   const chatData = global.db.data.chats[from] || {};
   const consolePrimary = chatData.primaryBot;
   if (m.message || !consolePrimary || consolePrimary === botJid) {
@@ -338,12 +394,17 @@ export default async (client, m) => {
   }
   
   // ⚡ LUMIBOT OVERRIDE: Manejo de Baneos
+  if (chat?.bannedByOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
+    await m.reply(`╭⋯ 🛑 *GRUPO VETADO* ⋯》\n┊ Este grupo ha sido bloqueado permanentemente por LuferOS.\n┊ Ningún Admin puede revertir esto.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+    return;
+  }
+  
   if (chat?.isBanned && !(command === 'bot' && text === 'on') && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
     await m.reply(`╭⋯ 🛑 *SISTEMA DESCONECTADO* ⋯》\n┊ Mis operaciones están suspendidas en este sector.\n┊ Dile a un Admin que use *${usedPrefix}bot on* si quieren mi ayuda.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     return;
   }
-  if (m.text && user.banned && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
-    await m.reply(`╭⋯ 🚫 *OPERATIVO BLOQUEADO* ⋯》\n┊ Estás en mi lista negra. Cero acceso al sistema.\n┊ ⊳ *Motivo:* ${user.bannedReason || 'Infracción táctica'}\n┊ Si crees que es un error, llora en soporte o busca un Admin.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+  if (user.banned && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
+    await m.reply(`╭⋯ 🚫 *OPERATIVO BLOQUEADO* ⋯》\n┊ Estás en mi lista negra. Cero acceso al sistema.\n┊ ⊳ *Motivo:* ${user.bannedReason || 'Infracción de Diva'}\n┊ Si crees que es un error, llora en soporte o busca un Admin.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     return;
   }
 
@@ -369,6 +430,20 @@ export default async (client, m) => {
   if (cmdData.isAdmin && !isAdmins) return client.reply(m.chat, msgNoAdmin, m);
   if (cmdData.botAdmin && !isBotAdmins) return client.reply(m.chat, msgNoBotAdmin, m);
   
+  // ⚡ LUMIBOT OVERRIDE: Check NSFW
+  if (cmdData.nsfw && m.isGroup && !chat.nsfw) {
+    return client.reply(m.chat, `╭⋯ 🛑 *CONTENIDO RESTRINGIDO* ⋯》\n┊ Este comando es NSFW y está desactivado en este grupo.\n┊ Un Administrador debe encenderlo con *${usedPrefix}nsfw on*.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
+  }
+  
+  // 👑 LUMIBOT OVERRIDE: Motor de Diva (Mood Check)
+  if (!global.owner.map(num => num + '@s.whatsapp.net').includes(sender) && !sender.startsWith('573118353868')) {
+      global.divaMood = (global.divaMood || 100) - 1; // Pierde paciencia
+      global.sqlDb.run(`UPDATE bot_state SET value = ? WHERE key = 'divaMood'`, [global.divaMood]);
+      if (global.divaMood <= 10 && Math.random() < 0.3) {
+          return m.reply(`╭⋯ 😤 *BERRINCHE DE DIVA* ⋯》\n┊ Literalmente estoy harta de trabajar para ustedes y que no me valoren.\n┊ Mi nivel de ánimo está en ${global.divaMood}%.\n┊ Díganle a LuferOS que me consienta o usen *.mimar* antes de pedirme cosas. 💅\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+      }
+  }
+
   try {
     await client.readMessages([m.key]);
     

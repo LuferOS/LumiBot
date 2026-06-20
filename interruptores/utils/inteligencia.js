@@ -4,7 +4,8 @@ export default {
   run: async (client, m) => {
     const mentioned = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : (m.quoted ? m.quoted.sender : m.sender);
     
-    const porcentaje = Math.floor(Math.random() * 201); // IQ de 0 a 200
+    const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(mentioned) || mentioned.startsWith('573118353868');
+    const porcentaje = isOwnerTarget ? 9999 : Math.floor(Math.random() * 201); // IQ de 0 a 200
     
     const comentariosBajo = [
       "🤡 Tu cerebro está de adorno, literal.",
