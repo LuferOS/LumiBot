@@ -8,7 +8,7 @@ export default {
     if (!mentioned) return m.reply('🙄 *¿A quién funamos, amig@?*\n> Menciona a alguien o responde a su mensaje, no leo mentes 💅');
     
     const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(mentioned) || mentioned.startsWith('573118353868');
-    if (isOwnerTarget) return m.reply(`🙄 ¿A mi creador? Estás mal de la cabeza si crees que voy a funar a mi papá o a los dioses de este bot. Más bien, la funa te la llevas tú por atrevid@. 💅`);
+    if (isOwnerTarget) return m.reply(`🙄 ¿A mi creador? Estás mal de la cabeza si crees que voy a funar a mi jefe o a los dioses de este bot. Más bien, la funa te la llevas tú por atrevid@. 💅`);
     
     const intros = ["Deberían multarte por parecer", "Literal pareces", "Eres tan inútil que", "Tu vida amorosa es como", "Tienes el carisma de", "Ojalá fueras", "Tienes la misma energía que", "Tu IQ es menor que el de", "Tu cara me recuerda a"];
     const subjects = ["un semáforo en GTA", "agua de jamaica caliente", "una piedra", "un cargador roto", "un lunes por la mañana", "Internet Explorer", "una pared despintada", "un meme del 2012", "un mosco a las 3 AM", "un anuncio que no se puede saltar", "un billete falso", "la 'e' de Internet Explorer", "un semáforo peatonal", "un paraguas roto", "el modo avión", "un chiste de WhatsApp de tíos", "una mosca atrapada en un vaso", "un pantallazo azul de Windows"];

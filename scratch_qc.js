@@ -1,5 +1,6 @@
 import axios from 'axios';
 import fs from 'fs';
+import { generateQuoteSticker } from './interruptores/utils/quote_api.js';
 
 async function testQuote() {
   const quoteObj = { 
@@ -19,8 +20,8 @@ async function testQuote() {
   };
   
   try {
-    const { data } = await axios.post('https://bot.lyo.su/quote/generate', quoteObj, { headers: { 'Content-Type': 'application/json' } });
-    const buffer = Buffer.from(data.result.image, 'base64');
+    const base64Image = await generateQuoteSticker(quoteObj);
+    const buffer = Buffer.from(base64Image, 'base64');
     fs.writeFileSync('test_quote.png', buffer);
     console.log("Image saved as test_quote.png");
   } catch (e) {

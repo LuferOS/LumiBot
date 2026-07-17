@@ -1,6 +1,7 @@
 import os from 'os';
 import { performance } from 'perf_hooks';
 import fetch from 'node-fetch';
+import { pingQuoteApis } from './quote_api.js';
 export default {
   command: ["ping", "telemetria"],
   category: "utilidad",
@@ -28,7 +29,7 @@ export default {
     const [pingCausas, pingAlya, pingLyo] = await Promise.all([
         pingApi('https://rest.apicausas.xyz/'),
         pingApi('https://api.alyacore.xyz/'),
-        pingApi('https://bot.lyo.su/')
+        pingQuoteApis()
     ]);
     
     // Cálculos de Memoria
@@ -51,19 +52,30 @@ export default {
     const sysUptime = formatUptime(os.uptime());
     const botUptime = formatUptime(process.uptime());
 
-    const txt = `*🟢 ESTADO DE LA QUEEN*\n\n` +
-      `*Reacción Interna:* ${execTime} ms\n` +
-      `*Desfase de Reloj:* ${clockDrift}\n` +
-      `*API Causas:* ${pingCausas}\n` +
-      `*API AlyaCore:* ${pingAlya}\n` +
-      `*API Stickers:* ${pingLyo}\n\n` +
-      `*Plataforma:* ${os.platform()} ${os.arch()}\n` +
-      `*RAM Uso:* ${usedGb} GB / ${totalGb} GB (${ramPct}%)\n` +
-      `*Procesador:* ${os.cpus()[0].model.trim()}\n` +
-      `*Uptime Sistema:* ${sysUptime}\n` +
-      `*Uptime LumiBot:* ${botUptime}`;
+      const ramEstado = ramPct < 80 ? '🟢 Óptimo' : (ramPct < 90 ? '🟡 Advertencia' : '🔴 Crítico');
+      const sysEstado = execTime < 1000 ? '🟢 En línea' : '🔴 En problemas';
+      const latencia = execTime < 500 ? '🟢 Excelente' : (execTime < 1000 ? '🟡 Aceptable' : '🔴 Malo');
 
-    await m.reply(txt);
+      const txt = `⚡ 𝐑𝐄𝐒𝐔𝐋𝐓𝐀𝐃𝐎 𝐃𝐄 𝐋𝐀 𝐏𝐑𝐔𝐄𝐁𝐀 ⚡\n\n` +
+                  `╭━━〔 𝐋𝐔𝐌𝐈𝐁𝐎𝐓 𝐒𝐘𝐒𝐓𝐄𝐌 〕━━⬣\n` +
+                  `┃ ⚡ 𝐕𝐞𝐥𝐨𝐜𝐢𝐝𝐚𝐝 𝐝𝐞𝐥 𝐁𝐨𝐭: ${execTime}ms\n` +
+                  `┃ 📶 𝐋𝐚𝐭𝐞𝐧𝐜𝐢𝐚: ${latencia}\n` +
+                  `┃ 📊 𝐑𝐀𝐌 (𝐔𝐬𝐨): ${usedGb} GB / ${totalGb} GB (${ramPct}%)\n` +
+                  `┃ 📈 𝐄𝐬𝐭𝐚𝐝𝐨 𝐑𝐀𝐌: ${ramEstado}\n` +
+                  `┃ 💻 𝐔𝐩𝐭𝐢𝐦𝐞 𝐁𝐨𝐭: ${botUptime}\n` +
+                  `┃ 🌐 𝐔𝐩𝐭𝐢𝐦𝐞 𝐒𝐲𝐬: ${sysUptime}\n` +
+                  `┃ 🔥 𝐒𝐢𝐬𝐭𝐞𝐦𝐚: ${sysEstado}\n` +
+                  `╰━━━━━━━━━━━━━━━━⬣`;
+
+      try {
+        await client.sendMessage(m.chat, { 
+          video: { url: 'https://i.pinimg.com/originals/5b/b2/d1/5bb2d1601a93b22cf3c9cf1c2c317d74.gif' }, 
+          caption: txt, 
+          gifPlayback: true 
+        }, { quoted: m });
+      } catch (e) {
+        await client.sendMessage(m.chat, { text: txt }, { quoted: m });
+      }
     await m.react('✅');
   }
 };

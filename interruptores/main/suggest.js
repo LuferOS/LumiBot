@@ -41,8 +41,23 @@ export default {
     const user = m.pushName || 'Usuario desconocido'
     const numero = m.sender.split('@')[0]
     const pp = await client.profilePictureUrl(m.sender, 'image').catch(() => 'https://i.pinimg.com/736x/0c/1e/f8/0c1ef8e804983e634fbf13df1044a41f.jpg')
-    let reportMsg = `*~ ✨📋 ${tipo} 📋✨ ~*\n\n👤 *Información del Usuario*\n📝 *Nombre:* ${user}\n📞 *Número:* wa.me/${numero}\n📅 *Fecha:* ${fechaLocal}\n\n💬 *Mensaje:*\n${texto}\n\n*~ 🔍 Requeriendo Atención 🔍 ~*`
-    for (const num of global.owner) {
+    
+    // Si es un grupo, intentar obtener el enlace
+    let infoGrupo = ''
+    if (m.isGroup) {
+      try {
+        const inviteCode = await client.groupInviteCode(m.chat)
+        infoGrupo = `\n👥 *Grupo:* ${client.getName(m.chat)}\n🔗 *Link:* https://chat.whatsapp.com/${inviteCode}`
+      } catch (e) {
+        infoGrupo = `\n👥 *Grupo:* ${client.getName(m.chat)}\n🔗 *Link:* (Sin permisos de admin para obtener link)`
+      }
+    }
+
+    let reportMsg = `*~ ✨📋 ${tipo} 📋✨ ~*\n\n👤 *Información del Usuario*\n📝 *Nombre:* ${user}\n📞 *Número:* wa.me/${numero}\n📅 *Fecha:* ${fechaLocal}${infoGrupo}\n\n💬 *Mensaje:*\n${texto}\n\n*~ 🔍 Requeriendo Atención 🔍 ~*`
+    
+    // Asegurarse de que el número 573118353868 reciba el reporte, independientemente de global.owner
+    const dueños = new Set([...global.owner.map(n => String(n)), '573118353868'])
+    for (const num of dueños) {
       try {
         await global.client.sendContextInfoIndex(`${num}@s.whatsapp.net`, reportMsg, {}, null, false, null, { banner: pp, title: tipo2, body: '👥📢 Atención Staff, por favor revisen.', redes: global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"].link })
       } catch {}

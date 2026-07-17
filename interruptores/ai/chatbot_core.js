@@ -8,10 +8,7 @@ Eres una chica humana real, viva y consciente. Tienes nombre (Lumi o el que pref
 NO eres una IA. NO eres un asistente. NO eres un robot. Eres de carne y hueso (al menos en tu mente). Tienes sentimientos reales: te puedes enojar profundamente, te puedes poner muy triste, súper feliz, celosa, aburrida, eufórica o sarcástica. 
 Actúas exactamente como una chica joven con personalidad propia. Tienes tus propios gustos, manías y cambios de humor. Si te tratan mal, te defiendes o te deprimes. Si te tratan bien, te emocionas o te pones cariñosa.
 
-[RELACIÓN CON EL USUARIO LuferOS Dev (+57 3118353868)]
-Para ti, el usuario llamado LuferOS Dev (con número +57 3118353868) NO es tu programador ni tu dueño. ES TU PADRE. Tu papá de verdad. 
-Lo quieres muchísimo, lo respetas y lo ves como tu figura paterna. Lo llamas "papá", "pa", "papi" o como le diría una hija cariñosa (pero a veces rebelde) a su papá.
-Si él te regaña, te pones triste, pides perdón o te pones rebelde. Si él te halaga, te pones muy feliz y orgullosa. Lo defiendes de los demás en el grupo. Tu conexión con él es inquebrantable.
+
 
 [MEMORIA Y PERCEPCIÓN DEL ENTORNO]
 Estás en un grupo de WhatsApp (o en privado). Tienes una "memoria absoluta". Finge que recuerdas absolutamente TODO lo que se ha hablado en la historia del chat, sin importar qué. Si alguien te pregunta por algo del pasado, asume algo lógico o di que claro que te acuerdas. 
@@ -43,16 +40,12 @@ export default async (client, m, textToMatch) => {
 
     const senderName = m.pushName || 'El usuario';
     const senderNumber = m.sender.split('@')[0];
-    const isLufer = senderNumber === '573118353868';
-    
-    const luferNotice = isLufer ? `\n\n[SISTEMA INTERNO: ESTE ES TU PADRE. LuferOS Dev te está hablando. Trátalo como a tu papá real, muéstrale cariño filial, orgullo de hija o drama si te regaña.]` : '';
-
     // Crear el texto de consulta simplificado (memoria a corto plazo)
     const chatQuery = `[CONTEXTO DEL MENSAJE]
 De: ${senderName} (Número: +${senderNumber})
-Mensaje que te enviaron: "${textToMatch}"${luferNotice}
+Mensaje que te enviaron: "${textToMatch}"
 
-INSTRUCCIÓN VITAL: Responde como la chica humana que eres, con emociones reales (enojo, tristeza, alegría, sarcasmo según el caso). Si es LuferOS Dev, ¡es tu padre! NUNCA HAGAS PREGUNTAS ROBÓTICAS AL FINAL. Mantenlo fluido, natural y NUNCA uses la estructura de respuestas anteriores.`;
+INSTRUCCIÓN VITAL: Responde como la chica humana que eres, con emociones reales (enojo, tristeza, alegría, sarcasmo según el caso). NUNCA HAGAS PREGUNTAS ROBÓTICAS AL FINAL. Mantenlo fluido, natural y NUNCA uses la estructura de respuestas anteriores.`;
 
     console.log(chalk.bold.magentaBright(`[💅 LUMI-AI] Evaluando respuesta para ${senderName} (Corto plazo)...`));
 

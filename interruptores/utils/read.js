@@ -1,4 +1,4 @@
-import { downloadContentFromMessage, extractMessageContent } from '@whiskeysockets/baileys'
+import { downloadContentFromMessage, extractMessageContent } from 'baileys-next'
 
 export default {
   command: ['readviewonce', 'read', 'readvo', 'interceptar'],

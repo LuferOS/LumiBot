@@ -169,10 +169,10 @@ async function getAudioUrl(youtubeUrl) {
 }
 
 async function getVideoUrl(youtubeUrl, quality = '360') {
-  const newApiResult = await getNewApiDownload(youtubeUrl, 'video', 20000)
+  const newApiResult = await getNewApiDownload(youtubeUrl, 'video', 60000)
   if (newApiResult) return newApiResult
   const alyaUrl = `https://api.alyacore.xyz/dl/ytmp4?url=${encodeURIComponent(youtubeUrl)}&quality=${quality}&key=${encodeURIComponent(ALYA_KEY)}`
-  const alyaJson = await fetchJsonWithRetry(alyaUrl, ALYA_TIMEOUT_MS, ALYA_RETRIES, ALYA_RETRY_DELAY_MS)
+  const alyaJson = await fetchJsonWithRetry(alyaUrl, 60000, ALYA_RETRIES, ALYA_RETRY_DELAY_MS)
   const alyaDl = alyaJson?.status !== false ? extractAlyaDownloadUrl(alyaJson, 'video') : null
 
   if (alyaDl) {
@@ -261,10 +261,10 @@ function embedCoverArt(mp3Buffer, imageBuffer, title) {
   }
 }
 
-function getMikuMenuText(title, author, duration, views) {
+function getLumiMenuText(title, author, duration, views) {
   return (
     `╭──『 *YOUTUBE PLAY* 』──╮\n` +
-    `│ 👑 *Hatsune Miku Edition* 👑\n` +
+    `│ 👑 *LumiBot Edition* 👑\n` +
     `╰────────────────╯\n\n` +
     `🎬 *${String(title).substring(0, 35)}*\n` +
     (author   ? `👤 ${author}\n`                   : '') +
@@ -274,12 +274,13 @@ function getMikuMenuText(title, author, duration, views) {
     `『 *¿Qué deseas descargar?* 』\n\n` +
     `1️⃣ *🌱 Audio MP3*\n` +
     `2️⃣ *🌱 Video 360p*\n` +
-    `3️⃣ *🌱 Documento MP4*\n` +
-    `4️⃣ *🌱 Documento MP3*\n\n` +
+    `3️⃣ *🌱 Video 480p*\n` +
+    `4️⃣ *🌱 Video 720p*\n` +
+    `5️⃣ *🌱 Documento MP4*\n` +
+    `6️⃣ *🌱 Documento MP3*\n\n` +
     `────────────────────\n` +
-    `_▸ Responde con el numero (1-4)_\n` +
-    `_▸ Expira en 5 minutos_\n` +
-    `_▸ Costo: 🌱 500 Cebollines_`
+    `_▸ Responde con el numero (1-6)_\n` +
+    `_▸ Expira en 5 minutos_\n`
   )
 }
 
@@ -298,8 +299,9 @@ export async function processDownload(conn, m, videoInfo, option) {
   activeYouTubeDownloads.set(lockKey, { startedAt: Date.now(), sender: m.sender })
   await conn.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
   let animMsg = await lumiAnim(conn, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando multimedia de YouTube...* 💅'], 1000);
-  const isAudio    = option === 1 || option === 4
-  const asDocument = option === 3 || option === 4
+  const isAudio    = option === 'audio' || option === 'audio_doc'
+  const asDocument = option === 'video_doc' || option === 'audio_doc'
+  const quality    = ['360', '480', '720'].includes(option) ? option : '360'
   const fileName   = String(videoInfo.title || 'descarga').replace(/[^\w\s]/gi, '').trim().substring(0, 50) || 'descarga'
   const ext        = isAudio ? 'mp3' : 'mp4'
   const mimetype   = isAudio ? 'audio/mpeg' : 'video/mp4'
@@ -307,7 +309,7 @@ export async function processDownload(conn, m, videoInfo, option) {
   try {
     const data = isAudio
       ? await getAudioUrl(videoInfo.url)
-      : await getVideoUrl(videoInfo.url, '360')
+      : await getVideoUrl(videoInfo.url, quality)
     let thumbnailBuffer = null
     if (isAudio) {
       const thumbUrl = data.thumbnail || videoInfo.thumbnail ||
@@ -394,11 +396,6 @@ export async function processDownload(conn, m, videoInfo, option) {
     if (animMsg) await conn.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
     const user = global.db?.data?.users?.[m.sender]
-    if (user && !user.monedaDeducted) {
-      user.moneda = (user.moneda || 0) - 500
-      user.monedaDeducted = true
-      conn.reply(m.chat, '💋 Has utilizado 🌱 500 *Cebollines*', m)
-    }
     return true
   } catch (error) {
     if (animMsg) await conn.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
@@ -429,10 +426,12 @@ export async function processYouTubeButton(conn, m) {
   }
   if (!buttonId) return false
   let option = null
-  if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
-  else if (buttonId.includes('youtube_video_360_'))                        option = 2
-  else if (buttonId.includes('youtube_video_doc_'))                        option = 3
-  else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
+  if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 'audio'
+  else if (buttonId.includes('youtube_video_360_'))                        option = '360'
+  else if (buttonId.includes('youtube_video_480_'))                        option = '480'
+  else if (buttonId.includes('youtube_video_720_'))                        option = '720'
+  else if (buttonId.includes('youtube_video_doc_'))                        option = 'video_doc'
+  else if (buttonId.includes('youtube_audio_doc_'))                        option = 'audio_doc'
   if (!option) return false
   const user = global.db?.data?.users?.[m.sender]
   if (!user?.lastYTSearch) {
@@ -443,7 +442,6 @@ export async function processYouTubeButton(conn, m) {
     await conn.reply(m.chat, '⏰ La búsqueda expiró. Realiza una nueva búsqueda.', m)
     return false
   }
-  user.monedaDeducted = false
   try {
     await processDownload(conn, m, user.lastYTSearch.videoInfo, option)
     user.lastYTSearch = null
@@ -469,8 +467,7 @@ export default {
         return conn.reply(
           m.chat,
           `💅 *${usedPrefix}${command}* <canción o URL>\n` +
-          `👑 Ejemplo: *${usedPrefix}${command} Let you down Cyberpunk*\n` +
-          `🔥 Costo: *🌱 500 cebollines*`,
+          `👑 Ejemplo: *${usedPrefix}${command} Let you down Cyberpunk*`,
           m
         )
       }
@@ -499,22 +496,37 @@ export default {
       const videoInfo = { url: videoUrl, title: videoTitle, thumbnail: videoThumbnail }
       if (user) user.lastYTSearch = { videoInfo, timestamp: Date.now() }
       const videoId  = extractYouTubeId(videoUrl) || ''
-      const infoText = getMikuMenuText(videoTitle, videoAuthor, videoDuration, videoViews)
+      const infoText = getLumiMenuText(videoTitle, videoAuthor, videoDuration, videoViews)
       try {
         const thumbBuf = await fetchThumbnailBuffer(videoThumbnail)
         if (!thumbBuf) throw new Error('sin thumbnail')
-        await conn.sendMessage(m.chat, {
-          image: thumbBuf,
-          caption: infoText,
-          footer: '💅 Hatsune Miku Bot',
-          buttons: [
-            { buttonId: `youtube_audio_${videoId}`, buttonText: { displayText: '🎵 Audio MP3' }, type: 1 },
-            { buttonId: `youtube_video_360_${videoId}`, buttonText: { displayText: '🎬 Video 360p' }, type: 1 },
-            { buttonId: `youtube_video_doc_${videoId}`, buttonText: { displayText: '📁 Doc MP4' }, type: 1 },
-            { buttonId: `youtube_audio_doc_${videoId}`, buttonText: { displayText: '📄 Doc MP3' }, type: 1 },
-          ],
-          headerType: 4,
-          viewOnce: true,
+        
+        const { generateWAMessageContent } = await import('baileys-next')
+        const { imageMessage } = await generateWAMessageContent(
+          { image: thumbBuf },
+          { upload: conn.waUploadToServer }
+        )
+
+        await conn.relayMessage(m.chat, {
+          viewOnceMessage: {
+            message: {
+              interactiveMessage: {
+                header: { title: '', hasMediaAttachment: true, imageMessage },
+                body: { text: infoText },
+                footer: { text: '💅 LumiBot' },
+                nativeFlowMessage: {
+                  buttons: [
+                    { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🎵 Audio MP3', id: `youtube_audio_${videoId}` }) },
+                    { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🎬 Video 360p', id: `youtube_video_360_${videoId}` }) },
+                    { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🎬 Video 480p', id: `youtube_video_480_${videoId}` }) },
+                    { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🎬 Video 720p', id: `youtube_video_720_${videoId}` }) },
+                    { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '📁 Doc MP4', id: `youtube_video_doc_${videoId}` }) },
+                    { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '📄 Doc MP3', id: `youtube_audio_doc_${videoId}` }) },
+                  ]
+                }
+              }
+            }
+          }
         }, { quoted: m })
       } catch (e) {
         await conn.reply(m.chat, infoText, m)

@@ -6,22 +6,24 @@ export default {
       const db = global.db?.data || {};
       const botId = client?.user?.id?.split(':')[0] + '@s.whatsapp.net';
       const botSettings = db.settings?.[botId] || {};
-      const banner = botSettings.banner || 'https://i.imgur.com/8Q9N49Q.jpeg';
+      const banner = botSettings.banner || 'https://telegra.ph/file/24fa902ead26340f3df2c.png';
       
-      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v5.0.0* ⋯》
-┊ ✨ *NOTAS DE LA ACTUALIZACIÓN (DIVA ENGINE UPDATE)* ✨
+      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v5.0.2* ⋯》
+┊ ✨ *NOTAS DE LA ACTUALIZACIÓN (BAILEYS-NEXT 7.0.7)* ✨
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
-┊ 🚀 *INTEGRACIÓN DE IA CON SENTIMIENTOS:*
-┊ ⊳ *Motor de Diva (Mood Engine):* Ahora LumiBot tiene sentimientos y una barra de paciencia. Si abusas de los comandos entrará en "Berrinche" y se negará a trabajar. Usa *.mimar* para comprarle regalos y subir su ánimo, o *.animo* para ver cómo está.
-┊ ⊳ *La Policía Tóxica:* Nuevo sistema de bodas completo. Cásate con *.casarse* o divórciate con *.divorcio*. Si estando casado usas comandos románticos (.beso, .ship, etc) con OTRA persona, LumiBot interrumpirá el comando, te expondrá como infiel frente al grupo y sumará un punto en el comando *.infieles*.
-┊ ⊳ *Red de Chismes Global:* LumiBot ahora lee pasivamente y guarda palabras clave de "salseo" en los grupos. Usa *.chisme* para revelar secretos anónimos robados de la base de datos SQL.
+┊ 🚀 *RENDIMIENTO EXTREMO Y ESTABILIDAD:*
+┊ ⊳ *Anti-OOM (Control de Memoria):* Actualizado el motor Baileys a la v7.0.7 con sistema de LRUCache. El bot no sobrepasará su límite de memoria aunque lleguen 100,000 mensajes, evitando colapsos del servidor.
+┊ ⊳ *Límite Inteligente de RAM:* El sistema operativo ahora restringe estrictamente la RAM del bot a un límite sano de 4GB.
+┊ ⊳ *Desconexión Segura:* Límite de 50,000 nodos offline. Si el bot se cae, ya no crasheará la RAM al volver a conectarse intentando leer millones de mensajes en un segundo.
 ┊ 
-┊ 🚀 *INTEGRACIÓN MASIVA (UPGRADES ANTERIORES):*
-┊ ⊳ *API Racing:* Los descargadores principales compiten entre múltiples APIs.
-┊ ⊳ *NSFW Ilimitado y Herramientas IA:* Nuevas utilidades de escalado, descargas Hentai y más.
-┊
-┊ 🐛 *CORRECCIONES Y SEGURIDAD (BUG FIXES):*
-┊ ⊳ *Motor SQLite Multi-Hilo:* Ahora el registro de bodas, infidelidades, chismes y ánimo se guarda en SQLite usando WAL (Write-Ahead Logging) sin pausas asíncronas.
+┊ 🛡️ *ANTI-BAN & RED:*
+┊ ⊳ *Arreglos Críticos:* Solucionado el Bug 463 y arreglado el bucle infinito en envíos masivos. Ahora los mensajes se envían instantáneos o bajo un estricto limitador anti-ban, tú decides.
+┊ 
+┊ 🛠️ *MEJORAS DE COMANDOS:*
+┊ ⊳ *.ping Avanzado:* El comando de estado ahora muestra telemetría real. Consumo exacto de RAM en GB (y su porcentaje), latencia pura del motor, y tiempos de actividad separados (Uptime) del Sistema y del Bot.
+┊ 
+┊ 🚀 *INTEGRACIÓN DE IA CON SENTIMIENTOS:*
+┊ ⊳ *Motor de Diva (Mood Engine):* Ahora LumiBot tiene sentimientos y una barra de paciencia. (Manteniendo las mecánicas de bodas y toxicidad intactas).
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
 
       let msgPayload = {};

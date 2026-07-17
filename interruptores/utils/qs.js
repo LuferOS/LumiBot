@@ -1,6 +1,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import { getRecentMessages, getMessagesBeforeId } from '../../nucleo/system/markov_db.js';
+import { generateQuoteSticker } from './quote_api.js';
 
 export default {
   command: ["qs", "quote_sticker"],
@@ -45,7 +46,7 @@ export default {
           try {
             pfpCache[msg.sender_jid] = await sock.profilePictureUrl(msg.sender_jid, 'image');
           } catch (e) {
-            pfpCache[msg.sender_jid] = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Default de Queen
+            pfpCache[msg.sender_jid] = 'https://telegra.ph/file/24fa902ead26340f3df2c.png'; // Default de Queen
           }
         }
         pfp = pfpCache[msg.sender_jid];
@@ -81,8 +82,8 @@ export default {
         messages: quoteMessages 
       };
 
-      const { data } = await axios.post('https://bot.lyo.su/quote/generate', quoteObj, { headers: { 'Content-Type': 'application/json' } });
-      const buffer = Buffer.from(data.result.image, 'base64');
+      const base64Image = await generateQuoteSticker(quoteObj);
+      const buffer = Buffer.from(base64Image, 'base64');
 
       const tmpFile = `./tmp/qs-${Date.now()}.webp`;
       fs.writeFileSync(tmpFile, buffer);

@@ -13,7 +13,8 @@ export default {
   isAdmin: true,
   run: async (client, m, args, usedPrefix, command) => {
     const chatData = global.db.data.chats[m.chat]
-    const botname = global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"].botname 
+    const botSettings = global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"] || {};
+    const botname = botSettings.botname || 'LumiBot';
     const stateArg = args[0]?.toLowerCase()
     const validStates = ['on', 'off', 'enable', 'disable']
     const mapTerms = {

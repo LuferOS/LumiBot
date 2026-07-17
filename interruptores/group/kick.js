@@ -11,7 +11,7 @@ export default {
         // Evitar sacar al bot o al creador
         if (target === client.user.id.split(':')[0] + '@s.whatsapp.net') return m.reply("🙄 ¿En serio me quieres sacar a mí? Qué patético.");
         const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(target) || target.startsWith('573118353868');
-        if (isOwnerTarget) return m.reply("💅 Ni loca toco a mi papá LuferOS ni a ningún Owner.");
+        if (isOwnerTarget) return m.reply("💅 Ni loca toco a LuferOS ni a ningún Owner.");
 
         await m.reply(`╭⋯ 🥾 *EXPULSIÓN DE DIVA* ⋯》\n┊ Adiós @${target.split('@')[0]}, nadie te va a extrañar.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, { mentions: [target] });
         

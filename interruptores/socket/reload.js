@@ -1,7 +1,7 @@
 import { startSubBot } from '../../nucleo/subs.js';
 import fs from 'fs';
 import path from 'path';
-import {jidDecode} from '@whiskeysockets/baileys';
+import {jidDecode} from 'baileys-next';
 
 export default {
   command: ['reload'],

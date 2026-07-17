@@ -1,5 +1,6 @@
 import axios from 'axios';
 import fs from 'fs';
+import { generateQuoteSticker } from '../utils/quote_api.js';
 
 export default {
   command: ['qc', 'cita', 'quote'],
@@ -14,7 +15,7 @@ export default {
       let target = m.quoted ? m.quoted.sender : m.sender;
       
       // ⚡ LUMIBOT OVERRIDE: Avatar de Diva por defecto en lugar de la waifu
-      const pp = await client.profilePictureUrl(target).catch(() => 'https://i.imgur.com/8Q9N49Q.jpeg');
+      const pp = await client.profilePictureUrl(target).catch(() => 'https://telegra.ph/file/24fa902ead26340f3df2c.png');
       
       const db = global.db.data;
       const userGlobal = db.users[target] || {};
@@ -45,8 +46,8 @@ export default {
         }] 
       };
       
-      const json = await axios.post('https://bot.lyo.su/quote/generate', quoteObj, { headers: { 'Content-Type': 'application/json' } });
-      const buffer = Buffer.from(json.data.result.image, 'base64');
+      const base64Image = await generateQuoteSticker(quoteObj);
+      const buffer = Buffer.from(base64Image, 'base64');
       
       const user = db.users[m.sender] || {};
       const name = user.name || m.sender.split('@')[0];

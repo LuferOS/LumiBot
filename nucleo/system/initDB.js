@@ -13,8 +13,8 @@ function initDB(m, client) {
   settings.nameid = '🛡️ LUMIBOT SECURITY 🛡️'
   settings.type = 'Owner'
   settings.link = 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G'
-  settings.banner = 'https://i.imgur.com/8Q9N49Q.jpeg'
-  settings.icon = 'https://i.imgur.com/8Q9N49Q.jpeg'
+  settings.banner = 'https://telegra.ph/file/24fa902ead26340f3df2c.png'
+  settings.icon = 'https://telegra.ph/file/24fa902ead26340f3df2c.png'
   settings.currency = '💎 Créditos' // Adiós cebollines ridículos
   settings.audios = true
   settings.namebot = 'LumiBOT'
@@ -37,6 +37,7 @@ function initDB(m, client) {
   const chat = global.db.data.chats[m.chat] ||= {}
   chat.users ||= {}
   chat.isBanned ??= false
+  chat.isActivated ??= false // Requiere activación por el Owner
   chat.welcome ??= false
   chat.goodbye ??= false
   chat.sWelcome ??= ''

@@ -1,4 +1,4 @@
-import { Browsers, makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, DisconnectReason, jidDecode, } from '@whiskeysockets/baileys';
+import { Browsers, makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, DisconnectReason, jidDecode, } from 'baileys-next';
 import qrcode from "qrcode"
 import NodeCache from 'node-cache';
 import main from '../main.js'
@@ -17,6 +17,60 @@ let reintentos = {}
 let sesionesEliminadas = new Set()
 let reconectando = new Set()
 const cleanJid = (jid = '') => jid.replace(/:\d+/, '').split('@')[0]
+
+export const MSG = {
+  codeInstructions: (usedPrefix, phoneNumber) =>
+    `🎤 *VINCULACIÓN POR CÓDIGO*\n\n` +
+    `📱 *Número:* ${phoneNumber || 'detectado automáticamente'}\n\n` +
+    `*①* Abre WhatsApp → ⠿ → *Dispositivos vinculados*\n` +
+    `*②* Toca *Vincular un dispositivo*\n` +
+    `*③* Elige *Vincular con número de teléfono*\n` +
+    `*④* Ingresa el código que recibirás 👇\n\n` +
+    `⏳ _Generando tu código..._\n\n` +
+    `💡 _Si el número es incorrecto, usa: *${usedPrefix}code <número>*_\n\n` +
+    `> 💙 *LumiBot* · *${usedPrefix}stopsub* para detener`,
+
+  qrInstructions: (usedPrefix) =>
+    `📷 *VINCULACIÓN POR QR*\n\n` +
+    `*①* Abre WhatsApp → ⠿ → *Dispositivos vinculados*\n` +
+    `*②* Toca *Vincular un dispositivo*\n` +
+    `*③* Apunta la cámara al QR de abajo 👇\n\n` +
+    `⚠️ _No uses tu número personal principal_\n\n` +
+    `> 💙 *LumiBot* · *${usedPrefix}stopsub* para detener`,
+
+  pairingCode: (formattedCode) =>
+    `*${formattedCode}*`,
+
+  success: (userName, cleanId, usedPrefix) =>
+    `✅ *CONEXIÓN EXITOSA*\n\n` +
+    `👤 *Usuario:* ${userName}\n` +
+    `📱 *Número:* ${cleanId}\n` +
+    `💚 *Estado:* Activando...\n\n` +
+    `_Listo en unos segundos_ 🌿\n\n` +
+    `> 💙 *LumiBot* · *${usedPrefix}stopsub* para desvincular`,
+
+  errorConnection: (reason, usedPrefix, phoneNumber) =>
+    `❌ *ERROR DE CONEXIÓN*\n\n` +
+    `Código: *${reason}*\n\n` +
+    (reason === 408
+      ? `⚠️ *Timeout de conexión*\n\n` +
+        `Causas posibles:\n` +
+        `• El número ${phoneNumber || 'detectado'} no tiene WhatsApp activo\n` +
+        `• El número está incorrecto (detectado: ${phoneNumber || 'N/A'})\n` +
+        `• Problemas de red temporales\n\n` +
+        `Soluciones:\n` +
+        `• Usa número manual: *${usedPrefix}code <tu_número>*\n` +
+        `• Ejemplo: *${usedPrefix}code 5211234567890*\n` +
+        `• Intenta con QR: *${usedPrefix}qr*\n\n`
+      : `Intenta de nuevo con *${usedPrefix}vincular*\n\n`)
+    +
+    `> 💙 *LumiBot*`,
+
+  errorInternal: (errMsg) =>
+    `❌ *ERROR INTERNO*\n\n` +
+    `_${errMsg}_\n\n` +
+    `> 💙 *LumiBot*`,
+};
 
 export async function startSubBot(m, client, caption = '', isCode = false, phone = '', chatId = '', commandFlags = {}, isCommand = false) {
   const id = phone || (m?.sender || '').split('@')[0]
@@ -92,7 +146,7 @@ const sock = makeWASocket({
 
           if (codeGenRaw) {
             const codeGen = codeGenRaw.match(/.{1,4}/g)?.join("-") || codeGenRaw;
-            const msgCode = await m.reply(codeGen);
+            const msgCode = await m.reply(MSG.pairingCode(codeGen));
             m.react('✅').catch(() => {});
             delete commandFlags[senderId];
             
@@ -102,7 +156,7 @@ const sock = makeWASocket({
               } catch {}
             }, 60000);
           } else {
-            m.reply("╭⋯ ❌ *ERROR DE ENLACE* ⋯》\n┊ WhatsApp rechazó la petición del código.\n┊ ⊳ El número podría ser inválido o bloqueado.\n┊ Inténtalo de nuevo en unos minutos. 🙄\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》");
+            m.reply(MSG.errorInternal("WhatsApp rechazó la petición del código. El número podría ser inválido o estar bloqueado."));
             delete commandFlags[senderId];
           }
         } catch (e) {
@@ -135,6 +189,14 @@ const sock = makeWASocket({
 
         delete reintentos[sock.userId || id]
         await joinChannels(sock)
+
+        if (isCommand && client && chatId) {
+          const userName = sock.user?.name || 'Usuario';
+          const cleanId = sock.userId;
+          try {
+             await client.sendMessage(chatId, { text: MSG.success(userName, cleanId, '.') });
+          } catch {}
+        }
       }
 
       if (connection === 'close') {
@@ -207,6 +269,7 @@ const sock = makeWASocket({
   })
 
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
+    if (global.subbotsMuted) return; // ⚡ LUMIBOT OVERRIDE: Si están dormidos, ignoran todo
     if (type !== 'notify') return
     for (let raw of messages) {
       if (!raw.message) continue

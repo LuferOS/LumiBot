@@ -7,7 +7,7 @@ export default {
     const mentioned = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : (m.quoted ? m.quoted.sender : m.sender);
     
     const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(mentioned) || mentioned.startsWith('573118353868');
-    if (isOwnerTarget) return m.reply(`💅 Literal mi papá LuferOS y los dueños tienen el futuro asegurado, su única ruina sería perder el tiempo contigo. 💅✨`);
+    if (isOwnerTarget) return m.reply(`💅 Literal LuferOS y los dueños tienen el futuro asegurado, su única ruina sería perder el tiempo contigo. 💅✨`);
     
     const ruinas = [
       "literal vas a arruinar tu vida volviendo con tu ex 💅🤡",

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { proto, generateWAMessageFromContent, generateWAMessageContent } from '@whiskeysockets/baileys'
+import { proto, generateWAMessageFromContent, generateWAMessageContent } from 'baileys-next'
 import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
@@ -127,7 +127,14 @@ export default {
           return { provider: 'alya', data }
       }
 
-      const winner = await Promise.any([fetchCausas(), fetchAlya()])
+      let winner;
+      try {
+          winner = await Promise.any([fetchCausas(), fetchAlya()]);
+      } catch (error) {
+          if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+          return client.reply(m.chat, `╭⋯ ❌ *ERROR DE DESCARGA* ⋯》\n┊ No pude descargar este TikTok.\n┊ Asegúrate de que el enlace sea correcto y el perfil público.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
+      }
+      
       const data = winner.data
 
       const title = data.data?.title || data.title || data.data?.music_info?.title || 'TikTok Video'

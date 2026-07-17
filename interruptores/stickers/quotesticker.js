@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
-import { downloadContentFromMessage } from '@whiskeysockets/baileys'
+import { downloadContentFromMessage } from 'baileys-next'
+import { generateQuoteSticker } from '../utils/quote_api.js'
 
 const ALYA_KEY = 'LumiBot-alya';
 
@@ -29,7 +30,7 @@ export default {
           targetName = dbUser?.name || targetSender.split('@')[0];
       }
       
-      let avatarUrl = 'https://i.imgur.com/8Q9N49Q.jpeg'; // Fallback
+      let avatarUrl = 'https://telegra.ph/file/24fa902ead26340f3df2c.png'; // Fallback
       if (msg) {
          const stream = await downloadContentFromMessage(msg, 'image')
          let buffer = Buffer.from([])
@@ -66,19 +67,8 @@ export default {
         }]
       };
 
-      const res = await fetch('https://bot.lyo.su/quote/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-      })
-      const data = await res.json()
-      
-      if (!data || !data.ok) {
-         await m.react('❌')
-         return m.reply(`🙄 *Ay por favor...*\nEl servidor se ahogó procesando tu sticker. Intenta luego si no es mucha molestia. 💅`)
-      }
-
-      const stickerBuffer = Buffer.from(data.result.image, 'base64')
+      const base64Image = await generateQuoteSticker(payload)
+      const stickerBuffer = Buffer.from(base64Image, 'base64')
       await client.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: m })
       await m.react('✅')
     } catch (e) {

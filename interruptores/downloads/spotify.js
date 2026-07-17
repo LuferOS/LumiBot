@@ -1,9 +1,28 @@
 import fetch from 'node-fetch'
-import { proto, generateWAMessageFromContent } from '@whiskeysockets/baileys'
+import { proto, generateWAMessageFromContent } from 'baileys-next'
 import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
-const ALYA_KEY = 'LumiBot-alya'; // Usamos la key principal de Alya
+const ALYA_KEY = 'LumiBot-alya';
+
+async function fetchJsonRobust(url, retries = 2) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const res = await fetch(url, { timeout: 15000 });
+      const text = await res.text();
+      try {
+        const json = JSON.parse(text);
+        if (json && typeof json === 'object') return json;
+      } catch (e) {
+        if (i === retries) throw new Error('La API devolvió un formato incorrecto (quizás está caída).');
+      }
+    } catch (err) {
+      if (i === retries) throw err;
+    }
+    await new Promise(r => setTimeout(r, 1000));
+  }
+  return null;
+}
 
 export default {
   command: ['spotify', 'sp'],
@@ -19,8 +38,7 @@ export default {
 
       // MODO BÚSQUEDA (Si no es un enlace, usa AlyaCore Search)
       if (!text.includes('spotify.com')) {
-          const searchRes = await fetch(`https://api.alyacore.xyz/search/spotify?query=${encodeURIComponent(text)}&key=${ALYA_KEY}`);
-          const searchData = await searchRes.json();
+          const searchData = await fetchJsonRobust(`https://api.alyacore.xyz/search/spotify?query=${encodeURIComponent(text)}&key=${ALYA_KEY}`);
 
           if (!searchData.status || !searchData.data || searchData.data.length === 0) {
               await m.react('✖️')
@@ -70,18 +88,15 @@ export default {
 
       const fetchCausas = async () => {
           const url = `https://rest.apicausas.xyz/api/v1/descargas/spotify?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`
-          const res = await fetch(url)
-          const data = await res.json()
-          if (!data.status) throw new Error('Causas fallo status')
+          const data = await fetchJsonRobust(url)
+          if (!data || !data.status) throw new Error('Causas fallo status')
           return { provider: 'causas', data }
       }
 
       const fetchAlya = async () => {
-          // Para descargas podemos usar la key antigua o la nueva, usaré la principal por si acaso
           const url = `https://api.alyacore.xyz/dl/spotify?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`
-          const res = await fetch(url)
-          const data = await res.json()
-          if (!data.status) throw new Error('Alya fallo status')
+          const data = await fetchJsonRobust(url)
+          if (!data || !data.status) throw new Error('Alya fallo status')
           return { provider: 'alya', data }
       }
 

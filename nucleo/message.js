@@ -1,4 +1,4 @@
-import { proto, delay, areJidsSameUser, generateWAMessage, prepareWAMessageMedia, generateWAMessageFromContent, downloadContentFromMessage, generateMessageID, generateWAMessageContent, getContentType, getDevice, extractMessageContent } from '@whiskeysockets/baileys';
+import { proto, delay, areJidsSameUser, generateWAMessage, prepareWAMessageMedia, generateWAMessageFromContent, downloadContentFromMessage, generateMessageID, generateWAMessageContent, getContentType, getDevice, extractMessageContent } from 'baileys-next';
 import { resolveLidToRealJid } from "./utils.js"
 import chalk from 'chalk';
 import fs from 'fs';
@@ -500,29 +500,31 @@ export async function smsg(client, m, store) {
   
   client.sendButton = async (jid, text = '',footer = '', buffer, buttons, copy, urls, quoted, options) => {
     let img, video
-    if (/^https?:\/\//i.test(buffer)) {
-      try {
-        const response = await fetch(buffer)
-        const contentType = response.headers.get('content-type')
-        if (/^image\//i.test(contentType)) {
-          img = await prepareWAMessageMedia({ image: { url: buffer } }, { upload: client.waUploadToServer })
-        } else if (/^video\//i.test(contentType)) {
-          video = await prepareWAMessageMedia({ video: { url: buffer } }, { upload: client.waUploadToServer })
-        } else {
-          console.error('Tipo MIME no compatible:', contentType)
+    if (buffer) {
+      if (/^https?:\/\//i.test(buffer)) {
+        try {
+          const response = await fetch(buffer)
+          const contentType = response.headers.get('content-type')
+          if (/^image\//i.test(contentType)) {
+            img = await prepareWAMessageMedia({ image: { url: buffer } }, { upload: client.waUploadToServer })
+          } else if (/^video\//i.test(contentType)) {
+            video = await prepareWAMessageMedia({ video: { url: buffer } }, { upload: client.waUploadToServer })
+          } else {
+            console.error('Tipo MIME no compatible:', contentType)
+          }
+        } catch (error) {
+          console.error('Error al obtener el tipo MIME:', error)
         }
-      } catch (error) {
-        console.error('Error al obtener el tipo MIME:', error)
-      }
-    } else {
-      try {
-        const type = await client.getFile(buffer)
-        if (/^image\//i.test(type.mime)) { img = await prepareWAMessageMedia({ image: { url: buffer } }, { upload: client.waUploadToServer })
-        } else if (/^video\//i.test(type.mime)) {
-          video = await prepareWAMessageMedia({ video: { url: buffer } }, { upload: client.waUploadToServer })
+      } else {
+        try {
+          const type = await client.getFile(buffer)
+          if (/^image\//i.test(type.mime)) { img = await prepareWAMessageMedia({ image: { url: buffer } }, { upload: client.waUploadToServer })
+          } else if (/^video\//i.test(type.mime)) {
+            video = await prepareWAMessageMedia({ video: { url: buffer } }, { upload: client.waUploadToServer })
+          }
+        } catch (error) {
+          console.error('Error al obtener el tipo de archivo:', error)
         }
-      } catch (error) {
-        console.error('Error al obtener el tipo de archivo:', error)
       }
     }
     

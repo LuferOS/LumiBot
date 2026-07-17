@@ -1,9 +1,9 @@
 import fetch from 'node-fetch'
-let WAMessageStubType = (await import('@whiskeysockets/baileys')).default
+let WAMessageStubType = (await import('baileys-next')).default
 import chalk from 'chalk'
 
-const linkRegex = /(https?:\/\/)?(chat\.whatsapp\.com\/[0-9A-Za-z]{20,24}|whatsapp\.com\/channel\/[0-9A-Za-z]{20,24})/i
-
+// Expresión regular para detectar CUALQUIER enlace (http, https, www)
+const linkRegex = /(https?:\/\/|www\.)[^\s]+/i
 // ⚡ LUMIBOT OVERRIDE: Canal oficial autorizado. Brecha de seguridad sellada.
 const allowedLinks = [
   'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G',
@@ -63,9 +63,9 @@ export default async (client, m) => {
     const userName = global.db.data.users[m.sender]?.name || 'Operativo'
     
     try {
-      // ⚡ LUMIBOT OVERRIDE: Reporte de neutralización de Queen
-      const aviso = `╭⋯ ⚠️ *AMENAZA NEUTRALIZADA* ⋯》\n┊ ⊳ *Objetivo:* ${userName}\n┊ ⊳ *Infracción:* Spam de ${isChannelLink ? 'canal externo' : 'grupo no autorizado'}\n┊ ⊳ *Acción:* Eliminación de mensaje y expulsión.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
-      await safeSend(client, m.chat, { text: aviso, mentions: [m.sender], ...global.lumi })
+      // ⚡ LUMIBOT OVERRIDE: Reporte de neutralización
+      const aviso = `━ׁ┉ׅ─ׁ┉ׅ─ׁ─ׁ─ׁ┉ׅ─ׁ─ׁ┉ׅ─˳ּ𑁍 ┉ׁ─ׅ─ׁ┉ׅ─ׁ─ׁ┉ׅ─ׁ─ׅ┉ׁ━ִ╮\n> ❖ @${m.sender.split('@')[0]} fue eliminado por Anti-Link!\n> NO SE PERMITEN ENLACES EN EL GRUPO\n━ׁ┉ׅ─ׁ┉ׅ─ׁ─ׁ─ׁ┉ׅ─ׁ─ׁ┉ׅ─˳ּ𑁍 ┉ׁ─ׅ─ׁ┉ׅ─ׁ─ׁ┉ׅ─ׁ─ׅ┉ׁ━ִ`
+      await safeSend(client, m.chat, { text: aviso, mentions: [m.sender] })
     } catch {}
     
     try {

@@ -1,4 +1,4 @@
-import { getUrlFromDirectPath } from "@whiskeysockets/baileys"
+import { getUrlFromDirectPath } from "baileys-next"
 import _ from "lodash"
 
 export default {

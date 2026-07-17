@@ -1,12 +1,12 @@
 {
   "name": "lumibot",
-  "version": "4.0.1",
+  "version": "5.0.1",
   "description": "WhatsApp Bot Multi Device - Powered by LuferOS Security",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
-    "start": "node index.js"
+    "start": "node --max-old-space-size=4096 index.js"
   },
   "keywords": [
     "whatsapp-bot",
@@ -24,10 +24,10 @@
     "@bochilteam/scraper": "^5.0.1",
     "@mrnima/facebook-downloader": "^1.0.0",
     "@vitalets/google-translate-api": "^9.2.1",
-    "@whiskeysockets/baileys": "npm:baileys-leet",
     "ab-downloader": "^1.0.2",
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "axios": "^1.18.0",
+    "baileys-next": "^7.0.7",
     "canvas": "^3.2.3",
     "cfonts": "latest",
     "chalk": "^4.1.2",

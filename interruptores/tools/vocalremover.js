@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { downloadContentFromMessage } from '@whiskeysockets/baileys'
+import { downloadContentFromMessage } from 'baileys-next'
 
 const ALYA_KEY = 'LumiBot-alya';
 

@@ -26,7 +26,7 @@ export default {
           imageBuffer = Buffer.from(response.data, 'binary')
         } catch (error) {
           // Si no tiene foto de perfil visible, usamos el logo del bot para no crashear
-          let fallback = 'https://i.imgur.com/8Q9N49Q.jpeg'
+          let fallback = 'https://telegra.ph/file/24fa902ead26340f3df2c.png'
           const response = await axios.get(fallback, { responseType: 'arraybuffer' })
           imageBuffer = Buffer.from(response.data, 'binary')
         }

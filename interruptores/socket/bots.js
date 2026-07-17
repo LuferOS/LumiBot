@@ -65,38 +65,26 @@ export default {
     const totalInGroup = inGroupCounts.Owner + inGroupCounts.Sub
     const connectedSubs = global.conns.filter(c => c.userId && subs.includes(c.userId)).map(c => c.userId)
 
-    let message = ''
-    message += `╭⋯ 📡 *TOPOLOGÍA DE RED LUMIBOT* ⋯》\n`
-    message += `┊\n`
-    message += `┊ 📊 *MÉTRICAS GLOBALES*\n`
-    message += `┊ ⊳ Nodos Totales: ${totalBots}\n`
-    message += `┊ ⊳ Operativos en Sector: ${totalInGroup}\n`
-    message += `┊ ⊳ Desplegados exterior: ${totalBots - totalInGroup}\n`
-    message += `┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n`
+    let message = `╭〔 🔌 𝐋𝐔𝐌𝐈𝐁𝐎𝐓 〕⬣\n`
+    message += `┃ 🤖 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐀𝐂𝐓𝐈𝐕𝐎𝐒\n`
+    message += `╰━━━━━━━━━━━━⬣\n\n`
+    message += `┃ 📊 𝐒𝐞𝐬𝐢𝐨𝐧𝐞𝐬: ${totalBots}/20\n\n`
 
-    message += `┊ 👑 *NÚCLEO PRINCIPAL* (${totalCounts.Owner})\n`
-    if (categorizedBots.Owner.length) {
-      message += categorizedBots.Owner.join('\n') + '\n'
+    if (categorizedBots.Owner.length || categorizedBots.Sub.length) {
+      if (categorizedBots.Owner.length) message += categorizedBots.Owner.join('\n') + '\n'
+      if (categorizedBots.Sub.length) message += categorizedBots.Sub.join('\n') + '\n'
     } else {
-      message += `┊   ∅ Fuera de este sector\n\n`
+      message += `┃ > No hay sesiones activas.\n\n`
     }
 
-    message += `┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n`
-    message += `┊ 🤖 *SUB-NODOS ESCLAVOS* (${totalCounts.Sub})\n`
-    if (categorizedBots.Sub.length) {
-      message += categorizedBots.Sub.join('\n') + '\n'
-    } else {
-      message += `┊   ∅ Ninguno registrado\n\n`
-    }
-
-    message += `┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n`
-    message += `┊ 📝 *LEYENDA DE DESPLIEGUE:*\n`
-    message += `┊ [✅] En grupo | [❌] Fuera del grupo\n`
-    message += `╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`
+    message += `> Usa ${m.prefix || '.'}code o ${m.prefix || '.'}qr para tener tu sub-bot.\n\n`
+    message += `╰〔 ⚡ 𝐒𝐘𝐒𝐓𝐄𝐌 〕⬣`
 
     // ⚡ LUMIBOT OVERRIDE: Envío en texto puro, cero dependencias multimedia
     await client.sendMessage(m.chat, {
-      text: message,
+      video: { url: 'https://i.pinimg.com/originals/5b/b2/d1/5bb2d1601a93b22cf3c9cf1c2c317d74.gif' }, // GIF estético
+      caption: message,
+      gifPlayback: true,
       mentions: mentionedJid
     }, { quoted: m })
   },

@@ -25,7 +25,7 @@ export default {
       const botname = botSettings.botname || 'LumiBOT'
       const namebot = botSettings.namebot || 'Lumi'
       const monedas = botSettings.currency || 'Créditos'
-      const banner = botSettings.banner || global.banner || 'https://i.imgur.com/8Q9N49Q.jpeg'
+      const banner = botSettings.banner || global.banner || 'https://telegra.ph/file/24fa902ead26340f3df2c.png'
       const prefijo = botSettings.prefix || '.'
       const owner = botSettings.owner || global.owner?.[0] + '@s.whatsapp.net' || '573118353868@s.whatsapp.net'
       

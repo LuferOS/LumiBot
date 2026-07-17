@@ -11,8 +11,8 @@ export default {
 
       await m.react('🕒')
 
-      // Intentamos sacar su foto de perfil. Si no tiene o está oculta, usamos el logo de LumiBOT.
-      let pp = await client.profilePictureUrl(target, 'image').catch(() => 'https://i.imgur.com/8Q9N49Q.jpeg')
+      // Intentamos sacar su foto de perfil. Si no tiene o está oculta, usamos una imagen de reserva compatible.
+      let pp = await client.profilePictureUrl(target, 'image').catch(() => 'https://telegra.ph/file/24fa902ead26340f3df2c.png')
 
       // Calculamos el porcentaje 100% real no fake
       const isOwnerTarget = global.owner.map(num => num + '@s.whatsapp.net').includes(target) || target.startsWith('573118353868');

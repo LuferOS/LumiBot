@@ -36,10 +36,8 @@ global.lumi = {
     externalAdReply: {
       title: "LumiBOT",
       body: global.dev,
-      mediaUrl: null,
-      description: null,
       previewType: "PHOTO",
-      thumbnailUrl: global.banner || 'https://i.imgur.com/8Q9N49Q.jpeg', // Logo 💅
+      thumbnailUrl: global.banner || 'https://github.com/fluidicon.png', // Logo 💅 - Github is generally safelisted
       sourceUrl: global.links?.channel || 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G',
       mediaType: 1,
       renderLargerThumbnail: false

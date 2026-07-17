@@ -1,6 +1,7 @@
 export default {
     command: ['bangroup', 'unbangroup'],
     category: 'owner',
+    isOwner: true,
     run: async (client, m, args, usedPrefix, command) => {
         // Solo LuferOS
         if (!m.sender.startsWith('573118353868')) return m.reply("💅 Privilegio denegado. Solo mi creador LuferOS puede ejecutar esto.");

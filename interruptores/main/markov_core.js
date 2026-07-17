@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import { getMassiveCorpus, getRandomConsecutiveMessages } from '../../nucleo/system/markov_db.js';
+import { generateQuoteSticker } from '../utils/quote_api.js';
 
 const fetchStickerVideo = async (text) => {
   const fetch = (await import('node-fetch')).default;
@@ -97,7 +98,7 @@ export default {
               try {
                 pfp = await client.profilePictureUrl(msg.sender_jid, 'image');
               } catch {
-                pfp = 'https://i.imgur.com/8Q9N49Q.jpeg';
+                pfp = 'https://telegra.ph/file/24fa902ead26340f3df2c.png';
               }
               
               quoteMessages.push({
@@ -118,9 +119,8 @@ export default {
               width: 512, height: 768, scale: 2, messages: quoteMessages 
             };
 
-            const axios = (await import('axios')).default;
-            const { data } = await axios.post('https://bot.lyo.su/quote/generate', quoteObj, { headers: { 'Content-Type': 'application/json' } });
-            const buffer = Buffer.from(data.result.image, 'base64');
+            const base64Image = await generateQuoteSticker(quoteObj);
+            const buffer = Buffer.from(base64Image, 'base64');
 
             const tmpFile = `./tmp/markov-qs-${Date.now()}.webp`;
             fs.writeFileSync(tmpFile, buffer);
@@ -130,6 +130,8 @@ export default {
           }
         } catch (e) {
           console.error(chalk.red(`[🧠 MARKOV-CORE] Falló Quote Sticker aleatorio, usando texto plano:`), e.message);
+          await client.sendMessage(m.chat, { text: responseText }, { quoted: m });
+          return;
         }
       }
 

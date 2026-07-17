@@ -8,7 +8,7 @@ export default {
         
         if (!target) return m.reply("🙄 Etiqueta o responde al mensaje del pobrecito con el que te quieres casar.");
         if (target === m.sender) return m.reply("🤡 Jajaja, nivel de soledad extremo. No te puedes casar contigo mismo.");
-        if (target === client.user.id.split(':')[0] + '@s.whatsapp.net') return m.reply("💅 Mi corazón solo le pertenece a mi papá LuferOS. Busca a alguien de tu nivel.");
+        if (target === client.user.id.split(':')[0] + '@s.whatsapp.net') return m.reply("💅 Mi corazón solo le pertenece a mi creador LuferOS. Busca a alguien de tu nivel.");
 
         if (!global.sqlDb) return m.reply("❌ Error 404: El registro civil está caído.");
 

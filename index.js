@@ -1,7 +1,7 @@
 import "./settings.js";
 import main from './main.js';
 import events from './interruptores/group/events.js';
-import { Browsers, makeWASocket, makeCacheableSignalKeyStore, useMultiFileAuthState, fetchLatestBaileysVersion, jidDecode, DisconnectReason } from "@whiskeysockets/baileys";
+import { Bot, Browsers, makeCacheableSignalKeyStore, useMultiFileAuthState, fetchLatestBaileysVersion, jidDecode, DisconnectReason } from "baileys-next";
 import cfonts from 'cfonts';
 import pino from "pino";
 import qrcode from "qrcode-terminal";
@@ -11,11 +11,24 @@ import path from "path";
 import readlineSync from "readline-sync";
 import dns from "dns";
 import os from "os";
+
+// 🚀 LUMIBOT PERFORMANCE OVERRIDE: Forzar el uso de todos los núcleos e hilos de la CPU para tareas Crypto/IO
+process.env.UV_THREADPOOL_SIZE = Math.max(4, os.cpus().length);
+
 import fetch from "node-fetch";
 import { smsg } from "./nucleo/message.js";
 import db from "./nucleo/system/database.js";
 import { startSubBot } from './nucleo/subs.js';
 import { exec } from "child_process";
+
+// 🛡️ ANTI-CRASH / ANTI-FREEZE GLOBAL
+process.on('uncaughtException', (err) => {
+    console.error(`[LUMIBOT ANTI-CRASH] Excepción no capturada:`, err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+    console.error(`[LUMIBOT ANTI-CRASH] Promesa no manejada:`, reason);
+});
+
 const getTimestamp = () => {
     let d = new Date();
     let h = d.getHours();
@@ -128,7 +141,9 @@ function cleanCache() {
       if (cleaned > 0) console.log(chalk.gray(`[⚡] Purga de caché TMP: ${cleaned} fragmentos eliminados.`));
     }
     // ... lógica de borrado mantenida intacta ...
-  } catch (e) {}
+  } catch (e) {
+    console.error("[LUMIBOT INDEX] Error al cargar base de datos:", e);
+  }
 }
 
 let opcion;
@@ -157,44 +172,22 @@ async function startBot() {
   const logger = pino({ level: "silent" });
   console.info = () => {}; console.debug = () => {};
 
-  const sock = makeWASocket({
+  const bot = new Bot({
     version,
     logger,
     printQRInTerminal: false,
     browser: Browsers.macOS('Chrome'),
-    auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, logger) },
-    markOnlineOnConnect: false,
-    generateHighQualityLinkPreview: true,
-    syncFullHistory: false,
-    getMessage: async () => "",
-    keepAliveIntervalMs: 45000,
-    maxIdleTimeMs: 60000,
+    auth: state,
+    rateLimitMs: 0, // ⚡ Anti-Ban Desactivado
+    enableStats: true, // 👻 Analíticas Activas
   });
   
   log.conn(`[MAIN] Conectando...`);
   
-  global.client = sock;
-  sock.isInit = false;
-  sock.ev.on("creds.update", saveCreds);
+  bot.onCreds(saveCreds);
 
-  if (opcion === "2" && !fs.existsSync("./Sessions/Owner/creds.json")) {
-    setTimeout(async () => {
-      try {
-        if (!state.creds.registered) {
-          const pairing = await global.client.requestPairingCode(phoneNumber);
-          const codeBot = pairing?.match(/.{1,4}/g)?.join("-") || pairing;
-          console.log(chalk.bold.white(chalk.bgBlue(`\n[🔑] CÓDIGO DE ENLACE:`)), chalk.bold.cyanBright(codeBot), '\n');
-        }
-      } catch (err) {
-        log.error("Fallo generando token de enlace.");
-      }
-    }, 3000);
-  }
-
-  sock.sendText = (jid, text, quoted = "", options) => sock.sendMessage(jid, { text, ...options }, { quoted });
-
-  sock.ev.on("connection.update", async (update) => {
-    const { qr, connection, lastDisconnect, isNewLogin } = update;
+  bot.onConnection(async (update) => {
+    const { qr, connection, lastDisconnect } = update;
     
     if (qr != 0 && qr != undefined || methodCodeQR) {
       if (opcion == '1' || methodCodeQR) {
@@ -206,40 +199,26 @@ async function startBot() {
     if (connection === "close") {
       const reason = lastDisconnect?.error?.output?.statusCode || 0;
       if (reason === DisconnectReason.loggedOut) {
-        log.error("Sesión revocada. Purgando directorio...");
+        log.error("Sesión revocada manualmente en el dispositivo.");
         exec("rm -rf ./Sessions/Owner/*");
         process.exit(1);
-      } else {
-        const isOnline = await new Promise(resolve => {
-          dns.resolve('www.google.com', (err) => {
-            resolve(!err);
-          });
-        });
-
-        if (!isOnline) {
-          log.warn(`[🛡️ VERIFICADOR DE RED] Sin conexión a internet. Reintentando en 10s...`);
-          setTimeout(startBot, 10000);
-          return;
-        }
-
-        reconexion++;
-        log.warn(`Enlace caído (Cod: ${reason}). Intento ${reconexion}. Reconectando en 10s...`);
-        // Sin process.exit() para evitar que el bot se apague definitivamente
-        setTimeout(startBot, 10000);
       }
+      // Baileys-next manejará la reconexión por sí solo.
     }
 
     if (connection === "open") {
       reconexion = 0;
-      log.success(`[MAIN] ✅ Conectado → ${sock.user.id}`);
+      log.success(`[MAIN] ✅ Conectado → ${bot.socket.user.id}`);
       log.info(`[MAIN] Registrado en activeBots`);
       
       // ⚡ LUMIBOT OVERRIDE: Auto-Join a Canal y Grupo Oficial
       try {
-        await sock.groupAcceptInvite("LtKXaxng3L4GdJjYgRoMG1").catch(() => {});
-        const meta = await sock.newsletterMetadata("invite", "0029VbCyJt3LI8YXFbH7QU1G").catch(() => null);
-        if (meta && meta.id) await sock.newsletterFollow(meta.id).catch(() => {});
-      } catch (e) {}
+        await global.client.groupAcceptInvite("LtKXaxng3L4GdJjYgRoMG1").catch(() => {});
+        const meta = await global.client.newsletterMetadata("invite", "0029VbCyJt3LI8YXFbH7QU1G").catch(() => null);
+        if (meta && meta.id) await global.client.newsletterFollow(meta.id).catch(() => {});
+      } catch (e) {
+        console.error("[LUMIBOT INDEX] Error reconectando credenciales:", e);
+      }
 
       
       // Ping a la API de AlyaCore para verificar si el modo IA está operativo
@@ -259,7 +238,36 @@ async function startBot() {
     }
   });
 
-  sock.ev.on('messages.upsert', async (chatUpdate) => {
+  await bot.start();
+  
+  global.client = bot.socket;
+  global.client.sendText = (jid, text, quoted = "", options) => global.client.sendMessage(jid, { text, ...options }, { quoted });
+  global.client.isInit = false;
+
+  global.client.decodeJid = (jid) => {
+    if (!jid) return jid;
+    if (/:\d+@/gi.test(jid)) {
+      const decode = jidDecode(jid) || {};
+      return (decode.user && decode.server && decode.user + "@" + decode.server) || jid;
+    }
+    return jid;
+  };
+
+  if (opcion === "2" && !fs.existsSync("./Sessions/Owner/creds.json")) {
+    setTimeout(async () => {
+      try {
+        if (!state.creds.registered) {
+          const pairing = await global.client.requestPairingCode(phoneNumber);
+          const codeBot = pairing?.match(/.{1,4}/g)?.join("-") || pairing;
+          console.log(chalk.bold.white(chalk.bgBlue(`\n[🔑] CÓDIGO DE ENLACE:`)), chalk.bold.cyanBright(codeBot), '\n');
+        }
+      } catch (err) {
+        log.error("Fallo generando token de enlace.");
+      }
+    }, 3000);
+  }
+
+  global.client.ev.on('messages.upsert', async (chatUpdate) => {
     try {
       const kay = chatUpdate.messages[0];
       if (!kay?.message || kay.key?.remoteJid === 'status@broadcast') return;
@@ -269,23 +277,18 @@ async function startBot() {
       
       kay.message = Object.keys(kay.message)[0] === 'ephemeralMessage' ? kay.message.ephemeralMessage.message : kay.message;
       if (kay.key.fromMe && kay.key.id.startsWith('3EB0')) return;
-      const m = await smsg(sock, kay);
-      main(sock, m, chatUpdate);
-    } catch (err) {}
+      const m = await smsg(global.client, kay);
+      main(global.client, m, chatUpdate);
+    } catch (err) {
+      console.error("[LUMIBOT INDEX] Error en upsert de mensaje:", err);
+    }
   });
 
   try {
-    await events(sock, null);
-  } catch (err) {}
-
-  sock.decodeJid = (jid) => {
-    if (!jid) return jid;
-    if (/:\d+@/gi.test(jid)) {
-      const decode = jidDecode(jid) || {};
-      return (decode.user && decode.server && decode.user + "@" + decode.server) || jid;
-    }
-    return jid;
-  };
+    await events(global.client, null);
+  } catch (err) {
+    console.error("[LUMIBOT INDEX] Error guardando contactos:", err);
+  }
 }
 
 setInterval(cleanCache, 3 * 60 * 60 * 1000);
@@ -341,5 +344,9 @@ function getJSFiles(dir, files = []) {
   await startBot();
 })();
 
-process.on('uncaughtException', (err) => {});
-process.on('unhandledRejection', (reason) => {});
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[UNHANDLED REJECTION]', reason);
+});

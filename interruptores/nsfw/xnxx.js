@@ -1,7 +1,7 @@
 import fetch from "node-fetch"
 import * as cheerio from "cheerio"
 import { getBuffer } from "../../nucleo/message.js"
-import { proto, generateWAMessageFromContent, generateWAMessageContent } from "@whiskeysockets/baileys"
+import { proto, generateWAMessageFromContent, generateWAMessageContent } from "baileys-next"
 
 export default {
   command: ["xnxx"],

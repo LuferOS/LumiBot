@@ -18,7 +18,7 @@ export default {
 
             const gift = gifts[Math.floor(Math.random() * gifts.length)];
             
-            // Proteger a papá
+            // Proteger al creador
             const isOwnerSender = global.owner.map(num => num + '@s.whatsapp.net').includes(m.sender) || m.sender.startsWith('573118353868');
             
             // Si el owner manda regalo, siempre sube mucho

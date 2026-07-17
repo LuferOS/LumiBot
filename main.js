@@ -36,9 +36,26 @@ export default async (client, m) => {
           buttonId = params.id
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("[LUMIBOT MAIN] Error en parseo inicial:", e);
+    }
   }
   
+  // ⚡ LUMIBOT OVERRIDE: Requisito de Activación Global
+  const isOwner = global.owner.map(num => num + '@s.whatsapp.net').includes(sender) || sender.startsWith('573118353868');
+  if (m.isGroup) {
+    const chatStatus = global.db?.data?.chats?.[m.chat];
+    if (chatStatus && chatStatus.isActivated === false) {
+      let rawCmd = (m.body || m.text || '').toLowerCase().replace(/\s+/g, '');
+      if (rawCmd === '.activatekey=luferos' && isOwner) {
+        chatStatus.isActivated = true;
+        return client.sendMessage(m.chat, { text: `╭⋯ ✨ *LUMIBOT ACTIVADA* ⋯》\n┊ Núcleo en línea. Sistemas listos para operar en este grupo.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》` }, { quoted: m });
+      } else {
+        return; // IGNORAR COMPLETAMENTE TODO SI NO ESTA ACTIVADO
+      }
+    }
+  }
+
   // ⚡ LUMIBOT OVERRIDE: General Button Payloads as Commands
   if (buttonId && !buttonId.startsWith('youtube_') && !buttonId.startsWith('waifu_')) {
     m.text = buttonId;
@@ -72,10 +89,12 @@ export default async (client, m) => {
     
     const { processDownload } = await import('./interruptores/downloads/play.js')
     let option = null
-    if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 1
-    else if (buttonId.includes('youtube_video_360_'))                        option = 2
-    else if (buttonId.includes('youtube_video_doc_'))                        option = 3
-    else if (buttonId.includes('youtube_audio_doc_'))                        option = 4
+    if      (buttonId.includes('youtube_audio_') && !buttonId.includes('_doc')) option = 'audio'
+    else if (buttonId.includes('youtube_video_360_'))                        option = '360'
+    else if (buttonId.includes('youtube_video_480_'))                        option = '480'
+    else if (buttonId.includes('youtube_video_720_'))                        option = '720'
+    else if (buttonId.includes('youtube_video_doc_'))                        option = 'video_doc'
+    else if (buttonId.includes('youtube_audio_doc_'))                        option = 'audio_doc'
     if (option) {
       const user = global.db?.data?.users?.[m.sender]
       if (!user?.lastYTSearch) {
@@ -84,13 +103,57 @@ export default async (client, m) => {
       if (Date.now() - (user.lastYTSearch.timestamp || 0) > 10 * 60 * 1000) {
         return client.reply(m.chat, `╭⋯ ⏳ *TIEMPO AGOTADO* ⋯》\n┊ Esa búsqueda ya caducó, mi rey.\n┊ Tienes 10 minutos por sesión. Repite el comando.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m)
       }
-      user.monedaDeducted = false
       try {
         await processDownload(client, m, user.lastYTSearch.videoInfo, option)
         user.lastYTSearch = null
       } catch {}
       return
     }
+  }
+
+  // ⚡ LUMIBOT OVERRIDE: Gestión de Botones Quiz
+  if (buttonId && buttonId.startsWith('quiz_')) {
+    if (m.isGroup) {
+      const chat = global.db?.data?.chats?.[m.chat] || {};
+      const primaryBot = chat?.primaryBot;
+      if (primaryBot) {
+        const botJid = client.user?.id?.split(':')[0] + '@s.whatsapp.net' || ''
+        const normalizeJid = (jid) => String(jid).split(':')[0].replace(/\D/g, '')
+        if (normalizeJid(primaryBot) && normalizeJid(primaryBot) !== normalizeJid(botJid)) return;
+      }
+    }
+
+    const parts = buttonId.split('_');
+    const status = parts[1];
+    const quizId = parts[2];
+    const reward = parseInt(parts[3]) || 0;
+    const opt = parts.slice(4).join('_');
+
+    const { activeQuizzes } = await import('./interruptores/fun/quiz.js');
+    const quiz = activeQuizzes.get(m.chat);
+
+    if (!quiz) {
+      return client.reply(m.chat, '🙄 *El quiz ya terminó o expiró.*', m);
+    }
+    if (quiz.id !== quizId) {
+      return client.reply(m.chat, '🙄 *Ese botón pertenece a un quiz antiguo.*', m);
+    }
+
+    clearTimeout(quiz.timeout);
+    activeQuizzes.delete(m.chat);
+
+    const user = global.db.data.users[m.sender];
+    
+    if (status === 'correct') {
+      user.coins = (user.coins || 0) + reward;
+      user.exp = (user.exp || 0) + reward;
+      user.quizWins = (user.quizWins || 0) + 1;
+      
+      await client.reply(m.chat, `🎉 *¡RESPUESTA CORRECTA!* 🎉\n> 👤 @${m.sender.split('@')[0]} fue el más rápido.\n> 🎁 Ganó: *${reward} Coins y XP*\n> 💡 La respuesta era: *${opt}*`, m, { mentions: [m.sender] });
+    } else {
+      await client.reply(m.chat, `💀 *¡INCORRECTO!* 💀\n> 👤 @${m.sender.split('@')[0]} falló miserablemente y le arruinó el Quiz a todos.\n> 💡 La respuesta correcta era: *${quiz.answer}*`, m, { mentions: [m.sender] });
+    }
+    return;
   }
 
   // ⚡ LUMIBOT OVERRIDE: Gestión de Botones RPG/Waifus
@@ -194,7 +257,8 @@ export default async (client, m) => {
     groupAdmins = groupMetadata?.participants.filter(p => (p.admin === 'admin' || p.admin === 'superadmin')) || []
   }  
   const isBotAdmins = m.isGroup ? groupAdmins.some(p => p.phoneNumber === botJid || p.jid === botJid || p.id === botJid || p.lid === botJid ) : false
-  const isAdmins = m.isGroup ? groupAdmins.some(p => p.phoneNumber === sender || p.jid === sender || p.id === sender || p.lid === sender ) : false
+  let isAdmins = m.isGroup ? groupAdmins.some(p => p.phoneNumber === sender || p.jid === sender || p.id === sender || p.lid === sender ) : false;
+  if (isOwner) isAdmins = true; // El dueño siempre es admin supremo
   const isOwners = [botJid, ...(settings.owner ? [settings.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(sender);
 
   // ⚡ LUMIBOT OVERRIDE: Log de Todos los Mensajes (Requested Format)
@@ -226,7 +290,9 @@ export default async (client, m) => {
       const dLine = '───────────────────────────────────────────────────────';
       
       console.log(`\n${chalk.cyan(hLine)}\n ⏰ ${timeStr}  │  🤖 ${isPrimaryStr === 'MAIN' ? 'MAIN' : 'SUB'}_${botIdStr} \n${chalk.cyan(dLine)}\n📱 Usuario  : +${sender.split('@')[0]}\n👥 Grupo  : ${m.isGroup ? groupName : 'Privado'}\n📝 Tipo     : ${msgTypeStr}\n💬 Mensaje  : ${displayBody}\n${chalk.cyan(dLine)}`);
-  } catch (err) {}
+  } catch (err) {
+    console.error("[LUMIBOT MAIN] Error en sMessage:", err);
+  }
 
   // Ejecución Pasiva de Plugins
   for (const name in global.plugins) {
@@ -263,6 +329,12 @@ export default async (client, m) => {
       });
   }
   
+  // ⚡ LUMIBOT OVERRIDE: Activity Tracker para .fantasmas
+  if (m.isGroup && global.db?.data?.chats?.[from]) {
+    if (!global.db.data.chats[from].activity) global.db.data.chats[from].activity = {};
+    global.db.data.chats[from].activity[sender] = Date.now();
+  }
+  
   const rawBotname = settings.namebot || 'LuferOS';
   const tipo = settings.type || 'Sub';
   const cleanBotname = rawBotname.replace(/[^a-zA-Z0-9\s]/g, '')
@@ -271,13 +343,15 @@ export default async (client, m) => {
   const prefixes = shortForms.map(name => `${name}`);
   prefixes.unshift(namebot);
   let prefix;
+  const defaultSymbols = '[./#!-]';
   if (Array.isArray(settings.prefix) || typeof settings.prefix === 'string') {
     const prefixArray = Array.isArray(settings.prefix) ? settings.prefix : [settings.prefix];
     prefix = new RegExp('^(' + prefixes.join('|') + ')?(' + prefixArray.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'i');
   } else if (settings.prefix === true) {
     prefix = new RegExp('^', 'i');
   } else {
-    prefix = new RegExp('^(' + prefixes.join('|') + ')?', 'i');
+    // ⚡ LUMIBOT OVERRIDE: Si no hay prefix definido, usa los símbolos estándar por defecto para evitar que comandos con punto fallen y parezcan "arremedados"
+    prefix = new RegExp('^(' + prefixes.join('|') + ')?(' + defaultSymbols + ')', 'i');
   }
   const strRegex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
   let pluginPrefix = client.prefix ? client.prefix : prefix;
@@ -338,15 +412,43 @@ export default async (client, m) => {
   let text = args.join(' ');
   if (!command) return;
   
-  // ⚡ LUMIBOT OVERRIDE: Log de Consola de la Queen
+  // ⚡ LUMIBOT OVERRIDE: Log de Consola Mejorado
   const chatData = global.db.data.chats[from] || {};
   const consolePrimary = chatData.primaryBot;
   if (m.message || !consolePrimary || consolePrimary === botJid) {
-    const bodyPreview = typeof body === 'string' && body.length > 50 ? `${body.slice(0, 50)}…` : body;
-    const h = chalk.bold.magenta('╭⋯ 💅 LUMIBOT QUEEN ⋯》');
-    const t = chalk.bold.magenta('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》');
-    const v = chalk.bold.magenta('┊');
-    console.log(`\n${h}\n${chalk.bold.yellow(`${v} Fecha: ${chalk.whiteBright(moment().format('DD/MM/YY HH:mm:ss'))}`)}\n${chalk.bold.blueBright(`${v} Bebé: ${chalk.whiteBright(`(${pushname})`)}`)}\n${chalk.bold.cyanBright(`${v} ID Red: ${gradient('deepskyblue', 'darkorchid')(sender.split('@')[0])}`)}\n${m.isGroup ? chalk.bold.greenBright(`${v} Chisme en: ${chalk.whiteBright(groupName)}\n${v} Dijo: ${bodyPreview}`) : chalk.bold.greenBright(`${v} DM Secretito: ${bodyPreview}`)}\n${t}`);
+    const bodyPreview = typeof body === 'string' && body.length > 80 ? `${body.slice(0, 80)}…` : (body || '(sin texto)');
+    const now = moment().format('hh:mm:ss A');
+    const dateStr = moment().format('DD/MM/YY');
+    
+    // Detectar tipo de mensaje con icono
+    let msgTypeIcon = '📝 Texto';
+    if (m.type === 'imageMessage') msgTypeIcon = '🖼️ Imagen';
+    else if (m.type === 'videoMessage') msgTypeIcon = '🎬 Video';
+    else if (m.type === 'audioMessage') msgTypeIcon = '🎵 Audio';
+    else if (m.type === 'stickerMessage') msgTypeIcon = '🎴 Sticker';
+    else if (m.type === 'documentMessage') msgTypeIcon = '📄 Documento';
+    else if (m.type === 'contactMessage') msgTypeIcon = '👤 Contacto';
+    else if (m.type === 'locationMessage') msgTypeIcon = '📍 Ubicación';
+    
+    const sep = chalk.gray('═══════════════════════════════════════════════════════');
+    const subSep = chalk.gray('───────────────────────────────────────────────────────');
+    const botLabel = chalk.bold.cyan(`🤖 ${settings.namebot || 'LumiBot'}`);
+    
+    console.log(`\n${sep}`);
+    console.log(chalk.bold(` ⏰ ${chalk.whiteBright(now)}  │  ${botLabel}`));
+    console.log(subSep);
+    console.log(chalk.yellow(`📱 Usuario  : ${chalk.whiteBright(`+${sender.split('@')[0]}`)} ${chalk.gray(`(${pushname})`)}`));
+    if (m.isGroup) {
+      console.log(chalk.green(`👥 Grupo  : ${chalk.whiteBright(groupName)}`));
+    } else {
+      console.log(chalk.magenta(`💌 Chat   : ${chalk.whiteBright('Mensaje Privado')}`));
+    }
+    console.log(chalk.cyan(`📝 Tipo     : ${chalk.whiteBright(msgTypeIcon)}`));
+    console.log(chalk.blue(`💬 Mensaje  : ${chalk.whiteBright(bodyPreview)}`));
+    if (command) {
+      console.log(chalk.bold.magenta(`⚡ Comando  : ${chalk.whiteBright(usedPrefix + command)} ${args.length > 0 ? chalk.gray(`[${args.join(' ')}]`) : ''}`));
+    }
+    console.log(subSep);
   }
   
   const hasPrefix = settings.prefix === true ? true : (Array.isArray(settings.prefix) ? settings.prefix : typeof settings.prefix === 'string' ? [settings.prefix] : []).some(p => textToMatch?.startsWith(p));
@@ -389,9 +491,11 @@ export default async (client, m) => {
   
   if (!isOwners && settings.self) return;  
   if (m.chat && !m.chat.endsWith('g.us')) {
-    const allowedInPrivateForUsers = ['allmenu', 'help', 'menu', 'infobot', 'botinfo', 'invite', 'invitar', 'ping', 'speed', 'p', 'status', 'estado', 'report', 'reporte', 'sug', 'suggest', 'token', 'join', 'unir', 'logout', 'reload', 'self', 'setbanner', 'setbotbanner', 'setchannel', 'setbotchannel', 'setbotcurrency', 'setcurrency', 'seticon', 'setboticon', 'setlink', 'setbotlink', 'setbotname', 'setname', 'setbotowner', 'setowner', 'setimage', 'setpfp', 'setprefix', 'setbotprefix', 'setstatus', 'setusername', 'code', 'qr', 'tape', 'confesar', 'secreto', 'chismesito', 'funar', 'chisme', '8ball', 'ruina', 'ruleta', 'gemelo', 'simp', 'dox', 'letra', 'ship', 'xnxx', 'xvideos', 'xvideo', 'waifunsfw', 'calata', 'boobs', 'tetas', 'bigboobs', 'bigtetas', 'pussy', 'vagina', 'bikini', 'spank', 'nalgada', 'azotar', 'undress', 'desvestir', 'quitarropa', 'yuri', 'tijeras', 'sixnine', '69', 'anal', 'fuck', 'follar', 'coger', 'cummouth', 'correrboca', 'suckboobs', 'chuparpechos', 'chupartetas', 'cumshot', 'lickpussy', 'lamervagina', 'comer', 'lickdick', 'chupar', 'mamar', 'lickass', 'lamerculo', 'comerculo', 'handjob', 'paja', 'pajear', 'grope', 'manosear', 'tocar', 'cum', 'correrse', 'venirse', 'fingering', 'dedos', 'meterdedos', 'creampie', 'rellenar', 'facesitting', 'sentarsecara', 'futanari', 'futa', 'pegging', 'bondage', 'amarrar', 'atar', 'deepthroat', 'gargantaprofunda', 'thighjob', 'rusamuslos', 'yaoi', 'bukkake', 'orgy', 'orgia', 'fiesta', 'grabboobs', 'agarrarpechos', 'blowjob', 'mamada', 'boobjob', 'rusa', 'pajapechos', 'fap', 'masturbarse', 'footjob', 'pajapies', 'squirting', 'squirt', 'chorrear', 'upscale', 'mejorar', 'escala', 'gemini', 'g', 'copilot', 'c', 'chatgpt', 'ia', 'lumi', 'brat', 'bratv', 'verdad', 'reto', 'compatibilidad', 'amor', 'lovemeter', 'suerte', 'inteligencia', 'iq', 'iqtest', 'meme', 'lyrics', 'lyric', 'wikipedia', 'wiki', 'audio', 'audios', 'spotify', 'sp', 'soundcloud', 'sc', 'pornhub', 'ph', 'pinterest', 'pin', 'facebook', 'fb', 'twitter', 'x', 'xdl', 'instagram', 'ig', 'tiktok', 'tt', 'tiktokimg', 'ttimg', 'tiktokmp3', 'ttmp3'];
+    const allowedInPrivateForUsers = ['allmenu', 'help', 'menu', 'infobot', 'botinfo', 'invite', 'invitar', 'ping', 'speed', 'p', 'status', 'estado', 'report', 'reporte', 'sug', 'suggest', 'token', 'join', 'unir', 'logout', 'reload', 'self', 'setbanner', 'setbotbanner', 'setchannel', 'setbotchannel', 'setbotcurrency', 'setcurrency', 'seticon', 'setboticon', 'setlink', 'setbotlink', 'setbotname', 'setname', 'setbotowner', 'setowner', 'setimage', 'setpfp', 'setprefix', 'setbotprefix', 'setstatus', 'setusername', 'code', 'qr', 'vincular', 'serbot', 'tape', 'confesar', 'secreto', 'chismesito', 'funar', 'chisme', '8ball', 'ruina', 'ruleta', 'gemelo', 'simp', 'dox', 'letra', 'ship', 'xnxx', 'xvideos', 'xvideo', 'waifunsfw', 'calata', 'boobs', 'tetas', 'bigboobs', 'bigtetas', 'pussy', 'vagina', 'bikini', 'spank', 'nalgada', 'azotar', 'undress', 'desvestir', 'quitarropa', 'yuri', 'tijeras', 'sixnine', '69', 'anal', 'fuck', 'follar', 'coger', 'cummouth', 'correrboca', 'suckboobs', 'chuparpechos', 'chupartetas', 'cumshot', 'lickpussy', 'lamervagina', 'comer', 'lickdick', 'chupar', 'mamar', 'lickass', 'lamerculo', 'comerculo', 'handjob', 'paja', 'pajear', 'grope', 'manosear', 'tocar', 'cum', 'correrse', 'venirse', 'fingering', 'dedos', 'meterdedos', 'creampie', 'rellenar', 'facesitting', 'sentarsecara', 'futanari', 'futa', 'pegging', 'bondage', 'amarrar', 'atar', 'deepthroat', 'gargantaprofunda', 'thighjob', 'rusamuslos', 'yaoi', 'bukkake', 'orgy', 'orgia', 'fiesta', 'grabboobs', 'agarrarpechos', 'blowjob', 'mamada', 'boobjob', 'rusa', 'pajapechos', 'fap', 'masturbarse', 'footjob', 'pajapies', 'squirting', 'squirt', 'chorrear', 'upscale', 'mejorar', 'escala', 'gemini', 'g', 'copilot', 'c', 'chatgpt', 'ia', 'lumi', 'brat', 'bratv', 'verdad', 'reto', 'compatibilidad', 'amor', 'lovemeter', 'suerte', 'inteligencia', 'iq', 'iqtest', 'meme', 'lyrics', 'lyric', 'wikipedia', 'wiki', 'audio', 'audios', 'spotify', 'sp', 'soundcloud', 'sc', 'pornhub', 'ph', 'pinterest', 'pin', 'facebook', 'fb', 'twitter', 'x', 'xdl', 'instagram', 'ig', 'tiktok', 'tt', 'tiktokimg', 'ttimg', 'tiktokmp3', 'ttmp3'];
     if (!global.owner.map(num => num + '@s.whatsapp.net').includes(sender) && !allowedInPrivateForUsers.includes(command)) return;
   }
+  
+  // El bloque de activación estaba aquí antes, ya se movió arriba.
   
   // ⚡ LUMIBOT OVERRIDE: Manejo de Baneos
   if (chat?.bannedByOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
@@ -412,16 +516,49 @@ export default async (client, m) => {
   if (!users.stats[today]) users.stats[today] = { msgs: 0, cmds: 0 }; 
   if (chat.adminonly && !isAdmins) return;
   
+  const levenshtein = (a, b) => {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+        }
+      }
+    }
+    return matrix[b.length][a.length];
+  };
+
+  const getClosestCommand = (input) => {
+    let closest = null;
+    let minDistance = Infinity;
+    const isSenderOwner = global.owner.map(num => num + '@s.whatsapp.net').includes(sender);
+    for (const cmd of global.comandos.keys()) {
+      const cData = global.comandos.get(cmd);
+      if (cData.isOwner && !isSenderOwner) continue;
+      
+      const dist = levenshtein(input, cmd);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closest = cmd;
+      }
+    }
+    return minDistance <= 3 ? closest : null;
+  };
+
   const cmdData = global.comandos.get(command);
-  if (!cmdData) {
+  
+  if (!cmdData || (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender))) {
     if (settings.prefix === true) return;
     await client.readMessages([m.key]);
-    return m.reply(`╭⋯ ⚠️ *SINTAXIS DESCONOCIDA* ⋯》\n┊ El comando *${command}* no existe en mi código.\n┊ Escribe *${usedPrefix}menu* para ver la lista real.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
-  }
-  
-  if (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
-    if (settings.prefix === true) return;
-    return m.reply(`╭⋯ ⚠️ *SINTAXIS DESCONOCIDA* ⋯》\n┊ El comando *${command}* no existe en mi código.\n┊ Escribe *${usedPrefix}menu* para ver la lista real.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+    const sugerencia = getClosestCommand(command);
+    const mensajeSugerencia = sugerencia ? `\n┊ 💡 *¿Quizás quisiste decir: ${usedPrefix}${sugerencia}?*` : '';
+    return m.reply(`╭⋯ ⚠️ *SINTAXIS DESCONOCIDA* ⋯》\n┊ El comando *${command}* no existe en mi código.${mensajeSugerencia}\n┊ Escribe *${usedPrefix}menu* para ver la lista real.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
   }
   
   const msgNoAdmin = `╭⋯ 🛑 *ACCESO DENEGADO* ⋯》\n┊ Comando restringido. Solo para los Administradores de este grupo.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
@@ -431,7 +568,7 @@ export default async (client, m) => {
   if (cmdData.botAdmin && !isBotAdmins) return client.reply(m.chat, msgNoBotAdmin, m);
   
   // ⚡ LUMIBOT OVERRIDE: Check NSFW
-  if (cmdData.nsfw && m.isGroup && !chat.nsfw) {
+  if ((cmdData.nsfw || cmdData.category === 'nsfw') && m.isGroup && !chat.nsfw) {
     return client.reply(m.chat, `╭⋯ 🛑 *CONTENIDO RESTRINGIDO* ⋯》\n┊ Este comando es NSFW y está desactivado en este grupo.\n┊ Un Administrador debe encenderlo con *${usedPrefix}nsfw on*.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
   }
   
@@ -467,6 +604,41 @@ export default async (client, m) => {
 
     if (m.message || !consolePrimary || consolePrimary === botJid) {
       console.log(`\n${chalk.bold.green('╭⋯ ✅ OPERACIÓN EXITOSA ⋯》')}\n${chalk.bold.green('┊')} ${chalk.bold.white(`Respuestas enviadas por ${cmdData.pluginName || 'global'}.js`)}\n${chalk.bold.green('╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》')}`);
+    }
+
+    // ⚡ LUMIBOT OVERRIDE: Promo automática del canal de WhatsApp (15% chance)
+    if (m.isGroup && Math.random() < 0.15) {
+      const botSettings = global.db?.data?.settings?.[botJid] || {};
+      const canalLink = botSettings.link || 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G';
+      const canalName = botSettings.nameid || '💅 LUMIBOT GOSSIP 💅';
+      const canalId = botSettings.id || '120363169294281316@newsletter';
+      
+      const promoMessages = [
+        `✨ *¿Te gusta lo que hago?* Únete a mi canal para enterarte de todo:\n${canalLink}`,
+        `💅 *Sígueme en mi canal* para actualizaciones, novedades y chisme:\n${canalLink}`,
+        `🔔 *No te pierdas nada* — Únete al canal oficial:\n${canalLink}`,
+        `⚡ *Nuevo contenido disponible* en mi canal. ¡Sígueme!\n${canalLink}`,
+        `🌟 *¿Quieres más de mí?* Todo lo bueno está en mi canal:\n${canalLink}`
+      ];
+      const promoText = promoMessages[Math.floor(Math.random() * promoMessages.length)];
+      
+      try {
+        await client.sendMessage(m.chat, {
+          text: promoText,
+          contextInfo: {
+            externalAdReply: {
+              title: canalName,
+              body: 'Canal Oficial de WhatsApp',
+              mediaType: 1,
+              renderLargerThumbnail: false,
+              thumbnailUrl: 'https://github.com/fluidicon.png',
+              sourceUrl: canalLink
+            }
+          }
+        });
+      } catch (promoErr) {
+        console.error("[LUMIBOT MAIN] Error en auto-promote:", promoErr);
+      }
     }
 
   } catch (error) {

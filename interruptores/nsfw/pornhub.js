@@ -11,22 +11,28 @@ export default {
       }
 
       await m.react('🕒')
-      const url = `https://rest.apicausas.xyz/api/v1/nsfw/descargas/pornhub?apikey=causa-60ca3fea34a7af43&url=${encodeURIComponent(urlText)}`
+      const apicausasUrl = `https://rest.apicausas.xyz/api/v1/nsfw/descargas/pornhub?apikey=causa-60ca3fea34a7af43&url=${encodeURIComponent(urlText)}`
+      const alyacoreUrl = `https://api.alyacore.xyz/nsfw/dl/pornhub?url=${encodeURIComponent(urlText)}&key=LumiBot-alya`
       
-      const res = await fetch(url)
-      const data = await res.json()
-
-      if (!data.status) {
-        await m.react('✖️')
-        return m.reply(`🙄 *Falló la descarga de Pornhub* 💅\n> Quizás el enlace no es válido o está privado.`)
+      const fetchApi = async (url) => {
+        const res = await fetch(url)
+        const data = await res.json()
+        if (!data.status) throw new Error(data.message || data.msg || 'Status false')
+        let videoUrl = data.url || data.download || data.video
+        if (data.data && data.data.url) videoUrl = data.data.url
+        if (!videoUrl) throw new Error('Sin URL de video en respuesta')
+        return videoUrl
       }
 
-      let videoUrl = data.url || data.download || data.video
-      if (data.data && data.data.url) videoUrl = data.data.url
-
-      if (!videoUrl) {
-         await m.react('✖️')
-         return m.reply(`🙄 *La API no devolvió un enlace válido de video* 💅`)
+      let videoUrl;
+      try {
+        videoUrl = await Promise.any([
+          fetchApi(apicausasUrl),
+          fetchApi(alyacoreUrl)
+        ])
+      } catch (aggregateError) {
+        await m.react('✖️')
+        return m.reply(`🙄 *Falló la descarga de Pornhub* 💅\n> Las APIs de extracción (Causas / Alyacore) están caídas o Pornhub actualizó su seguridad.\n> Inténtalo de nuevo más tarde.`)
       }
 
       await client.sendMessage(m.chat, { video: { url: videoUrl }, caption: `🔥 *Aquí tienes tu video de Pornhub, puerco* 🔥\n> Disfruta 💅` }, { quoted: m })

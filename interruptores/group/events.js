@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-let WAMessageStubType = (await import('@whiskeysockets/baileys')).default
+let WAMessageStubType = (await import('baileys-next')).default
 import chalk from 'chalk'
 
 // ⚡ LUMIBOT OVERRIDE: Importamos el descifrador de LIDs de tu núcleo
@@ -85,7 +85,7 @@ export default async (client, m) => {
         
         const phone = validJid.split('@')[0];
         
-        let pp = 'https://i.imgur.com/8Q9N49Q.jpeg';
+        let pp = 'https://telegra.ph/file/24fa902ead26340f3df2c.png';
         for (let i = 0; i < 3; i++) {
           try {
             pp = await Promise.race([
@@ -104,7 +104,7 @@ export default async (client, m) => {
             mediaUrl: null,
             description: null,
             previewType: 'PHOTO',
-            thumbnailUrl: botSettings.icon || 'https://i.imgur.com/8Q9N49Q.jpeg',
+            thumbnailUrl: botSettings.icon || 'https://telegra.ph/file/24fa902ead26340f3df2c.png',
             sourceUrl: botSettings.link || 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G',
             mediaType: 1,
             renderLargerThumbnail: false
