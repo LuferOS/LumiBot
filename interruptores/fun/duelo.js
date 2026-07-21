@@ -1,3 +1,5 @@
+import { getCoins, addCoins, removeCoins, hasCoins } from '../../nucleo/coinsDB.js';
+
 export default {
   command: ['duelo', 'pvp', 'pelear'],
   category: 'games',
@@ -5,53 +7,32 @@ export default {
     try {
       const sender = m.sender;
       const mentionedJid = m.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];
-      
+
       if (mentionedJid.length === 0) {
           return m.reply(`⚔️ *DUELOS LUMIBOT* ⚔️\n\n> 💡 *Uso:* ${usedPrefix}${command} @usuario [apuesta]\n> *Ejemplo:* ${usedPrefix}${command} @123456789 100\n\n_Reta a alguien a una pelea a muerte por sus Coins._`);
       }
 
       const target = mentionedJid[0];
-      if (target === sender) {
-          return m.reply('🙄 *Bruh*, no puedes pelear contigo mismo. Busca un psicólogo.');
-      }
+      if (target === sender) return m.reply('🙄 *Bruh*, no puedes pelear contigo mismo.');
+      if (target === client.user.id.split(':')[0] + '@s.whatsapp.net') return m.reply('🤖 *Soy el crupier, no un luchador.*');
 
-      // Evitar que apuesten contra el bot
-      if (target === client.user.id.split(':')[0] + '@s.whatsapp.net') {
-          return m.reply('🤖 *Soy el crupier, no un luchador.* Reta a un humano.');
-      }
-
-      // Parsear apuesta
       const rawBet = args.find(arg => !arg.includes('@'));
       let bet = parseInt(rawBet);
+      if (!rawBet || isNaN(bet) || bet < 10) return m.reply('🙄 Apuesta mínima de *10 Coins*.');
 
-      if (!rawBet || isNaN(bet) || bet < 10) {
-          return m.reply('🙄 Debes ingresar una apuesta válida (Mínimo 10 Coins).');
-      }
+      if (!hasCoins(sender, bet)) return m.reply(`💸 *¡Estás en la quiebra!*\n> Tienes: *${getCoins(sender)} Coins*`);
+      if (!hasCoins(target, bet)) return m.reply(`💸 *¡Tu oponente es pobre!*\n> @${target.split('@')[0]} no tiene suficientes Coins.`, null, { mentions: [target] });
 
-      let users = global.db.data.users;
-      if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
-      if (!users[target]) users[target] = { coins: 0, exp: 0 };
-
-      if ((users[sender].coins || 0) < bet) {
-          return m.reply(`💸 *¡Estás en la quiebra!*\n> No tienes suficientes Coins para retarlo.\n> Tienes: *${users[sender].coins || 0} Coins*`);
-      }
-
-      if ((users[target].coins || 0) < bet) {
-          return m.reply(`💸 *¡Tu oponente es pobre!*\n> @${target.split('@')[0]} no tiene suficientes Coins para aceptar esta apuesta.`, null, { mentions: [target] });
-      }
-
-      // Restamos a ambos inmediatamente (el pozo es bet * 2)
-      users[sender].coins -= bet;
-      users[target].coins -= bet;
+      removeCoins(sender, bet);
+      removeCoins(target, bet);
       const pot = bet * 2;
 
       await client.sendPresenceUpdate('composing', m.chat);
-      await client.sendMessage(m.chat, { 
-          text: `⚔️ *¡DUELO A MUERTE INICIADO!* ⚔️\n\n@${sender.split('@')[0]} ha retado a @${target.split('@')[0]} a un duelo por *${pot} Coins*.\n\n> 🎲 *La pelea está en marcha...*`, 
-          mentions: [sender, target] 
+      await client.sendMessage(m.chat, {
+          text: `⚔️ *¡DUELO A MUERTE INICIADO!* ⚔️\n\n@${sender.split('@')[0]} ha retado a @${target.split('@')[0]} a un duelo por *${pot} Coins*.\n\n> 🎲 *La pelea está en marcha...*`,
+          mentions: [sender, target]
       });
 
-      // Simulación de pelea
       setTimeout(async () => {
           const attacks = [
               "le dio un gancho derecho",
@@ -63,25 +44,24 @@ export default {
               "usó la técnica de la grulla",
               "le lanzó un Nokia 3310"
           ];
-          
-          // 50/50 RNG
+
           const senderWins = Math.random() >= 0.5;
           const winner = senderWins ? sender : target;
           const loser = senderWins ? target : sender;
           const attack = attacks[Math.floor(Math.random() * attacks.length)];
 
-          users[winner].coins += pot;
+          addCoins(winner, pot);
 
           await client.sendPresenceUpdate('composing', m.chat);
-          await client.sendMessage(m.chat, { 
-              text: `🩸 *RESULTADO DEL DUELO* 🩸\n\n@${winner.split('@')[0]} ${attack} a @${loser.split('@')[0]} y lo dejó inconsciente en el piso.\n\n🏆 *¡GANADOR:* @${winner.split('@')[0]}!*\nSe lleva el pozo de *${pot} Coins*.\n\n> 💰 *Saldo Ganador:* ${users[winner].coins} Coins\n> 💀 *Saldo Perdedor:* ${users[loser].coins} Coins`, 
-              mentions: [winner, loser] 
+          await client.sendMessage(m.chat, {
+              text: `🩸 *RESULTADO DEL DUELO* 🩸\n\n@${winner.split('@')[0]} ${attack} a @${loser.split('@')[0]} y lo dejó inconsciente.\n\n🏆 *¡GANADOR:* @${winner.split('@')[0]}!\nSe lleva el pozo de *${pot} Coins*.\n\n> 💰 *Saldo Ganador:* ${getCoins(winner)} Coins\n> 💀 *Saldo Perdedor:* ${getCoins(loser)} Coins`,
+              mentions: [winner, loser]
           });
       }, 3000);
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en duelo.js:', e);
-      m.reply('🙄 *Alguien llamó a la policía y se canceló la pelea.* (Error del sistema)');
+      m.reply('🙄 *Alguien llamó a la policía.* (Error del sistema)');
     }
   }
 };

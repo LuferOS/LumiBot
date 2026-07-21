@@ -1,3 +1,5 @@
+import { getCoins, addCoins } from '../../nucleo/coinsDB.js';
+
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const activeWordle = new Map();
@@ -127,15 +129,14 @@ export default {
             if (isWin) {
               clearTimeout(game.timeout);
               let premio = 500;
-              if (!global.db.data.users[senderId]) global.db.data.users[senderId] = { coins: 0, exp: 0 };
-              global.db.data.users[senderId].coins += premio;
+              addCoins(senderId, premio);
               activeWordle.delete(chatId);
               let finalTxt = `🎉 *¡WORDLE RESUELTO!* 🎉\n\n`;
               finalTxt += `@${senderId.split('@')[0]} adivinó la palabra: *${game.word}*\n`;
               finalTxt += `Intentos usados: *${game.attempts}/${game.maxAttempts}*\n\n`;
               finalTxt += `*Historial:*\n${game.history.join('\n')}\n\n`;
               finalTxt += `> 🎁 Recompensa: *${premio} Coins*\n`;
-              finalTxt += `> 💰 *Saldo:* ${global.db.data.users[senderId].coins} Coins`;
+              finalTxt += `> 💰 *Saldo:* ${getCoins(senderId)} Coins`;
               await client.sendMessage(chatId, { text: finalTxt, mentions: [senderId] }, { quoted: msg });
             } else if (game.attempts >= game.maxAttempts) {
               clearTimeout(game.timeout);

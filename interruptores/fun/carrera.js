@@ -1,3 +1,5 @@
+import { getCoins, addCoins, removeCoins, hasCoins } from '../../nucleo/coinsDB.js';
+
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
@@ -6,23 +8,20 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       const sender = m.sender;
-      let users = global.db.data.users;
-      if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
 
-      if (args.length < 2) return m.reply(`🏁 *CARRERA DE CABALLOS* 🏁\n\n> 💡 *Uso:* ${usedPrefix}${command} [1-4] [apuesta]\n> *Ejemplo:* ${usedPrefix}${command} 3 50\n\n💰 *Tus Coins:* ${users[sender].coins || 0}`);
+      if (args.length < 2) return m.reply(`🏁 *CARRERA DE CABALLOS* 🏁\n\n> 💡 *Uso:* ${usedPrefix}${command} [1-4] [apuesta]\n> *Ejemplo:* ${usedPrefix}${command} 3 50\n\n💰 *Tus Coins:* ${getCoins(sender)}`);
 
       let caballo = parseInt(args[0]);
       let apuesta = parseInt(args[1]);
 
       if (isNaN(caballo) || caballo < 1 || caballo > 4) return m.reply(`🚩 Elige un caballo válido del *1* al *4*.`);
       if (isNaN(apuesta) || apuesta < 10) return m.reply(`🚩 Apuesta mínima de *10 Coins*.`);
-      if ((users[sender].coins || 0) < apuesta) return m.reply(`💸 No tienes suficientes Coins.\n> Tienes: *${users[sender].coins || 0} Coins*`);
+      if (!hasCoins(sender, apuesta)) return m.reply(`💸 No tienes suficientes Coins.\n> Tienes: *${getCoins(sender)} Coins*`);
 
-      // Anti-Spam
       await client.sendPresenceUpdate('composing', m.chat);
       await delay(1500);
 
-      users[sender].coins -= apuesta;
+      removeCoins(sender, apuesta);
 
       const emojis = ['🐴', '🦄', '🏇', '🐎'];
       let caballos = [
@@ -57,26 +56,21 @@ export default {
         await delay(1500);
         for (let c of caballos) {
           c.pos += Math.floor(Math.random() * 3) + 1;
-          if (c.pos >= meta && !winner) {
-            winner = c.id;
-          }
+          if (c.pos >= meta && !winner) winner = c.id;
         }
-        try {
-          await client.sendMessage(m.chat, { text: renderTrack(), edit: msg.key });
-        } catch {}
+        try { await client.sendMessage(m.chat, { text: renderTrack(), edit: msg.key }); } catch {}
       }
 
       if (!winner) winner = caballos.sort((a, b) => b.pos - a.pos)[0].id;
-
       await delay(500);
 
       if (winner === caballo) {
         let premio = apuesta * 4;
-        users[sender].coins += premio;
-        let finalTxt = renderTrack() + `\n\n🎉 *¡Tu caballo ganó!* Te llevas *${premio} Coins*.\n> 💰 *Saldo:* ${users[sender].coins} Coins`;
+        addCoins(sender, premio);
+        let finalTxt = renderTrack() + `\n\n🎉 *¡Tu caballo ganó!* Te llevas *${premio} Coins*.\n> 💰 *Saldo:* ${getCoins(sender)} Coins`;
         try { await client.sendMessage(m.chat, { text: finalTxt, edit: msg.key }); } catch {}
       } else {
-        let finalTxt = renderTrack() + `\n\n💥 *Perdiste.* El caballo *${winner}* cruzó primero.\n> 💰 *Saldo:* ${users[sender].coins} Coins`;
+        let finalTxt = renderTrack() + `\n\n💥 *Perdiste.* El caballo *${winner}* cruzó primero.\n> 💰 *Saldo:* ${getCoins(sender)} Coins`;
         try { await client.sendMessage(m.chat, { text: finalTxt, edit: msg.key }); } catch {}
       }
 

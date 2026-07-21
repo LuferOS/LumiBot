@@ -1,3 +1,5 @@
+import { addCoins, removeCoins, hasCoins } from '../../nucleo/coinsDB.js';
+
 const ahorcadoDrawings = [
   `  +---+
   |   |
@@ -133,7 +135,7 @@ export default {
                     
                     let users = global.db.data.users;
                     if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
-                    users[sender].coins = (users[sender].coins || 0) + 100;
+                    addCoins(sender, 100);
 
                     await client.sendPresenceUpdate('composing', chat);
                     await delay(1500);
@@ -161,8 +163,8 @@ export default {
                     const extraLifeCost = 50;
                     
                     // Si el usuario tiene suficientes Coins, autocomprar vida extra
-                    if ((users[sender].coins || 0) >= extraLifeCost) {
-                        users[sender].coins -= extraLifeCost;
+                    if (hasCoins(sender, extraLifeCost)) {
+                        removeCoins(sender, extraLifeCost);
                         game.errors = 5; // Lo salva al límite
                         
                         await client.sendPresenceUpdate('composing', chat);

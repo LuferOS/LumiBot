@@ -1,3 +1,5 @@
+import { addCoins } from '../../nucleo/coinsDB.js';
+
 export const activeAnagrams = new Map();
 let isAnagramaListenerActive = false;
 
@@ -61,7 +63,7 @@ export default {
                 
                 let users = global.db.data.users;
                 if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
-                users[sender].coins = (users[sender].coins || 0) + 100;
+                addCoins(sender, 100);
 
                 await client.sendPresenceUpdate('composing', chat);
                 await delay(1500);

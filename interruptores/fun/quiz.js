@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
+import { addCoins } from '../../nucleo/coinsDB.js';
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -96,7 +97,7 @@ export default {
                 }
 
                 // Sumar la recompensa (ajusta 'coins' o 'exp' según la economía de tu bot)
-                users[sender].coins = (users[sender].coins || 0) + quiz.reward;
+                addCoins(sender, quiz.reward);
                 users[sender].exp = (users[sender].exp || 0) + quiz.reward; // Sumando XP también
                 // ----------------------------------------
 

@@ -1,3 +1,5 @@
+import { getCoins, addCoins, removeCoins, hasCoins } from '../../nucleo/coinsDB.js';
+
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const activeMinas = new Map();
@@ -11,22 +13,19 @@ export default {
   run: async (client, m, args, usedPrefix, command) => {
     try {
       const sender = m.sender;
-      let users = global.db.data.users;
-      if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
 
       let apuesta = parseInt(args[0]);
-      if (isNaN(apuesta) || apuesta < 10) return m.reply(`💣 *BUSCAMINAS* 💣\n\n> 💡 *Uso:* ${usedPrefix}${command} [apuesta]\n> *Ejemplo:* ${usedPrefix}${command} 50\n\n💰 *Tus Coins:* ${users[sender].coins || 0}`);
+      if (isNaN(apuesta) || apuesta < 10) return m.reply(`💣 *BUSCAMINAS* 💣\n\n> 💡 *Uso:* ${usedPrefix}${command} [apuesta]\n> *Ejemplo:* ${usedPrefix}${command} 50\n\n💰 *Tus Coins:* ${getCoins(sender)}`);
 
-      if ((users[sender].coins || 0) < apuesta) return m.reply(`💸 No tienes suficientes Coins.\n> Tienes: *${users[sender].coins || 0} Coins*`);
+      if (!hasCoins(sender, apuesta)) return m.reply(`💸 No tienes suficientes Coins.\n> Tienes: *${getCoins(sender)} Coins*`);
 
       const gameId = m.chat + sender;
-      if (activeMinas.has(gameId)) return m.reply(`🚩 Ya tienes un juego de minas activo. Escribe *retirar* para cobrar o sigue jugando.`);
+      if (activeMinas.has(gameId)) return m.reply(`🚩 Ya tienes un juego de minas activo. Escribe *retirar* para cobrar.`);
 
-      // Anti-Spam
       await client.sendPresenceUpdate('composing', m.chat);
       await delay(1500);
 
-      users[sender].coins -= apuesta;
+      removeCoins(sender, apuesta);
 
       activeMinas.set(gameId, {
         apuesta,
@@ -36,11 +35,11 @@ export default {
           if (activeMinas.has(gameId)) {
             const game = activeMinas.get(gameId);
             let premio = Math.floor(game.apuesta * game.multiplier);
-            users[sender].coins += premio;
+            addCoins(sender, premio);
             activeMinas.delete(gameId);
-            client.sendMessage(m.chat, { text: `⏰ *Tiempo agotado.* Te retiraste automáticamente.\n> Te llevas *${premio} Coins* (x${game.multiplier}).` }).catch(() => {});
+            client.sendMessage(m.chat, { text: `⏰ *Tiempo agotado.* Te retiraste automáticamente.\n> Te llevas *${premio} Coins* (x${game.multiplier}).\n> 💰 *Saldo:* ${getCoins(sender)} Coins` }).catch(() => {});
           }
-        }, 120000) // 2 minutos de timeout
+        }, 120000)
       });
 
       let txt = `💣 *BUSCAMINAS* 💣\n\n`;
@@ -64,38 +63,32 @@ export default {
             const gId = chatId + senderId;
 
             if (!activeMinas.has(gId)) continue;
-
             const game = activeMinas.get(gId);
             const choice = text.trim().toLowerCase();
 
             if (choice === 'retirar') {
               clearTimeout(game.timeout);
               let premio = Math.floor(game.apuesta * game.multiplier);
-              if (!global.db.data.users[senderId]) global.db.data.users[senderId] = { coins: 0, exp: 0 };
-              global.db.data.users[senderId].coins += premio;
+              addCoins(senderId, premio);
               activeMinas.delete(gId);
               await client.sendPresenceUpdate('composing', chatId);
               await delay(1000);
-              await client.sendMessage(chatId, { text: `✅ *Te has retirado a tiempo.*\n> Te llevas *${premio} Coins* (Multiplicador x${game.multiplier}).\n> 💰 *Saldo:* ${global.db.data.users[senderId].coins} Coins` }, { quoted: msg });
+              await client.sendMessage(chatId, { text: `✅ *Te has retirado a tiempo.*\n> Te llevas *${premio} Coins* (x${game.multiplier}).\n> 💰 *Saldo:* ${getCoins(senderId)} Coins` }, { quoted: msg });
               continue;
             }
 
             if (['1', '2', '3'].includes(choice)) {
               let isMine = Math.random() < 0.33;
+              await client.sendPresenceUpdate('composing', chatId);
+              await delay(1000);
               if (isMine) {
                 clearTimeout(game.timeout);
                 activeMinas.delete(gId);
-                await client.sendPresenceUpdate('composing', chatId);
-                await delay(1000);
-                if (!global.db.data.users[senderId]) global.db.data.users[senderId] = { coins: 0, exp: 0 };
-                await client.sendMessage(chatId, { text: `💥 *¡BOOOOM!* 💥\n\nPisaste una mina en el paso *${game.step + 1}*.\n> Perdiste *${game.apuesta} Coins*.\n> 💰 *Saldo:* ${global.db.data.users[senderId].coins} Coins` }, { quoted: msg });
+                await client.sendMessage(chatId, { text: `💥 *¡BOOOOM!* 💥\n\nPisaste una mina en el paso *${game.step + 1}*.\n> Perdiste *${game.apuesta} Coins*.\n> 💰 *Saldo:* ${getCoins(senderId)} Coins` }, { quoted: msg });
               } else {
                 game.step++;
                 game.multiplier = multiplierTable[game.step] || (game.multiplier + 2.0);
                 let premioActual = Math.floor(game.apuesta * game.multiplier);
-
-                await client.sendPresenceUpdate('composing', chatId);
-                await delay(1000);
                 let txt = `✅ *¡PASO SEGURO!* ✅\n\n`;
                 txt += `Paso: *${game.step}*\n`;
                 txt += `Multiplicador: *x${game.multiplier}*\n`;
