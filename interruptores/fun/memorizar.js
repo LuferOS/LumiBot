@@ -25,16 +25,16 @@ export default {
 
         const mode = (args[0] || 'facil').toLowerCase();
         let emojiCount = 5;
-        let showTime = 5000;
+        let showTime = 8000;
         let reward = 200;
 
         if (mode === 'medio' || mode === 'intermedio') {
             emojiCount = 10;
-            showTime = 4000;
+            showTime = 5000;
             reward = 500;
         } else if (mode === 'dificil' || mode === 'difícil') {
             emojiCount = 12;
-            showTime = 3000;
+            showTime = 4000;
             reward = 1000;
         } else if (mode !== 'facil' && mode !== 'fácil') {
             return client.reply(chat, `╭⋯ 🧠 *JUEGO DE MEMORIA* ⋯》\n┊ Memoriza la secuencia de emojis.\n┊\n┊ Uso: *${usedPrefix}memorizar [facil/medio/dificil]*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
