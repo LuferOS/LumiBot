@@ -25,7 +25,7 @@ export default {
 
         const mode = (args[0] || 'facil').toLowerCase();
         let emojiCount = 5;
-        let showTime = 5000;
+        let showTime = 10000;
         let answerTime = 18000;
         let reward = 200;
 
