@@ -553,6 +553,14 @@ export default async (client, m) => {
 
   const cmdData = global.comandos.get(command);
   
+  if (global.db?.data?.settings?.mantenimiento && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender) && !sender.startsWith('573118353868')) {
+    if (cmdData) {
+      return client.reply(m.chat, \`╭⋯ 🛠️ *SISTEMA EN MANTENIMIENTO* ⋯》\\n┊ LuferOS está realizando ajustes en el bot.\\n┊ Todos los comandos están desactivados temporalmente.\\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》\`, m);
+    } else {
+      return;
+    }
+  }
+  
   if (!cmdData || (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender))) {
     if (settings.prefix === true) return;
     await client.readMessages([m.key]);

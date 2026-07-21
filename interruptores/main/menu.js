@@ -63,6 +63,8 @@ export default {
 ┃╭──────────────┄
 ┃│◈ 👧 .monika
 ┃│◈ 🌪️ .tatsumaki
+┃│◈ ✨ .gemini
+┃│◈ 🤖 .chatgpt
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
@@ -278,11 +280,9 @@ export default {
 ┃│◈ ✂️ .acortar *<url>*
 ┃│◈ ⬛ .blackbox
 ┃│◈ 🧮 .cal *<ecuacion>*
-┃│◈ 🤖 .chatgpt
 ┃│◈ 🎵 .chazam *<audio>*
 ┃│◈ 🎨 .dalle
 ┃│◈ 🎭 .fake *<texto/@tag/texto>*
-┃│◈ ✨ .gemini
 ┃│◈ 📱 .getnum
 ┃│◈ 🖼️ .getpp
 ┃│◈ 📺 .hd
