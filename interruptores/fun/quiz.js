@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
 import { addCoins } from '../../nucleo/coinsDB.js';
+import { fixLid } from '../../nucleo/message.js';
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -58,7 +59,8 @@ export default {
             if (!msg || msg.key.fromMe) return;
 
             const chat = msg.key.remoteJid;
-            const sender = msg.key.participant || msg.key.remoteJid;
+            const rawSender = msg.key.participant || msg.key.remoteJid;
+            const sender = await fixLid(client, { key: msg.key, chat: chat, fromMe: msg.key.fromMe });
             
             const userText = msg.message?.conversation || msg.message?.extendedTextMessage?.text || msg.message?.imageMessage?.caption || "";
             

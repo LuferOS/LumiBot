@@ -1,4 +1,5 @@
 import { getCoins, addCoins } from '../../nucleo/coinsDB.js';
+import { fixLid } from '../../nucleo/message.js';
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -82,7 +83,8 @@ export default {
             if (!msg.message || msg.key.fromMe) continue;
             const text = msg.message.conversation || msg.message.extendedTextMessage?.text || "";
             const chatId = msg.key.remoteJid;
-            const senderId = msg.key.participant || msg.key.remoteJid;
+            const rawSenderId = msg.key.participant || msg.key.remoteJid;
+            const senderId = await fixLid(client, { key: msg.key, chat: chatId, fromMe: msg.key.fromMe });
 
             if (!activeWordle.has(chatId)) continue;
 
