@@ -97,26 +97,20 @@ export default async (client, m) => {
           if (i < 2) await new Promise(r => setTimeout(r, 3000))
         }
         
-        const contextInfo = {
-          externalAdReply: {
-            title: botSettings.namebot || 'SISTEMA LUMIBOT',
-            body: global.dev || '© Powered by LuferOS Security',
-            mediaUrl: null,
-            description: null,
-            previewType: 'PHOTO',
-            thumbnailUrl: botSettings.icon || 'https://telegra.ph/file/24fa902ead26340f3df2c.png',
-            sourceUrl: botSettings.link || 'https://whatsapp.com/channel/0029VbCyJt3LI8YXFbH7QU1G',
-            mediaType: 1,
-            renderLargerThumbnail: false
-          },
-          mentionedJid: [validJid]
-        };
-        
         if (anu.action === 'add' && (!primaryBotId || primaryBotId === botId)) {
           queueWelcome(async () => {
             try {
-              const caption = `╭⋯ 🚀 *NUEVO INGRESO* ⋯》\n┊ ⊳ *Usuario:* @${phone}\n┊ ⊳ *Grupo:* ${metadata.subject || 'Grupo'}\n┊ ⊳ *Miembros:* ${memberCount}\n┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n┊ 💡 Escribe *.menu* para ver todo\n┊ lo que puedo hacer por ti.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
-              await safeSend(client, anu.id, { image: { url: pp }, caption, contextInfo })
+              const caption = `╭⋯ 🚀 *¡NUEVO INTEGRANTE!* 🚀 ⋯》
+┊ ⊳ *Bienvenido/a:* @${phone}
+┊ ⊳ *Grupo:* ${metadata.subject || 'este grupo'}
+┊ ⊳ *Ahora somos:* ${memberCount} miembros
+┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┊ 💡 Escribe *.menu* para ver la
+┊ lista de comandos y juegos.
+┊ ¡Pásala genial! 🎉
+╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
+              await safeSend(client, anu.id, { text: caption, mentions: [validJid] })
+              await safeSend(client, anu.id, { audio: { url: './assets/audios/Bienvenido.mp3' }, ptt: true, mimetype: 'audio/mpeg' })
             } catch {}
           })
         }
@@ -124,8 +118,13 @@ export default async (client, m) => {
         if ((anu.action === 'remove' || anu.action === 'leave') && (!primaryBotId || primaryBotId === botId)) {
           queueWelcome(async () => {
             try {
-              const caption = `╭⋯ 👋 *USUARIO SALIÓ* ⋯》\n┊ ⊳ *Usuario:* @${phone}\n┊ ⊳ *Miembros actuales:* ${memberCount}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
-              await safeSend(client, anu.id, { image: { url: pp }, caption, contextInfo })
+              const caption = `╭⋯ 👋 *ALGUIEN SE FUE* 👋 ⋯》
+┊ ⊳ *Adiós:* @${phone}
+┊ ⊳ *Quedamos:* ${memberCount} sobrevivientes
+┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+┊ 🌬️ _"Uno menos, más espacio."_
+╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
+              await safeSend(client, anu.id, { text: caption, mentions: [validJid] })
             } catch {}
           })
         }
