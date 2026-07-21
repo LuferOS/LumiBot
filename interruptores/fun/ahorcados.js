@@ -1,0 +1,189 @@
+const ahorcadoDrawings = [
+  `  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========`,
+  `  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========`,
+  `  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========`,
+  `  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========`,
+  `  +---+
+  |   |
+  O   |
+ /|\\  |
+      |
+      |
+=========`,
+  `  +---+
+  |   |
+  O   |
+ /|\\  |
+ /    |
+      |
+=========`,
+  `  +---+
+  |   |
+  O   |
+ /|\\  |
+ / \\  |
+      |
+=========`
+];
+
+const words = [
+  "PERRO", "GATO", "COMPUTADORA", "WHATSAPP", "JAVASCRIPT", 
+  "PROGRAMACION", "CELULAR", "BOTELLA", "TECLADO", "PANTALLA", 
+  "INTERNET", "ELEFANTE", "UNIVERSO", "GALAXIA", "ASTRONAUTA", 
+  "TELEVISOR", "VEHICULO", "GUITARRA", "MURCIELAGO", "VIDEOJUEGO"
+];
+
+export const activeAhorcados = new Map();
+let isAhorcadoListenerActive = false;
+
+// Función para obtener la palabra censurada (ej: P _ R R _)
+function getDisplayWord(word, guessed) {
+    return word.split('').map(letter => guessed.has(letter) ? letter : '_').join(' ');
+}
+
+export default {
+  command: ['ahorcado', 'hangman'],
+  category: 'games',
+  run: async (client, m, args, usedPrefix, command) => {
+
+    // Inyectar el listener global si no está activo
+    if (!isAhorcadoListenerActive && client.ev) {
+        client.ev.on('messages.upsert', async ({ messages, type }) => {
+            if (type !== 'notify') return;
+            const msg = messages[0];
+            if (!msg || msg.key.fromMe) return;
+
+            const chat = msg.key.remoteJid;
+            const sender = msg.key.participant || msg.key.remoteJid;
+            
+            const userText = msg.message?.conversation || msg.message?.extendedTextMessage?.text || "";
+            const guess = userText.trim().toUpperCase();
+            
+            if (!activeAhorcados.has(chat) || guess.length !== 1 || !/^[A-ZÑ]$/.test(guess)) return;
+
+            const game = activeAhorcados.get(chat);
+
+            // Si la letra ya fue intentada
+            if (game.guessed.has(guess)) {
+                return client.sendMessage(chat, { text: `🙄 Ya intentaste la letra *${guess}*. Intenta con otra.` }, { quoted: msg });
+            }
+
+            game.guessed.add(guess);
+
+            // Reiniciar el timeout de inactividad
+            clearTimeout(game.timeout);
+            game.timeout = setTimeout(() => {
+                if (activeAhorcados.has(chat)) {
+                    activeAhorcados.delete(chat);
+                    client.sendMessage(chat, { text: `⏳ *Juego de Ahorcado cancelado por inactividad.*\nLa palabra era: *${game.word}*` });
+                }
+            }, 60000);
+
+            // Verificar si acertó
+            if (game.word.includes(guess)) {
+                const currentDisplay = getDisplayWord(game.word, game.guessed);
+                
+                // Si ya no hay guiones, ganó
+                if (!currentDisplay.includes('_')) {
+                    clearTimeout(game.timeout);
+                    activeAhorcados.delete(chat);
+                    
+                    let users = global.db.data.users;
+                    if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
+                    users[sender].limit = (users[sender].limit || 0) + 100;
+
+                    return client.sendMessage(chat, { 
+                        text: `🎉 *¡Felicidades @${sender.split('@')[0]}!* 🎉\n\nAcertaste la palabra: *${game.word}*\n🎁 *Has ganado 100 Coins.*`,
+                        mentions: [sender]
+                    }, { quoted: msg });
+                } else {
+                    // Sigue jugando
+                    return client.sendMessage(chat, { 
+                        text: `✅ *¡Letra correcta!*\n\n${currentDisplay}\n\n*Errores:* ${game.errors}/6\n\`\`\`${ahorcadoDrawings[game.errors]}\`\`\`` 
+                    }, { quoted: msg });
+                }
+            } else {
+                // Se equivocó
+                game.errors++;
+                const currentDisplay = getDisplayWord(game.word, game.guessed);
+
+                // Si alcanzó el máximo de errores
+                if (game.errors >= 6) {
+                    clearTimeout(game.timeout);
+                    activeAhorcados.delete(chat);
+                    return client.sendMessage(chat, { 
+                        text: `💀 *¡GAME OVER!* 💀\n\nEl ahorcado se completó.\nLa palabra era: *${game.word}*\n\n\`\`\`${ahorcadoDrawings[6]}\`\`\`` 
+                    }, { quoted: msg });
+                } else {
+                    return client.sendMessage(chat, { 
+                        text: `❌ *¡Letra incorrecta!*\n\n${currentDisplay}\n\n*Errores:* ${game.errors}/6\n\`\`\`${ahorcadoDrawings[game.errors]}\`\`\`` 
+                    }, { quoted: msg });
+                }
+            }
+        });
+        
+        isAhorcadoListenerActive = true;
+        console.log('[LUMIBOT NÚCLEO] 🎧 Interceptor de Ahorcado activado.');
+    }
+
+    try {
+        if (activeAhorcados.has(m.chat)) {
+            const game = activeAhorcados.get(m.chat);
+            return m.reply(`🙄 *Ya hay una partida de Ahorcado en curso.*\n\nPalabra: ${getDisplayWord(game.word, game.guessed)}\nErrores: ${game.errors}/6\n\n¡Simplemente envía una letra para adivinar!`);
+        }
+
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        
+        activeAhorcados.set(m.chat, {
+            word: randomWord,
+            guessed: new Set(),
+            errors: 0,
+            timeout: setTimeout(() => {
+                if (activeAhorcados.has(m.chat)) {
+                    activeAhorcados.delete(m.chat);
+                    client.sendMessage(m.chat, { text: `⏳ *Juego de Ahorcado cancelado por inactividad.*\nLa palabra era: *${randomWord}*` });
+                }
+            }, 60000)
+        });
+
+        const initialDisplay = getDisplayWord(randomWord, new Set());
+
+        let text = `🎮 *EL AHORCADO LUMIBOT* 🎮\n\n`;
+        text += `Adivina la palabra oculta enviando una sola letra.\n\n`;
+        text += `*Palabra:* ${initialDisplay}\n`;
+        text += `*Errores permitidos:* 6\n\n`;
+        text += `\`\`\`${ahorcadoDrawings[0]}\`\`\`\n\n`;
+        text += `_El juego se cancelará en 60 segundos si nadie juega._`;
+
+        await m.reply(text);
+
+    } catch (e) {
+        console.error('[LUMIBOT DEBUG] Error en ahorcados.js:', e);
+        m.reply('🙄 *Todo explotó intentando crear el Ahorcado.*');
+    }
+  }
+};
