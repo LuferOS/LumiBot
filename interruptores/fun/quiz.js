@@ -65,6 +65,9 @@ export default {
             
             if (quiz.answer === '___loading___') return;
 
+            // Si el usuario ya intentó responder y falló, lo ignoramos para dar oportunidad a otros
+            if (quiz.triedUsers && quiz.triedUsers.has(sender)) return;
+
             let cleanUserText = userText.replace(/^[a-d]\)\s*/i, "");
             
             const userAns = normalizeText(cleanUserText);
@@ -99,6 +102,12 @@ export default {
                     text: `🎉 *¡TENEMOS UN GANADOR!* 🎉\n\n@${sender.split('@')[0]} fue el más rápido.\n\n> ✅ *Respuesta correcta:* ${quiz.answer}\n🎁 *Recompensa:* ${quiz.reward} Coins\n📈 *Racha en ${quiz.mode}:* ${quiz.mode === 'dificil' ? users[sender].quizWinsDificil : users[sender].quizWins} victorias.`,
                     mentions: [sender] 
                 }, { quoted: msg });
+            } else {
+                // Respuesta incorrecta: el usuario pierde su oportunidad en este quiz
+                if (!quiz.triedUsers) quiz.triedUsers = new Set();
+                quiz.triedUsers.add(sender);
+                // Reaccionamos sutilmente para avisarle que falló, sin hacer spam
+                await client.sendMessage(chat, { react: { text: '❌', key: msg.key } });
             }
         });
         
@@ -181,7 +190,8 @@ export default {
         id: quizId,
         answer: qObj.ans,
         reward: reward,
-        mode: mode, // <--- Esto es clave para el topquiz
+        mode: mode,
+        triedUsers: new Set(),
         winner: null,
         timeout: setTimeout(async () => {
           if (activeQuizzes.has(m.chat)) {

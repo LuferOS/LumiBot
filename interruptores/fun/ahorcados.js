@@ -133,10 +133,25 @@ export default {
 
                 // Si alcanzó el máximo de errores
                 if (game.errors >= 6) {
+                    let users = global.db.data.users;
+                    if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
+                    
+                    const extraLifeCost = 50;
+                    
+                    // Si el usuario tiene suficientes Coins, autocomprar vida extra
+                    if ((users[sender].limit || 0) >= extraLifeCost) {
+                        users[sender].limit -= extraLifeCost;
+                        game.errors = 5; // Lo salva al límite
+                        return client.sendMessage(chat, { 
+                            text: `❤️ *¡VIDA EXTRA AUTOCONSUMIDA!*\n\n@${sender.split('@')[0]} se equivocó, pero gastó *${extraLifeCost} Coins* para evitar el Game Over del grupo.\n\n${currentDisplay}\n\n*Errores:* 5/6 (Al límite)\n\`\`\`${ahorcadoDrawings[5]}\`\`\``,
+                            mentions: [sender]
+                        }, { quoted: msg });
+                    }
+
                     clearTimeout(game.timeout);
                     activeAhorcados.delete(chat);
                     return client.sendMessage(chat, { 
-                        text: `💀 *¡GAME OVER!* 💀\n\nEl ahorcado se completó.\nLa palabra era: *${game.word}*\n\n\`\`\`${ahorcadoDrawings[6]}\`\`\`` 
+                        text: `💀 *¡GAME OVER!* 💀\n\nEl ahorcado se completó y nadie tenía Coins suficientes para una vida extra.\nLa palabra era: *${game.word}*\n\n\`\`\`${ahorcadoDrawings[6]}\`\`\`` 
                     }, { quoted: msg });
                 } else {
                     return client.sendMessage(chat, { 
