@@ -25,16 +25,17 @@ export default {
 
         const mode = (args[0] || 'facil').toLowerCase();
         let emojiCount = 5;
-        let showTime = 8000;
+        let showTime = 5000;
+        let answerTime = 18000;
         let reward = 200;
 
         if (mode === 'medio' || mode === 'intermedio') {
             emojiCount = 10;
-            showTime = 5000;
+            answerTime = 15000;
             reward = 500;
         } else if (mode === 'dificil' || mode === 'difícil') {
             emojiCount = 12;
-            showTime = 4000;
+            answerTime = 10000;
             reward = 1000;
         } else if (mode !== 'facil' && mode !== 'fácil') {
             return client.reply(chat, `╭⋯ 🧠 *JUEGO DE MEMORIA* ⋯》\n┊ Memoriza la secuencia de emojis.\n┊\n┊ Uso: *${usedPrefix}memorizar [facil/medio/dificil]*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`, m);
@@ -51,16 +52,16 @@ export default {
         // Ocultamos la secuencia
         await client.sendMessage(chat, { 
             edit: initMsg.key, 
-            text: `╭⋯ 🧠 *JUEGO DE MEMORIA* (${mode.toUpperCase()}) ⋯》\n┊ ¡TIEMPO AGOTADO!\n┊\n┊ Escribe los emojis en el chat en el orden correcto.\n┊ Recompensa: 🪙 *${reward} Coins*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》` 
+            text: `╭⋯ 🧠 *JUEGO DE MEMORIA* (${mode.toUpperCase()}) ⋯》\n┊ ¡TIEMPO AGOTADO!\n┊\n┊ Introduce los emojis en el orden correcto.\n┊ Tienes *${answerTime/1000} segundos* para responder.\n┊ Recompensa: 🪙 *${reward} Coins*\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》` 
         });
 
         // Activamos el juego
         const timeout = setTimeout(() => {
             if (activeMemory.has(chat)) {
                 activeMemory.delete(chat);
-                client.sendMessage(chat, { text: `⏰ *¡Tiempo!* Nadie pudo recordar la secuencia.\n> La secuencia era: ${sequence}` });
+                client.sendMessage(chat, { text: `⏰ *¡Tiempo!* Nadie pudo recordar la secuencia a tiempo.\n> La secuencia era: ${sequence}` });
             }
-        }, 45000); // Tienen 45 segundos para responder
+        }, answerTime); // Tienen tiempo limite para responder
 
         activeMemory.set(chat, {
             sequence,
