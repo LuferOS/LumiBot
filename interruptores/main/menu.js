@@ -189,6 +189,37 @@ fun: `┏━━〔 𝐅𝐮𝐧 〕━━⬣
 ┃ ➪ .𝐬𝐮𝐞𝐫𝐭𝐞
 ┃ ✦ Descubre tu suerte hoy 🍀`,
 
+games: `┏━━〔 𝐆𝐚𝐦𝐞𝐬 〕━━⬣
+┃ ➪ .𝐪𝐮𝐢𝐳
+┃ ✦ Juega a las trivias y gana Coins.
+┃ 
+┃ ➪ .𝐚𝐡𝐨𝐫𝐜𝐚𝐝𝐨
+┃ ✦ Adivina la palabra antes de que el ahorcado muera.
+┃ 
+┃ ➪ .𝐚𝐧𝐚𝐠𝐫𝐚𝐦𝐚
+┃ ✦ Ordena las letras de la palabra rápido para ganar Coins.
+┃ 
+┃ ➪ .𝐬𝐥𝐨𝐭𝐬 [𝐚𝐩𝐮𝐞𝐬𝐭𝐚]
+┃ ✦ Gira las tragamonedas apostando tus Coins.
+┃ 
+┃ ➪ .𝐫𝐮𝐥𝐞𝐭𝐚𝐫𝐮𝐬𝐚
+┃ ✦ Jala el gatillo. Sobrevive y gana, pierde y explota.
+┃ 
+┃ ➪ .𝐝𝐮𝐞𝐥𝐨 [@𝐮𝐬𝐮𝐚𝐫𝐢𝐨] [𝐚𝐩𝐮𝐞𝐬𝐭𝐚]
+┃ ✦ Reta a otro usuario a Piedra, Papel o Tijera apostando Coins.
+┃ 
+┃ ➪ .𝐜𝐚𝐫𝐫𝐞𝐫𝐚 [𝟏-𝟒] [𝐚𝐩𝐮𝐞𝐬𝐭𝐚]
+┃ ✦ Apuesta por tu caballo favorito y gana 4x si cruza la meta.
+┃ 
+┃ ➪ .𝐦𝐢𝐧𝐚𝐬 [𝐚𝐩𝐮𝐞𝐬𝐭𝐚]
+┃ ✦ Juego interactivo del Buscaminas. Multiplica tus Coins o explota.
+┃ 
+┃ ➪ .𝐦𝐨𝐧𝐞𝐝𝐚 [𝐜𝐚𝐫𝐚/𝐜𝐫𝐮𝐳] [𝐚𝐩𝐮𝐞𝐬𝐭𝐚]
+┃ ✦ Lanza una moneda al aire y dobla tu apuesta si aciertas.
+┃ 
+┃ ➪ .𝐰𝐨𝐫𝐝𝐥𝐞
+┃ ✦ Adivina la palabra oculta en 6 intentos como grupo.`,
+
 utils: `┏━━〔 𝐔𝐭𝐢𝐥𝐬 〕━━⬣
 ┃ ➪ .𝐫𝐞𝐚𝐝
 ┃ ✦ Extrae y reenvía medios de visualización única.
