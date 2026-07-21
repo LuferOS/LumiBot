@@ -211,6 +211,9 @@ games: `┏━━〔 𝐆𝐚𝐦𝐞𝐬 〕━━⬣
 ┃ ➪ .𝐜𝐚𝐫𝐫𝐞𝐫𝐚 [𝟏-𝟒] [𝐚𝐩𝐮𝐞𝐬𝐭𝐚]
 ┃ ✦ Apuesta por tu caballo favorito y gana 4x si cruza la meta.
 ┃ 
+┃ ➪ .𝐦𝐞𝐦𝐨𝐫𝐢𝐳𝐚𝐫 [𝐟𝐚𝐜𝐢𝐥/𝐦𝐞𝐝𝐢𝐨/𝐝𝐢𝐟𝐢𝐜𝐢𝐥]
+┃ ✦ Juego de memoria. Memoriza la secuencia de emojis antes de que desaparezca.
+┃ 
 ┃ ➪ .𝐦𝐢𝐧𝐚𝐬 [𝐚𝐩𝐮𝐞𝐬𝐭𝐚]
 ┃ ✦ Juego interactivo del Buscaminas. Multiplica tus Coins o explota.
 ┃ 
