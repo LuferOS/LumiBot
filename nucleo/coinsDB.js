@@ -46,6 +46,14 @@ export function getCoins(jid) {
 }
 
 /**
+ * Obtener todos los balances (para topcoins)
+ * @returns {object}
+ */
+export function getAllCoins() {
+  return _data;
+}
+
+/**
  * Establecer las coins de un usuario
  * @param {string} jid 
  * @param {number} amount 

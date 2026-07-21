@@ -221,7 +221,10 @@ games: `┏━━〔 𝐆𝐚𝐦𝐞𝐬 〕━━⬣
 ┃ ✦ Lanza una moneda al aire y dobla tu apuesta si aciertas.
 ┃ 
 ┃ ➪ .𝐰𝐨𝐫𝐝𝐥𝐞
-┃ ✦ Adivina la palabra oculta en 6 intentos como grupo.`,
+┃ ✦ Adivina la palabra oculta en 6 intentos como grupo.
+┃ 
+┃ ➪ .𝐭𝐨𝐩𝐜𝐨𝐢𝐧𝐬
+┃ ✦ Mira quiénes son los más ricos del bot.`,
 
 utils: `┏━━〔 𝐔𝐭𝐢𝐥𝐬 〕━━⬣
 ┃ ➪ .𝐫𝐞𝐚𝐝
