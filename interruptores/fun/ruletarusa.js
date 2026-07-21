@@ -5,9 +5,9 @@ export default {
     try {
       const sender = m.sender;
       let users = global.db.data.users;
-      if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
+      if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
       
-      const userCoins = users[sender].limit || 0;
+      const userCoins = users[sender].coins || 0;
       const penalty = 200;
       const reward = 50;
 
@@ -28,15 +28,15 @@ export default {
               const isDead = Math.floor(Math.random() * 6) === 0;
 
               if (isDead) {
-                  users[sender].limit -= penalty;
+                  users[sender].coins -= penalty;
                   await client.sendMessage(m.chat, { 
-                      text: `💥 *¡BAM!* 💥\n\n@${sender.split('@')[0]} se voló la cabeza.\n> 💀 *Penalización:* -${penalty} Coins\n> 💰 *Saldo restante:* ${users[sender].limit} Coins`,
+                      text: `💥 *¡BAM!* 💥\n\n@${sender.split('@')[0]} se voló la cabeza.\n> 💀 *Penalización:* -${penalty} Coins\n> 💰 *Saldo restante:* ${users[sender].coins} Coins`,
                       mentions: [sender]
                   });
               } else {
-                  users[sender].limit += reward;
+                  users[sender].coins += reward;
                   await client.sendMessage(m.chat, { 
-                      text: `😌 *¡Click!* 😌\n\nLa recámara estaba vacía. @${sender.split('@')[0]} sobrevive para contarlo.\n> 🎁 *Recompensa:* +${reward} Coins\n> 💰 *Saldo actual:* ${users[sender].limit} Coins`,
+                      text: `😌 *¡Click!* 😌\n\nLa recámara estaba vacía. @${sender.split('@')[0]} sobrevive para contarlo.\n> 🎁 *Recompensa:* +${reward} Coins\n> 💰 *Saldo actual:* ${users[sender].coins} Coins`,
                       mentions: [sender]
                   });
               }

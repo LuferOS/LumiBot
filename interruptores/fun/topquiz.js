@@ -10,7 +10,7 @@ export default {
         .filter(([_, data]) => (data.quizWins || 0) > 0)
         .map(([jid, data]) => ({
           jid,
-          name: data.name || 'Usuario',
+          name: data.name || `@${jid.split('@')[0]}`,
           wins: data.quizWins || 0
         }))
         .sort((a, b) => b.wins - a.wins) // Ordenar de mayor a menor
@@ -35,7 +35,8 @@ export default {
 
       txt += `\n_Para ganar puntos, usa el comando_ *.quiz*`;
 
-      await m.reply(txt);
+      const mentions = topUsers.map(u => u.jid);
+      await m.reply(txt, null, { mentions });
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en topquiz:', e);

@@ -29,20 +29,20 @@ export default {
       }
 
       let users = global.db.data.users;
-      if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
-      if (!users[target]) users[target] = { limit: 0, exp: 0 };
+      if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
+      if (!users[target]) users[target] = { coins: 0, exp: 0 };
 
-      if ((users[sender].limit || 0) < bet) {
-          return m.reply(`💸 *¡Estás en la quiebra!*\n> No tienes suficientes Coins para retarlo.\n> Tienes: *${users[sender].limit || 0} Coins*`);
+      if ((users[sender].coins || 0) < bet) {
+          return m.reply(`💸 *¡Estás en la quiebra!*\n> No tienes suficientes Coins para retarlo.\n> Tienes: *${users[sender].coins || 0} Coins*`);
       }
 
-      if ((users[target].limit || 0) < bet) {
+      if ((users[target].coins || 0) < bet) {
           return m.reply(`💸 *¡Tu oponente es pobre!*\n> @${target.split('@')[0]} no tiene suficientes Coins para aceptar esta apuesta.`, null, { mentions: [target] });
       }
 
       // Restamos a ambos inmediatamente (el pozo es bet * 2)
-      users[sender].limit -= bet;
-      users[target].limit -= bet;
+      users[sender].coins -= bet;
+      users[target].coins -= bet;
       const pot = bet * 2;
 
       await client.sendMessage(m.chat, { 
@@ -69,10 +69,10 @@ export default {
           const loser = senderWins ? target : sender;
           const attack = attacks[Math.floor(Math.random() * attacks.length)];
 
-          users[winner].limit += pot;
+          users[winner].coins += pot;
 
           await client.sendMessage(m.chat, { 
-              text: `🩸 *RESULTADO DEL DUELO* 🩸\n\n@${winner.split('@')[0]} ${attack} a @${loser.split('@')[0]} y lo dejó inconsciente en el piso.\n\n🏆 *¡GANADOR:* @${winner.split('@')[0]}!*\nSe lleva el pozo de *${pot} Coins*.\n\n> 💰 *Saldo Ganador:* ${users[winner].limit} Coins\n> 💀 *Saldo Perdedor:* ${users[loser].limit} Coins`, 
+              text: `🩸 *RESULTADO DEL DUELO* 🩸\n\n@${winner.split('@')[0]} ${attack} a @${loser.split('@')[0]} y lo dejó inconsciente en el piso.\n\n🏆 *¡GANADOR:* @${winner.split('@')[0]}!*\nSe lleva el pozo de *${pot} Coins*.\n\n> 💰 *Saldo Ganador:* ${users[winner].coins} Coins\n> 💀 *Saldo Perdedor:* ${users[loser].coins} Coins`, 
               mentions: [winner, loser] 
           });
       }, 3000);

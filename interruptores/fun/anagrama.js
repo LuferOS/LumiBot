@@ -1,6 +1,8 @@
 export const activeAnagrams = new Map();
 let isAnagramaListenerActive = false;
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 const anagramWords = [
   "MURCIELAGO", "COMPUTADORA", "WHATSAPP", "JAVASCRIPT", "PROGRAMACION",
   "ASTRONAUTA", "MOTOCICLETA", "UNIVERSIDAD", "TELEVISION", "ELEFANTE",
@@ -43,8 +45,11 @@ export default {
                 activeAnagrams.delete(chat);
                 
                 let users = global.db.data.users;
-                if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
-                users[sender].limit = (users[sender].limit || 0) + 100;
+                if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
+                users[sender].coins = (users[sender].coins || 0) + 100;
+
+                await client.sendPresenceUpdate('composing', chat);
+                await delay(1500);
 
                 return client.sendMessage(chat, { 
                     text: `🎉 *¡TENEMOS UN GANADOR!* 🎉\n\n@${sender.split('@')[0]} logró descifrar la palabra.\n\n> ✅ *Palabra:* ${game.word}\n🎁 *Recompensa:* 100 Coins`,

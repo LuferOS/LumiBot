@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 const preguntasPath = path.resolve('interruptores/fun/preguntas.json');
 export const activeQuizzes = new Map();
 
@@ -83,7 +85,7 @@ export default {
                 
                 // Asegurarse de que el usuario existe en la BD
                 if (!users[sender]) {
-                    users[sender] = { limit: 0, exp: 0 }; // Inicializar si es nuevo
+                    users[sender] = { coins: 0, exp: 0 }; // Inicializar si es nuevo
                 }
 
                 // Sumar victoria según el modo
@@ -93,10 +95,13 @@ export default {
                     users[sender].quizWins = (users[sender].quizWins || 0) + 1;
                 }
 
-                // Sumar la recompensa (ajusta 'limit' o 'exp' según la economía de tu bot)
-                users[sender].limit = (users[sender].limit || 0) + quiz.reward;
+                // Sumar la recompensa (ajusta 'coins' o 'exp' según la economía de tu bot)
+                users[sender].coins = (users[sender].coins || 0) + quiz.reward;
                 users[sender].exp = (users[sender].exp || 0) + quiz.reward; // Sumando XP también
                 // ----------------------------------------
+
+                await client.sendPresenceUpdate('composing', chat);
+                await delay(1500);
 
                 await client.sendMessage(chat, { 
                     text: `🎉 *¡TENEMOS UN GANADOR!* 🎉\n\n@${sender.split('@')[0]} fue el más rápido.\n\n> ✅ *Respuesta correcta:* ${quiz.answer}\n🎁 *Recompensa:* ${quiz.reward} Coins\n📈 *Racha en ${quiz.mode}:* ${quiz.mode === 'dificil' ? users[sender].quizWinsDificil : users[sender].quizWins} victorias.`,

@@ -60,6 +60,8 @@ const words = [
 export const activeAhorcados = new Map();
 let isAhorcadoListenerActive = false;
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 // Función para obtener la palabra censurada (ej: P _ R R _)
 function getDisplayWord(word, guessed) {
     return word.split('').map(letter => guessed.has(letter) ? letter : '_').join(' ');
@@ -113,8 +115,11 @@ export default {
                     activeAhorcados.delete(chat);
                     
                     let users = global.db.data.users;
-                    if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
-                    users[sender].limit = (users[sender].limit || 0) + 100;
+                    if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
+                    users[sender].coins = (users[sender].coins || 0) + 100;
+
+                    await client.sendPresenceUpdate('composing', chat);
+                    await delay(1500);
 
                     return client.sendMessage(chat, { 
                         text: `🎉 *¡Felicidades @${sender.split('@')[0]}!* 🎉\n\nAcertaste la palabra: *${game.word}*\n🎁 *Has ganado 100 Coins.*`,
@@ -134,14 +139,18 @@ export default {
                 // Si alcanzó el máximo de errores
                 if (game.errors >= 6) {
                     let users = global.db.data.users;
-                    if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
+                    if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
                     
                     const extraLifeCost = 50;
                     
                     // Si el usuario tiene suficientes Coins, autocomprar vida extra
-                    if ((users[sender].limit || 0) >= extraLifeCost) {
-                        users[sender].limit -= extraLifeCost;
+                    if ((users[sender].coins || 0) >= extraLifeCost) {
+                        users[sender].coins -= extraLifeCost;
                         game.errors = 5; // Lo salva al límite
+                        
+                        await client.sendPresenceUpdate('composing', chat);
+                        await delay(1000);
+
                         return client.sendMessage(chat, { 
                             text: `❤️ *¡VIDA EXTRA AUTOCONSUMIDA!*\n\n@${sender.split('@')[0]} se equivocó, pero gastó *${extraLifeCost} Coins* para evitar el Game Over del grupo.\n\n${currentDisplay}\n\n*Errores:* 5/6 (Al límite)\n\`\`\`${ahorcadoDrawings[5]}\`\`\``,
                             mentions: [sender]
@@ -150,6 +159,10 @@ export default {
 
                     clearTimeout(game.timeout);
                     activeAhorcados.delete(chat);
+                    
+                    await client.sendPresenceUpdate('composing', chat);
+                    await delay(1000);
+
                     return client.sendMessage(chat, { 
                         text: `💀 *¡GAME OVER!* 💀\n\nEl ahorcado se completó y nadie tenía Coins suficientes para una vida extra.\nLa palabra era: *${game.word}*\n\n\`\`\`${ahorcadoDrawings[6]}\`\`\`` 
                     }, { quoted: msg });

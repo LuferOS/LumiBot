@@ -5,9 +5,9 @@ export default {
     try {
       const sender = m.sender;
       let users = global.db.data.users;
-      if (!users[sender]) users[sender] = { limit: 0, exp: 0 };
+      if (!users[sender]) users[sender] = { coins: 0, exp: 0 };
       
-      const userCoins = users[sender].limit || 0;
+      const userCoins = users[sender].coins || 0;
       
       if (!args[0]) {
         return m.reply(`🎰 *TRAGAMONEDAS LUMIBOT* 🎰\n\n> 💡 *Uso:* ${usedPrefix}${command} [cantidad]\n> *Ejemplo:* ${usedPrefix}${command} 50\n> *Ejemplo:* ${usedPrefix}${command} all\n\n💰 *Tus Coins:* ${userCoins}`);
@@ -29,7 +29,7 @@ export default {
       }
 
       // Restamos la apuesta inmediatamente
-      users[sender].limit -= bet;
+      users[sender].coins -= bet;
 
       const emojis = ['🍒', '🍋', '🍉', '🔔', '💎'];
       
@@ -49,13 +49,13 @@ export default {
       if (slot1 === slot2 && slot2 === slot3) {
         // 3 iguales = x3
         winAmount = bet * 3;
-        users[sender].limit += winAmount;
+        users[sender].coins += winAmount;
         resultText += `🎉 *¡JACKPOT!* 🎉\n> Multiplicaste x3 tu apuesta.\n> Ganaste: *${winAmount} Coins*`;
         setTimeout(() => m.react('🤑'), 500);
       } else if (slot1 === slot2 || slot2 === slot3 || slot1 === slot3) {
         // 2 iguales = x1.5 o recupera
         winAmount = Math.floor(bet * 1.5);
-        users[sender].limit += winAmount;
+        users[sender].coins += winAmount;
         resultText += `⚠️ *¡Casi!* ⚠️\n> Sacaste 2 iguales.\n> Recuperaste y ganaste un poco: *${winAmount} Coins*`;
         setTimeout(() => m.react('😌'), 500);
       } else {
@@ -64,7 +64,7 @@ export default {
         setTimeout(() => m.react('📉'), 500);
       }
 
-      resultText += `\n\n💰 *Saldo actual:* ${users[sender].limit} Coins`;
+      resultText += `\n\n💰 *Saldo actual:* ${users[sender].coins} Coins`;
 
       await m.reply(resultText);
 
