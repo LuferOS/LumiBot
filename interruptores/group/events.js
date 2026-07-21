@@ -1,6 +1,9 @@
 import fetch from 'node-fetch'
 let WAMessageStubType = (await import('baileys-next')).default
 import chalk from 'chalk'
+import fs from 'fs'
+import path from 'path'
+import { toOpusVoiceNote } from '../main/audios-responder.js'
 
 // ⚡ LUMIBOT OVERRIDE: Importamos el descifrador de LIDs de tu núcleo
 import { resolveLidToRealJid } from '../../nucleo/utils.js'
@@ -110,7 +113,22 @@ export default async (client, m) => {
 ┊ ¡Pásala genial! 🎉
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
               await safeSend(client, anu.id, { text: caption, mentions: [validJid] })
-              await safeSend(client, anu.id, { audio: { url: './assets/audios/Bienvenido.mp3' }, ptt: true, mimetype: 'audio/mpeg' })
+              
+              try {
+                const audioFile = path.join(process.cwd(), 'assets', 'audios', 'Bienvenido.mp3')
+                if (fs.existsSync(audioFile)) {
+                  const buffer = await fs.promises.readFile(audioFile)
+                  let voiceBuffer = buffer
+                  try {
+                    voiceBuffer = await toOpusVoiceNote(buffer, '.mp3')
+                  } catch (convErr) {
+                    console.error('[LUMIBOT DEBUG] Falló la conversión de audio, se enviará el buffer original:', convErr.message)
+                  }
+                  await safeSend(client, anu.id, { audio: voiceBuffer, mimetype: 'audio/ogg; codecs=opus', ptt: true })
+                }
+              } catch (audioErr) {
+                console.error('[LUMIBOT DEBUG] Error en audio de bienvenida:', audioErr)
+              }
             } catch {}
           })
         }

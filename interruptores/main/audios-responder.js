@@ -164,7 +164,7 @@ const normalizedAudioMap = Object.fromEntries(
   Object.entries(audioMap).map(([key, value]) => [normalize(key), value]),
 )
 
-async function toOpusVoiceNote(inputBuffer, inputExt = '.mp3') {
+export async function toOpusVoiceNote(inputBuffer, inputExt = '.mp3') {
   const id = crypto.randomBytes(6).toString('hex')
   const inFile = path.join(os.tmpdir(), `miku-in-${id}${inputExt}`)
   const outFile = path.join(os.tmpdir(), `miku-out-${id}.ogg`)
