@@ -344,6 +344,11 @@ export async function smsg(client, m, store) {
   m.react = (u) => client.sendMessage(m.chat, { react: { text: u, key: m.key } })
 
   m.reply = async (content, options = {}) => {
+    try {
+      await client.sendPresenceUpdate('composing', m.chat)
+      await new Promise(resolve => setTimeout(resolve, 1500))
+    } catch (e) {}
+
     const quoted = m
     const chat = m.chat
     const caption = ''

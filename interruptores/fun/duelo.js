@@ -45,8 +45,9 @@ export default {
       users[target].coins -= bet;
       const pot = bet * 2;
 
+      await client.sendPresenceUpdate('composing', m.chat);
       await client.sendMessage(m.chat, { 
-          text: `⚔️ *¡DUELO A MUERTE INICIADO!* ⚔️\n\n🥊 @${sender.split('@')[0]} VS @${target.split('@')[0]} 🥊\n\n💰 *Pozo en juego:* ${pot} Coins\n\n_La pelea automática ha comenzado..._`, 
+          text: `⚔️ *¡DUELO A MUERTE INICIADO!* ⚔️\n\n@${sender.split('@')[0]} ha retado a @${target.split('@')[0]} a un duelo por *${pot} Coins*.\n\n> 🎲 *La pelea está en marcha...*`, 
           mentions: [sender, target] 
       });
 
@@ -71,6 +72,7 @@ export default {
 
           users[winner].coins += pot;
 
+          await client.sendPresenceUpdate('composing', m.chat);
           await client.sendMessage(m.chat, { 
               text: `🩸 *RESULTADO DEL DUELO* 🩸\n\n@${winner.split('@')[0]} ${attack} a @${loser.split('@')[0]} y lo dejó inconsciente en el piso.\n\n🏆 *¡GANADOR:* @${winner.split('@')[0]}!*\nSe lleva el pozo de *${pot} Coins*.\n\n> 💰 *Saldo Ganador:* ${users[winner].coins} Coins\n> 💀 *Saldo Perdedor:* ${users[loser].coins} Coins`, 
               mentions: [winner, loser] 
