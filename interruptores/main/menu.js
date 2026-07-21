@@ -19,549 +19,548 @@ export default {
       const userExp = db.users?.[sender]?.exp || 0;
       const userCoins = getCoins(sender);
 
-      const menuText = `Que tal @${sender.split('@')[0]} Bienvenido a *Cosmic* espero que tengas un lindo día 🌞 y que disfrutes del bot.
+      const menuText = `Hola @${sender.split('@')[0]} 👋 Bienvenido a *LumiBot* ✨ espero que tengas un lindo día 🌞 y que disfrutes del bot.
 
 ┏━━━━━━━━━━━━━━━
 ┃╭──────────────┄
-┃│◈ *By StarslightsTeam* ◈
-┃│◈ Owner: \`FRI-MEMO\`
-┃│◈ Bot Name: \`Cosmic\`
-┃│◈ Usuarios: \`${usersCount}\`
-┃│◈ Update: \`Custom (4.0)\`
+┃│◈ 👑 *By LuferOS Team* 👑
+┃│◈ 👤 Owner: \`LuferOS\`
+┃│◈ 🤖 Bot Name: \`LumiBot\`
+┃│◈ 👥 Usuarios: \`${usersCount}\`
+┃│◈ 🔄 Update: \`Custom (4.0)\`
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
 ┏━━━━━━━━━━━━━━━
 ┃╭──────────────┄
-┃│◈ Usuario: @${sender.split('@')[0]}
-┃│◈ CoinixCoins: ${userCoins}
-┃│◈ Nivel: ${userLevel}
-┃│◈ Experiencia: ${userExp}
+┃│◈ 👤 Usuario: @${sender.split('@')[0]}
+┃│◈ 🪙 LumiCoins: ${userCoins}
+┃│◈ 🌟 Nivel: ${userLevel}
+┃│◈ ⚡ Experiencia: ${userExp}
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-			*L I S T A  -  M E N Ú S*
+			*📋 L I S T A  -  M E N Ú S 📋*
 
-┏━━━━━⦅ \`INFO\` ⦆━━━━━
+┏━━━━━⦅ ℹ️ \`INFO\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .testram
-┃│◈ .totalfunciones
-┃│◈ .creador
-┃│◈ .dashboard
-┃│◈ .estado
-┃│◈ .grupos
-┃│◈ .infobot
-┃│◈ .menu
-┃│◈ .ping
-┃│◈ .suggest
-┃│◈ .runtime
-┃│◈ .owner
+┃│◈ 🖥️ .testram
+┃│◈ 📊 .totalfunciones
+┃│◈ 👨‍💻 .creador
+┃│◈ 🌐 .dashboard
+┃│◈ 🟢 .estado
+┃│◈ 👥 .grupos
+┃│◈ 🤖 .infobot
+┃│◈ 📋 .menu
+┃│◈ 🏓 .ping
+┃│◈ 💡 .suggest
+┃│◈ ⏱️ .runtime
+┃│◈ 👑 .owner
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`IA's\` ⦆━━━━━
+┏━━━━━⦅ 🧠 \`IA's\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .monika
-┃│◈ .tatsumaki
+┃│◈ 👧 .monika
+┃│◈ 🌪️ .tatsumaki
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`SEARCH\` ⦆━━━━━
+┏━━━━━⦅ 🔍 \`SEARCH\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .animesearch
-┃│◈ .hentaisearch
-┃│◈ .pixabay
-┃│◈ .pornhubsearch
-┃│◈ .redditsearch
-┃│◈ .rsearch 🌌
-┃│◈ .spotifysearch 🌌
-┃│◈ .tiktoksearch <texto> 🌌
-┃│◈ .tweetposts *<búsqueda>* 🌌
-┃│◈ .ytsearch *<búsqueda>* 🌌
+┃│◈ 🌸 .animesearch
+┃│◈ 🔞 .hentaisearch
+┃│◈ 🖼️ .pixabay
+┃│◈ 🟧 .pornhubsearch
+┃│◈ 👽 .redditsearch
+┃│◈ 🌌 .rsearch
+┃│◈ 🎧 .spotifysearch
+┃│◈ 🎵 .tiktoksearch <texto>
+┃│◈ 🐦 .tweetposts *<búsqueda>*
+┃│◈ 📺 .ytsearch *<búsqueda>*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`GAME\` ⦆━━━━━
+┏━━━━━⦅ 🎮 \`GAME\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .acertijo
-┃│◈ .ahorcados
-┃│◈ .anagrama
-┃│◈ .apostar *<cantidad>*
-┃│◈ .carrera *[1-4] [apuesta]*
-┃│◈ .dado
-┃│◈ .duelo *@usuario [apuesta]*
-┃│◈ .iqtest
-┃│◈ .mates
-┃│◈ .minas *[apuesta]*
-┃│◈ .moneda *<cara/cruz> [apuesta]*
-┃│◈ .quiz *facil/dificil*
-┃│◈ .rob *@usuario*
-┃│◈ .ruleta *<cantidad> <color>*
-┃│◈ .ruletarusa
-┃│◈ .slot *<apuesta>*
-┃│◈ .topquiz
-┃│◈ .wordle
+┃│◈ 🤔 .acertijo
+┃│◈ 🪢 .ahorcados
+┃│◈ 🔠 .anagrama
+┃│◈ 🎰 .apostar *<cantidad>*
+┃│◈ 🐎 .carrera *[1-4] [apuesta]*
+┃│◈ 🎲 .dado
+┃│◈ ⚔️ .duelo *@usuario [apuesta]*
+┃│◈ 🧠 .iqtest
+┃│◈ 🔢 .mates
+┃│◈ 💣 .minas *[apuesta]*
+┃│◈ 🪙 .moneda *<cara/cruz> [apuesta]*
+┃│◈ ❓ .quiz *facil/dificil*
+┃│◈ 🥷 .rob *@usuario*
+┃│◈ 🎡 .ruleta *<cantidad> <color>*
+┃│◈ 🔫 .ruletarusa
+┃│◈ 🍒 .slot *<apuesta>*
+┃│◈ 🏆 .topquiz
+┃│◈ 🟩 .wordle
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`SUB BOTS\` ⦆━━━━━
+┏━━━━━⦅ 🤖 \`SUB BOTS\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .bots
-┃│◈ .serbot
-┃│◈ .delsession
-┃│◈ .reconectar
-┃│◈ .reconectall
-┃│◈ .reconum <número>
-┃│◈ .set *<opción>*
-┃│◈ .stop
-┃│◈ .totalbots
+┃│◈ 🤖 .bots
+┃│◈ 🔗 .serbot
+┃│◈ ❌ .delsession
+┃│◈ 🔄 .reconectar
+┃│◈ 🔁 .reconectall
+┃│◈ 📞 .reconum <número>
+┃│◈ ⚙️ .set *<opción>*
+┃│◈ 🛑 .stop
+┃│◈ 📊 .totalbots
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`RPG\` ⦆━━━━━
+┏━━━━━⦅ 🎒 \`RPG\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .bal
-┃│◈ .bank
-┃│◈ .cofre
-┃│◈ .crimen
-┃│◈ .claim
-┃│◈ .darcoins @user <cantidad>
-┃│◈ .darxp @user <cantidad>
-┃│◈ .depositar
-┃│◈ .lb
-┃│◈ .levelup
-┃│◈ .minar
-┃│◈ .monthly
-┃│◈ .piñata
-┃│◈ .retirar
-┃│◈ .buy
-┃│◈ .buyall
-┃│◈ .slut
-┃│◈ .weekly
-┃│◈ .work
+┃│◈ 💰 .bal
+┃│◈ 🏦 .bank
+┃│◈ 📦 .cofre
+┃│◈ 🔪 .crimen
+┃│◈ 🎁 .claim
+┃│◈ 💸 .darcoins @user <cantidad>
+┃│◈ 🌟 .darxp @user <cantidad>
+┃│◈ 🏦 .depositar
+┃│◈ 🏆 .lb
+┃│◈ ⬆️ .levelup
+┃│◈ ⛏️ .minar
+┃│◈ 📅 .monthly
+┃│◈ 🪅 .piñata
+┃│◈ 🏧 .retirar
+┃│◈ 🛒 .buy
+┃│◈ 🛍️ .buyall
+┃│◈ 💃 .slut
+┃│◈ 📆 .weekly
+┃│◈ 💼 .work
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`REGISTRO\` ⦆━━━━━
+┏━━━━━⦅ 📝 \`REGISTRO\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .sn
-┃│◈ .perfil
-┃│◈ .perfil *@user*
-┃│◈ .reg *<nombre.edad>*
-┃│◈ .unreg
+┃│◈ 🔢 .sn
+┃│◈ 👤 .perfil
+┃│◈ 👥 .perfil *@user*
+┃│◈ ✍️ .reg *<nombre.edad>*
+┃│◈ ❌ .unreg
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`STICKER\` ⦆━━━━━
+┏━━━━━⦅ 🏷️ \`STICKER\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .brat *<texto>* 🌌
-┃│◈ .emojimix *<emoji+emoji>* 🌌
-┃│◈ .quotly *<texto>*
-┃│◈ .sticker
-┃│◈ .wm
-┃│◈ .wm2
-┃│◈ .toimg *<sticker>*
-┃│◈ .tovid *<sticker>* 🌌
+┃│◈ 🟩 .brat *<texto>*
+┃│◈ 🎭 .emojimix *<emoji+emoji>*
+┃│◈ 💬 .quotly *<texto>*
+┃│◈ 🖼️ .sticker
+┃│◈ 🏷️ .wm
+┃│◈ 🏷️ .wm2
+┃│◈ 🖼️ .toimg *<sticker>*
+┃│◈ 🎥 .tovid *<sticker>*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`IMAGE\` ⦆━━━━━
+┏━━━━━⦅ 🖼️ \`IMAGE\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .tiktokimg *<url>*
-┃│◈ .avatar
-┃│◈ .corean 🌌
-┃│◈ .cosplay
-┃│◈ .doujin
-┃│◈ .ero
-┃│◈ .foxgirl
-┃│◈ .imagen *<búsqueda>* 🌌
-┃│◈ .imagen2 <búsqueda>
-┃│◈ .loli
-┃│◈ .marin
-┃│◈ .megumin 🌌
-┃│◈ .neko 🌌
-┃│◈ .neko2 🌌
-┃│◈ .oppai
-┃│◈ .pack 🌌
-┃│◈ .pinterest 🌌
-┃│◈ .pixiv *<búsqueda>* 🌌
-┃│◈ .ppcouple 🌌
-┃│◈ .selfie
-┃│◈ .shinobu 🌌
-┃│◈ .waifu 🌌
-┃│◈ .boobs 🌌
+┃│◈ 🎵 .tiktokimg *<url>*
+┃│◈ 👤 .avatar
+┃│◈ 🇰🇷 .corean
+┃│◈ 👗 .cosplay
+┃│◈ 🔞 .doujin
+┃│◈ 🔞 .ero
+┃│◈ 🦊 .foxgirl
+┃│◈ 🔍 .imagen *<búsqueda>*
+┃│◈ 🔍 .imagen2 <búsqueda>
+┃│◈ 👧 .loli
+┃│◈ 🌸 .marin
+┃│◈ 💥 .megumin
+┃│◈ 🐱 .neko
+┃│◈ 🐱 .neko2
+┃│◈ 🍈 .oppai
+┃│◈ 📦 .pack
+┃│◈ 📌 .pinterest
+┃│◈ 🎨 .pixiv *<búsqueda>*
+┃│◈ 💑 .ppcouple
+┃│◈ 🤳 .selfie
+┃│◈ 🦋 .shinobu
+┃│◈ 👰 .waifu
+┃│◈ 🍈 .boobs
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`GROUPS\` ⦆━━━━━
+┏━━━━━⦅ 👥 \`GROUPS\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .antibot *<on/off>*
-┃│◈ .checkexpired
-┃│◈ .delete
-┃│◈ .demote *@tag*
-┃│◈ .erase
-┃│◈ .infogp
-┃│◈ .grouplist
-┃│◈ .invite
-┃│◈ .kick *@user*
-┃│◈ .link
-┃│◈ .mute *<1d/2h/10m>*
-┃│◈ .unmute *@user*
-┃│◈ .bot
-┃│◈ .encuesta *<pregunta|opciones>*
-┃│◈ .promote *@user*
-┃│◈ .resetlink
-┃│◈ .group *abrir/cerrar*
-┃│◈ .setprimary *asignar/eliminar*
-┃│◈ .tag <mensaje>
-┃│◈ .tag
-┃│◈ .wipe
-┃│◈ .ds
-┃│◈ .odemote *@tag*
-┃│◈ .opromote *@user*
-┃│◈ .otag
-┃│◈ .botdistancia
-┃│◈ .getbio 🌌
-┃│◈ .getbio *@tag* 🌌
-┃│◈ .getname 🌌
-┃│◈ .getname *@tag* 🌌
+┃│◈ 🛡️ .antibot *<on/off>*
+┃│◈ ⏱️ .checkexpired
+┃│◈ 🗑️ .delete
+┃│◈ ⬇️ .demote *@tag*
+┃│◈ 🧹 .erase
+┃│◈ ℹ️ .infogp
+┃│◈ 📋 .grouplist
+┃│◈ 📩 .invite
+┃│◈ 🥾 .kick *@user*
+┃│◈ 🔗 .link
+┃│◈ 🔇 .mute *<1d/2h/10m>*
+┃│◈ 🔊 .unmute *@user*
+┃│◈ 🤖 .bot
+┃│◈ 📊 .encuesta *<pregunta|opciones>*
+┃│◈ ⬆️ .promote *@user*
+┃│◈ 🔄 .resetlink
+┃│◈ 🚪 .group *abrir/cerrar*
+┃│◈ 👑 .setprimary *asignar/eliminar*
+┃│◈ 📣 .tag <mensaje>
+┃│◈ 🏷️ .tag
+┃│◈ 🧹 .wipe
+┃│◈ 📉 .ds
+┃│◈ ⬇️ .odemote *@tag*
+┃│◈ ⬆️ .opromote *@user*
+┃│◈ 🏷️ .otag
+┃│◈ 📏 .botdistancia
+┃│◈ 📝 .getbio
+┃│◈ 📝 .getbio *@tag*
+┃│◈ 👤 .getname
+┃│◈ 👤 .getname *@tag*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`ON / OFF\` ⦆━━━━━
+┏━━━━━⦅ ⚙️ \`ON / OFF\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .enable
-┃│◈ .disable
-┃│◈ .bot
-┃│◈ .onlyadmin *<on/off>*
+┃│◈ ✅ .enable
+┃│◈ ❌ .disable
+┃│◈ 🤖 .bot
+┃│◈ 👑 .onlyadmin *<on/off>*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`PREMIUM\` ⦆━━━━━
+┏━━━━━⦅ 💎 \`PREMIUM\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .mediafire *<url>* 🌌 🌌
-┃│◈ .inspect *<link>*  🌌
-┃│◈ .mega *<url>*  🌌
+┃│◈ 📁 .mediafire *<url>*
+┃│◈ 🔍 .inspect *<link>*
+┃│◈ ☁️ .mega *<url>*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`DOWNLOAD\` ⦆━━━━━
+┏━━━━━⦅ 📥 \`DOWNLOAD\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .aptoide *<búsqueda>* 🌌
-┃│◈ .danbooru *<url>* 🌌
-┃│◈ .fb *<link fb>* 🌌
-┃│◈ .gitclone *<url git>* 🌌
-┃│◈ .instagram *<link ig>* 🌌
-┃│◈ .likeedl *<url>* 🌌
-┃│◈ .mediafire *<url>* 🌌 🌌
-┃│◈ .spotify *<texto/link>* 🌌
-┃│◈ .threads <url>
-┃│◈ .tiktok <url tt> 🌌
-┃│◈ .tiktokimg *<url>*
-┃│◈ .tiktokuser *<usuario>* 🌌
-┃│◈ .tiktokvid *<búsqueda>* 🌌
-┃│◈ .x <url>
-┃│◈ .pixiv *<búsqueda>* 🌌
-┃│◈ .xnxxdl *<url>*
-┃│◈ .xvideosdl *<url>*
-┃│◈ .mega *<url>*  🌌
-┃│◈ .play <búsqueda>
+┃│◈ 🛒 .aptoide *<búsqueda>*
+┃│◈ 🌸 .danbooru *<url>*
+┃│◈ 📘 .fb *<link fb>*
+┃│◈ 🐙 .gitclone *<url git>*
+┃│◈ 📸 .instagram *<link ig>*
+┃│◈ 💖 .likeedl *<url>*
+┃│◈ 📁 .mediafire *<url>*
+┃│◈ 🎧 .spotify *<texto/link>*
+┃│◈ 🧵 .threads <url>
+┃│◈ 🎵 .tiktok <url tt>
+┃│◈ 🖼️ .tiktokimg *<url>*
+┃│◈ 👤 .tiktokuser *<usuario>*
+┃│◈ 🎥 .tiktokvid *<búsqueda>*
+┃│◈ 🐦 .x <url>
+┃│◈ 🎨 .pixiv *<búsqueda>*
+┃│◈ 🔞 .xnxxdl *<url>*
+┃│◈ 🔞 .xvideosdl *<url>*
+┃│◈ ☁️ .mega *<url>*
+┃│◈ ▶️ .play <búsqueda>
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`TOOLS\` ⦆━━━━━
+┏━━━━━⦅ 🛠️ \`TOOLS\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .setcmd <texto>
-┃│◈ .fixdb
-┃│◈ .infodb
-┃│◈ .lista
-┃│◈ .acortar *<url>*
-┃│◈ .blackbox
-┃│◈ .cal *<ecuacion>*
-┃│◈ .chatgpt
-┃│◈ .chazam *<audio>* 🌌
-┃│◈ .dalle
-┃│◈ .fake *<texto/@tag/texto>*
-┃│◈ .gemini
-┃│◈ .getnum
-┃│◈ .getpp 🌌
-┃│◈ .hd 🌌
-┃│◈ .ibb
-┃│◈ .lyrics <canción> 🌌
-┃│◈ .Ia
-┃│◈ .morse *<encode|decode>*
-┃│◈ .qrcode <texto>
-┃│◈ .qrcode *<texto>* 🌌
-┃│◈ .react *<emoji>*
-┃│◈ .readmore *<teks>|<teks>*
-┃│◈ .readqr
-┃│◈ .reenviar
-┃│◈ .ss *<url>* 🌌
-┃│◈ .ssweb *<url>* 🌌
-┃│◈ .style *<texto>*
-┃│◈ .document *<audio/video>*
-┃│◈ .togifaud
-┃│◈ .toimg *<sticker>*
-┃│◈ .tomp3
-┃│◈ .githubupload 🌌
-┃│◈ .tovid *<sticker>* 🌌
-┃│◈ .trad *<leng> <texto>*
-┃│◈ .transcripyt *<url>*
-┃│◈ .tts *<texto>* 🌌
-┃│◈ .vcard *@tag* 🌌
-┃│◈ .whatmusic 🌌
-┃│◈ .zodiac *2002 02 25* 🌌
+┃│◈ ⌨️ .setcmd <texto>
+┃│◈ 🔧 .fixdb
+┃│◈ 📊 .infodb
+┃│◈ 📋 .lista
+┃│◈ ✂️ .acortar *<url>*
+┃│◈ ⬛ .blackbox
+┃│◈ 🧮 .cal *<ecuacion>*
+┃│◈ 🤖 .chatgpt
+┃│◈ 🎵 .chazam *<audio>*
+┃│◈ 🎨 .dalle
+┃│◈ 🎭 .fake *<texto/@tag/texto>*
+┃│◈ ✨ .gemini
+┃│◈ 📱 .getnum
+┃│◈ 🖼️ .getpp
+┃│◈ 📺 .hd
+┃│◈ ☁️ .ibb
+┃│◈ 🎤 .lyrics <canción>
+┃│◈ 🧠 .Ia
+┃│◈ 📡 .morse *<encode|decode>*
+┃│◈ 🔳 .qrcode <texto>
+┃│◈ 😄 .react *<emoji>*
+┃│◈ 📖 .readmore *<teks>|<teks>*
+┃│◈ 📷 .readqr
+┃│◈ 🔄 .reenviar
+┃│◈ 📸 .ss *<url>*
+┃│◈ 💻 .ssweb *<url>*
+┃│◈ 💅 .style *<texto>*
+┃│◈ 📄 .document *<audio/video>*
+┃│◈ 🎥 .togifaud
+┃│◈ 🖼️ .toimg *<sticker>*
+┃│◈ 🎵 .tomp3
+┃│◈ ☁️ .githubupload
+┃│◈ 🎥 .tovid *<sticker>*
+┃│◈ 🌍 .trad *<leng> <texto>*
+┃│◈ 📝 .transcripyt *<url>*
+┃│◈ 🗣️ .tts *<texto>*
+┃│◈ 📇 .vcard *@tag*
+┃│◈ 🎵 .whatmusic
+┃│◈ ♈ .zodiac *2002 02 25*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`FUN\` ⦆━━━━━
+┏━━━━━⦅ 🥳 \`FUN\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .afk *<razón>*
-┃│◈ .infiel
-┃│◈ .proyectado
-┃│◈ .gay2 *@user*
-┃│◈ .lesbiana *@user*
-┃│◈ .pajero *@user*
-┃│◈ .pajera *@user*
-┃│◈ .puto *@user*
-┃│◈ .puta *@user*
-┃│◈ .manco *@user*
-┃│◈ .manca *@user*
-┃│◈ .rata *@user*
-┃│◈ .prostituta *@user*
-┃│◈ .prostituto *@user*
-┃│◈ .cumear @tag
-┃│◈ .dance *<@user>*
-┃│◈ .follar 🌌
-┃│◈ .formarpareja
-┃│◈ .gay *@user*
-┃│◈ .abrazar @tag
-┃│◈ .kill *<@user>*
-┃│◈ .kiss @tag
-┃│◈ .love *@user*
-┃│◈ .nombreninja *<texto>* 🌌
-┃│◈ .ola
-┃│◈ .personalidad *<nombre>*
-┃│◈ .piropo
-┃│◈ .pregunta *<texto>*
-┃│◈ .reto
-┃│◈ .top
-┃│◈ .hola
+┃│◈ 💤 .afk *<razón>*
+┃│◈ 💔 .infiel
+┃│◈ 📽️ .proyectado
+┃│◈ 🏳️‍🌈 .gay2 *@user*
+┃│◈ 👩‍❤️‍👩 .lesbiana *@user*
+┃│◈ 💦 .pajero *@user*
+┃│◈ 💦 .pajera *@user*
+┃│◈ 💅 .puto *@user*
+┃│◈ 💅 .puta *@user*
+┃│◈ ♿ .manco *@user*
+┃│◈ ♿ .manca *@user*
+┃│◈ 🐀 .rata *@user*
+┃│◈ 💄 .prostituta *@user*
+┃│◈ 💄 .prostituto *@user*
+┃│◈ 💦 .cumear @tag
+┃│◈ 💃 .dance *<@user>*
+┃│◈ 👉👌 .follar
+┃│◈ 💑 .formarpareja
+┃│◈ 🏳️‍🌈 .gay *@user*
+┃│◈ 🤗 .abrazar @tag
+┃│◈ 🔪 .kill *<@user>*
+┃│◈ 💋 .kiss @tag
+┃│◈ ❤️ .love *@user*
+┃│◈ 🥷 .nombreninja *<texto>*
+┃│◈ 👋 .ola
+┃│◈ 🧠 .personalidad *<nombre>*
+┃│◈ 😍 .piropo
+┃│◈ ❓ .pregunta *<texto>*
+┃│◈ 🎯 .reto
+┃│◈ 🔝 .top
+┃│◈ 👋 .hola
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`NSFW\` ⦆━━━━━
+┏━━━━━⦅ 🔞 \`NSFW\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .hvideo 🌌
-┃│◈ .genshin
-┃│◈ .swimsuit
-┃│◈ .schoolswimsuit
-┃│◈ .white
-┃│◈ .barefoot
-┃│◈ .touhou
-┃│◈ .gamecg
-┃│◈ .hololive
-┃│◈ .uncensored
-┃│◈ .sunglasses
-┃│◈ .glasses
-┃│◈ .weapon
-┃│◈ .shirtlift
-┃│◈ .chain
-┃│◈ .fingering
-┃│◈ .flatchest
-┃│◈ .torncloth
-┃│◈ .bondage
-┃│◈ .demon
-┃│◈ .wet
-┃│◈ .pantypull
-┃│◈ .headdress
-┃│◈ .headphone
-┃│◈ .tie
-┃│◈ .anusview
-┃│◈ .shorts
-┃│◈ .stokings
-┃│◈ .topless
-┃│◈ .beach
-┃│◈ .bunnygirl
-┃│◈ .bunnyear
-┃│◈ .idol
-┃│◈ .vampire
-┃│◈ .gun
-┃│◈ .maid
-┃│◈ .bra
-┃│◈ .nobra
-┃│◈ .bikini
-┃│◈ .whitehair
-┃│◈ .blonde
-┃│◈ .pinkhair
-┃│◈ .bed
-┃│◈ .ponytail
-┃│◈ .nude
-┃│◈ .dress
-┃│◈ .underwear
-┃│◈ .foxgirl
-┃│◈ .uniform
-┃│◈ .skirt
-┃│◈ .sex
-┃│◈ .sex2
-┃│◈ .sex3
-┃│◈ .breast
-┃│◈ .twintail
-┃│◈ .spreadpussy
-┃│◈ .tears
-┃│◈ .seethrough
-┃│◈ .breasthold
-┃│◈ .drunk
-┃│◈ .fateseries
-┃│◈ .spreadlegs
-┃│◈ .openshirt
-┃│◈ .headband
-┃│◈ .food
-┃│◈ .close
-┃│◈ .tree
-┃│◈ .nipples
-┃│◈ .erectnipples
-┃│◈ .horns
-┃│◈ .greenhair
-┃│◈ .wolfgirl
-┃│◈ .catgirl
-┃│◈ .rule34 *<búsqueda>*
-┃│◈ .ttvideo 🌌
-┃│◈ .xnxxdl *<url>*
-┃│◈ .xvideosdl *<url>*
+┃│◈ 🎥 .hvideo
+┃│◈ 🎮 .genshin
+┃│◈ 🩱 .swimsuit
+┃│◈ 🏫 .schoolswimsuit
+┃│◈ 🤍 .white
+┃│◈ 👣 .barefoot
+┃│◈ 🌸 .touhou
+┃│◈ 🎮 .gamecg
+┃│◈ 🎤 .hololive
+┃│◈ 🔓 .uncensored
+┃│◈ 🕶️ .sunglasses
+┃│◈ 👓 .glasses
+┃│◈ 🔫 .weapon
+┃│◈ 👕 .shirtlift
+┃│◈ ⛓️ .chain
+┃│◈ 👉👌 .fingering
+┃│◈ 🪟 .flatchest
+┃│◈ 👗 .torncloth
+┃│◈ 🪢 .bondage
+┃│◈ 😈 .demon
+┃│◈ 💦 .wet
+┃│◈ 🩲 .pantypull
+┃│◈ 👒 .headdress
+┃│◈ 🎧 .headphone
+┃│◈ 👔 .tie
+┃│◈ 🍑 .anusview
+┃│◈ 👖 .shorts
+┃│◈ 🧦 .stokings
+┃│◈ 👙 .topless
+┃│◈ 🏖️ .beach
+┃│◈ 🐰 .bunnygirl
+┃│◈ 🐇 .bunnyear
+┃│◈ 🎤 .idol
+┃│◈ 🦇 .vampire
+┃│◈ 🔫 .gun
+┃│◈ 🧹 .maid
+┃│◈ 👙 .bra
+┃│◈ 🚫 .nobra
+┃│◈ 👙 .bikini
+┃│◈ 🤍 .whitehair
+┃│◈ 👱‍♀️ .blonde
+┃│◈ 💖 .pinkhair
+┃│◈ 🛏️ .bed
+┃│◈ 👱‍♀️ .ponytail
+┃│◈ 🔞 .nude
+┃│◈ 👗 .dress
+┃│◈ 🩲 .underwear
+┃│◈ 🦊 .foxgirl
+┃│◈ 🏫 .uniform
+┃│◈ 👗 .skirt
+┃│◈ 👉👌 .sex
+┃│◈ 👉👌 .sex2
+┃│◈ 👉👌 .sex3
+┃│◈ 🍈 .breast
+┃│◈ 👧 .twintail
+┃│◈ 🍑 .spreadpussy
+┃│◈ 😢 .tears
+┃│◈ 🪟 .seethrough
+┃│◈ 👐 .breasthold
+┃│◈ 🍺 .drunk
+┃│◈ ⚔️ .fateseries
+┃│◈ 🦵 .spreadlegs
+┃│◈ 👔 .openshirt
+┃│◈ 🎀 .headband
+┃│◈ 🍔 .food
+┃│◈ 🔍 .close
+┃│◈ 🌳 .tree
+┃│◈ 🍒 .nipples
+┃│◈ 🍒 .erectnipples
+┃│◈ 😈 .horns
+┃│◈ 💚 .greenhair
+┃│◈ 🐺 .wolfgirl
+┃│◈ 🐱 .catgirl
+┃│◈ 🔞 .rule34 *<búsqueda>*
+┃│◈ 🎥 .ttvideo
+┃│◈ 🔞 .xnxxdl *<url>*
+┃│◈ 🔞 .xvideosdl *<url>*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`DATABASE\` ⦆━━━━━
+┏━━━━━⦅ 🗄️ \`DATABASE\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .delcmd *<texto>*
-┃│◈ .listcmd
-┃│◈ .delallcmd
+┃│◈ 🗑️ .delcmd *<texto>*
+┃│◈ 📋 .listcmd
+┃│◈ 💥 .delallcmd
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`OWNER\` ⦆━━━━━
+┏━━━━━⦅ 👑 \`OWNER\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .debugst
-┃│◈ .addxp <cantidad> @tag
-┃│◈ .addcoins <cantidad> @tag
-┃│◈ .expired *<días>*
-┃│◈ .addprem *@user*
-┃│◈ .autoadmin
-┃│◈ .banlist
-┃│◈ .ban *@user*
-┃│◈ .block <número>
-┃│◈ .blocklist
-┃│◈ .clearsessions
-┃│◈ .delxp <cantidad> @tag
-┃│◈ .delcoins <cantidad> @tag
-┃│◈ .deluser *@user*
-┃│◈ .deleteuser *@user*
-┃│◈ .delexpired
-┃│◈ .delplug
-┃│◈ .delprem *@user*
-┃│◈ .dldb
-┃│◈ .dsowner
-┃│◈ .fetch *( Link )*
-┃│◈ .getdb
-┃│◈ .getplug <nombre del plugin>
-┃│◈ .getrootfile <nombre del archivo>
-┃│◈ .getsesion
-┃│◈ .join *<link> <días>*
-┃│◈ .josuexp
-┃│◈ .listplugs
-┃│◈ .makeplug <name>|<code>
-┃│◈ .memoxp
-┃│◈ .nerftopxp
-┃│◈ .offallbot
-┃│◈ .okick *@user*
-┃│◈ .plugs <categoría>
-┃│◈ .resetuser *@user*
-┃│◈ .restart
-┃│◈ .rootlist
-┃│◈ .salir
-┃│◈ .saveplugin <nombre>
-┃│◈ .setxp <cantidad> @tag
-┃│◈ .setcoins <cantidad> @tag
-┃│◈ .setprice
-┃│◈ .unban *@user*
-┃│◈ .unblock <número>
-┃│◈ .update
+┃│◈ 🐛 .debugst
+┃│◈ 🌟 .addxp <cantidad> @tag
+┃│◈ 💰 .addcoins <cantidad> @tag
+┃│◈ ⏱️ .expired *<días>*
+┃│◈ 💎 .addprem *@user*
+┃│◈ 🤖 .autoadmin
+┃│◈ 🚫 .banlist
+┃│◈ 🔨 .ban *@user*
+┃│◈ ⛔ .block <número>
+┃│◈ 📋 .blocklist
+┃│◈ 🧹 .clearsessions
+┃│◈ ➖ .delxp <cantidad> @tag
+┃│◈ ➖ .delcoins <cantidad> @tag
+┃│◈ 🗑️ .deluser *@user*
+┃│◈ 🗑️ .deleteuser *@user*
+┃│◈ 🧹 .delexpired
+┃│◈ 🗑️ .delplug
+┃│◈ ❌ .delprem *@user*
+┃│◈ 📥 .dldb
+┃│◈ 👑 .dsowner
+┃│◈ 🔗 .fetch *( Link )*
+┃│◈ 🗄️ .getdb
+┃│◈ 🧩 .getplug <nombre del plugin>
+┃│◈ 📄 .getrootfile <nombre del archivo>
+┃│◈ 🔑 .getsesion
+┃│◈ ➕ .join *<link> <días>*
+┃│◈ 🌟 .josuexp
+┃│◈ 📋 .listplugs
+┃│◈ 🛠️ .makeplug <name>|<code>
+┃│◈ 💾 .memoxp
+┃│◈ 📉 .nerftopxp
+┃│◈ 🛑 .offallbot
+┃│◈ 🥾 .okick *@user*
+┃│◈ 📁 .plugs <categoría>
+┃│◈ 🔄 .resetuser *@user*
+┃│◈ 🔄 .restart
+┃│◈ 📂 .rootlist
+┃│◈ 🚪 .salir
+┃│◈ 💾 .saveplugin <nombre>
+┃│◈ ✏️ .setxp <cantidad> @tag
+┃│◈ ✏️ .setcoins <cantidad> @tag
+┃│◈ 💲 .setprice
+┃│◈ 🔓 .unban *@user*
+┃│◈ 🟢 .unblock <número>
+┃│◈ 🔄 .update
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`AUDIOS\` ⦆━━━━━
+┏━━━━━⦅ 🎵 \`AUDIOS\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .bass *<mp3/vn>*
-┃│◈ .blown *<mp3/vn>*
-┃│◈ .deep *<mp3/vn>*
-┃│◈ .earrape *<mp3/vn>*
-┃│◈ .fast *<mp3/vn>*
-┃│◈ .fat *<mp3/vn>*
-┃│◈ .nightcore *<mp3/vn>*
-┃│◈ .reverse *<mp3/vn>*
-┃│◈ .robot *<mp3/vn>*
-┃│◈ .slow *<mp3/vn>*
-┃│◈ .smooth *<mp3/vn>*
-┃│◈ .tupai *<mp3/vn>*
-┃│◈ .reverb *<mp3/vn>*
-┃│◈ .chorus *<mp3/vn>*
-┃│◈ .flanger *<mp3/vn>*
-┃│◈ .distortion *<mp3/vn>*
-┃│◈ .pitch *<mp3/vn>*
-┃│◈ .highpass *<mp3/vn>*
-┃│◈ .lowpass *<mp3/vn>*
-┃│◈ .underwater *<mp3/vn>*
+┃│◈ 🔊 .bass *<mp3/vn>*
+┃│◈ 💥 .blown *<mp3/vn>*
+┃│◈ 🌊 .deep *<mp3/vn>*
+┃│◈ 🙉 .earrape *<mp3/vn>*
+┃│◈ ⏩ .fast *<mp3/vn>*
+┃│◈ 🐘 .fat *<mp3/vn>*
+┃│◈ 🌙 .nightcore *<mp3/vn>*
+┃│◈ ⏪ .reverse *<mp3/vn>*
+┃│◈ 🤖 .robot *<mp3/vn>*
+┃│◈ 🐢 .slow *<mp3/vn>*
+┃│◈ ☁️ .smooth *<mp3/vn>*
+┃│◈ 🐿️ .tupai *<mp3/vn>*
+┃│◈ 🎵 .reverb *<mp3/vn>*
+┃│◈ 👥 .chorus *<mp3/vn>*
+┃│◈ 🚁 .flanger *<mp3/vn>*
+┃│◈ 🎸 .distortion *<mp3/vn>*
+┃│◈ 📈 .pitch *<mp3/vn>*
+┃│◈ 📻 .highpass *<mp3/vn>*
+┃│◈ 🔈 .lowpass *<mp3/vn>*
+┃│◈ 🌊 .underwater *<mp3/vn>*
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`ADVANCED\` ⦆━━━━━
+┏━━━━━⦅ 💻 \`ADVANCED\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ $
-┃│◈ <
-┃│◈ =<
+┃│◈ 💻 $
+┃│◈ 💻 <
+┃│◈ 💻 =<
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`CUSTOM\` ⦆━━━━━
+┏━━━━━⦅ ✨ \`CUSTOM\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .yachiyoxp
+┃│◈ 🌟 .yachiyoxp
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`ROLLWAIFU\` ⦆━━━━━
+┏━━━━━⦅ 🎲 \`ROLLWAIFU\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .ainfo
-┃│◈ .claimwf
-┃│◈ .c
-┃│◈ .miswaifus
-┃│◈ .harem
-┃│◈ .ginfo
-┃│◈ .gachainfo
-┃│◈ .sell
-┃│◈ .vender
-┃│◈ .haremshop
-┃│◈ .tiendawaifus
-┃│◈ .comprarwaifu
-┃│◈ .buycharacter
-┃│◈ .rollwaifu
-┃│◈ .vote
-┃│◈ .wimage *<name>*
-┃│◈ .wfinfo
+┃│◈ ℹ️ .ainfo
+┃│◈ 🎁 .claimwf
+┃│◈ 🎲 .c
+┃│◈ 👰 .miswaifus
+┃│◈ 👯‍♀️ .harem
+┃│◈ ℹ️ .ginfo
+┃│◈ ℹ️ .gachainfo
+┃│◈ 💰 .sell
+┃│◈ 💰 .vender
+┃│◈ 🏪 .haremshop
+┃│◈ 🏪 .tiendawaifus
+┃│◈ 💳 .comprarwaifu
+┃│◈ 💳 .buycharacter
+┃│◈ 🎲 .rollwaifu
+┃│◈ 🗳️ .vote
+┃│◈ 🖼️ .wimage *<name>*
+┃│◈ ℹ️ .wfinfo
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`AUTOMATION\` ⦆━━━━━
+┏━━━━━⦅ 🤖 \`AUTOMATION\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .onautodsowner
-┃│◈ .onautods
-┃│◈ .stopds
+┃│◈ ⚙️ .onautodsowner
+┃│◈ ⚙️ .onautods
+┃│◈ 🛑 .stopds
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━
 
-┏━━━━━⦅ \`ASISTENCIA\` ⦆━━━━━
+┏━━━━━⦅ 🤝 \`ASISTENCIA\` ⦆━━━━━
 ┃╭──────────────┄
-┃│◈ .asistente
+┃│◈ 👨‍🔧 .asistente
 ┃╰──────────────┄
 ┗━━━━━━━━━━━━━━━━`;
 
