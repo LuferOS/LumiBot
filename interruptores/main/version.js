@@ -8,22 +8,25 @@ export default {
       const botSettings = db.settings?.[botId] || {};
       const banner = botSettings.banner || 'https://telegra.ph/file/24fa902ead26340f3df2c.png';
       
-      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v5.0.2* ⋯》
-┊ ✨ *NOTAS DE LA ACTUALIZACIÓN (BAILEYS-NEXT 7.0.7)* ✨
+      const versionText = `╭⋯ ⚙️ *LUMIBOT FRAMEWORK: v6.0.0* ⋯》
+┊ ✨ *NUEVA VERSIÓN DE BAILEYS NEXT BY LUFEROS V6* ✨
 ┊┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 ┊ 🚀 *RENDIMIENTO EXTREMO Y ESTABILIDAD:*
-┊ ⊳ *Anti-OOM (Control de Memoria):* Actualizado el motor Baileys a la v7.0.7 con sistema de LRUCache. El bot no sobrepasará su límite de memoria aunque lleguen 100,000 mensajes, evitando colapsos del servidor.
-┊ ⊳ *Límite Inteligente de RAM:* El sistema operativo ahora restringe estrictamente la RAM del bot a un límite sano de 4GB.
-┊ ⊳ *Desconexión Segura:* Límite de 50,000 nodos offline. Si el bot se cae, ya no crasheará la RAM al volver a conectarse intentando leer millones de mensajes en un segundo.
+┊ ⊳ El motor ha sido actualizado y refactorizado. Ahora es 100% inmune al crasheo por botones interactivos de WhatsApp.
 ┊ 
-┊ 🛡️ *ANTI-BAN & RED:*
-┊ ⊳ *Arreglos Críticos:* Solucionado el Bug 463 y arreglado el bucle infinito en envíos masivos. Ahora los mensajes se envían instantáneos o bajo un estricto limitador anti-ban, tú decides.
+┊ 🎮 *REFATORIZACIÓN DE JUEGOS Y ECONOMÍA:*
+┊ ⊳ *Adiós a los botones:* Todos los juegos se han rescrito para jugarse directamente escribiendo en el chat.
+┊ ⊳ *Base de Datos:* Todo tu progreso, rachas de victorias y Coins ahora se guardan de forma permanente.
 ┊ 
-┊ 🛠️ *MEJORAS DE COMANDOS:*
-┊ ⊳ *.ping Avanzado:* El comando de estado ahora muestra telemetría real. Consumo exacto de RAM en GB (y su porcentaje), latencia pura del motor, y tiempos de actividad separados (Uptime) del Sistema y del Bot.
+┊ 🎲 *NUEVOS JUEGOS DEL CAOS GRUPAL:*
+┊ ⊳ *.ahorcado* - Adivina la palabra oculta. Autocompra vidas extras por 50 Coins para salvar al grupo.
+┊ ⊳ *.slots [apuesta]* - Casino tragamonedas clásico. Multiplica tu dinero o piérdelo todo.
+┊ ⊳ *.anagrama* - Descifra la palabra desordenada súper rápido y llévate 100 Coins.
+┊ ⊳ *.ruletarusa* - Apuesta tu vida. Sobrevive y gana 50 Coins, muere y paga 200 de funeral.
+┊ ⊳ *.duelo @usuario [apuesta]* - Peleas RNG callejeras por el pozo acumulado.
 ┊ 
-┊ 🚀 *INTEGRACIÓN DE IA CON SENTIMIENTOS:*
-┊ ⊳ *Motor de Diva (Mood Engine):* Ahora LumiBot tiene sentimientos y una barra de paciencia. (Manteniendo las mecánicas de bodas y toxicidad intactas).
+┊ 💡 *¿CÓMO JUGAR?*
+┊ Simplemente escribe el comando en el grupo. En juegos como el *.quiz*, *.ahorcado* y *.anagrama*, el bot te leerá automáticamente; no necesitas poner comandos extra, solo escribe la respuesta en el chat general. ¡Usa tus Coins sabiamente!
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
 
       let msgPayload = {};

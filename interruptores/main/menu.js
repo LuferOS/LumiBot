@@ -281,6 +281,21 @@ games: `┏━━〔 𝐆𝐚𝐦𝐞𝐬 & 𝐁𝐞𝐭𝐬 〕━━⬣
 ┃ ➪ .𝐪𝐮𝐢𝐳 • .𝐭𝐫𝐢𝐯𝐢𝐚
 ┃ ✦ Responde preguntas interactivas y gana coins y experiencia.
 
+┃ ➪ .𝐚𝐡𝐨𝐫𝐜𝐚𝐝𝐨 • .𝐡𝐚𝐧𝐠𝐦𝐚𝐧
+┃ ✦ Adivina la palabra letra por letra antes de que se dibuje el muñeco.
+
+┃ ➪ .𝐬𝐥𝐨𝐭𝐬 • .𝐭𝐫𝐚𝐠𝐚𝐦𝐨𝐧𝐞𝐝𝐚𝐬
+┃ ✦ Apuesta Coins en la ruleta de emojis. ¡Saca 3 iguales y gana el triple!
+
+┃ ➪ .𝐚𝐧𝐚𝐠𝐫𝐚𝐦𝐚
+┃ ✦ Descifra la palabra desordenada y gánate 100 Coins.
+
+┃ ➪ .𝐫𝐮𝐥𝐞𝐭𝐚𝐫𝐮𝐬𝐚 • .𝐫𝐫
+┃ ✦ Jala el gatillo. Si mueres, pierdes 200 Coins. Si vives, ganas 50.
+
+┃ ➪ .𝐝𝐮𝐞𝐥𝐨 @𝐮𝐬𝐮𝐚𝐫𝐢𝐨
+┃ ✦ Reta a alguien a una pelea a muerte por un pozo de Coins.
+
 ┃ ➪ .𝐭𝐨𝐩𝐪𝐮𝐢𝐳 • .𝐪𝐮𝐢𝐳𝐛𝐨𝐚𝐫𝐝
 ┃ ✦ Muestra a los más cerebritos del grupo/bot con más victorias en el Quiz.`,
 
