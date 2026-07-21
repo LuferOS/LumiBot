@@ -1,0 +1,202 @@
+[
+  {
+    "q": "¿Cuál es la capital de Canadá?",
+    "options": ["Toronto", "Vancouver", "Montreal", "Ottawa"],
+    "ans": "Ottawa"
+  },
+  {
+    "q": "¿Cuál es el símbolo químico del oro?",
+    "options": ["Ag", "Au", "Or", "Go"],
+    "ans": "Au"
+  },
+  {
+    "q": "¿Quién escribió 'Romeo y Julieta'?",
+    "options": ["Charles Dickens", "William Shakespeare", "Edgar Allan Poe", "Jane Austen"],
+    "ans": "William Shakespeare"
+  },
+  {
+    "q": "¿Cuál es el país más pequeño del mundo?",
+    "options": ["Mónaco", "Nauru", "Ciudad del Vaticano", "San Marino"],
+    "ans": "Ciudad del Vaticano"
+  },
+  {
+    "q": "¿En qué año se hundió el Titanic?",
+    "options": ["1905", "1912", "1918", "1923"],
+    "ans": "1912"
+  },
+  {
+    "q": "¿Quién pintó 'La persistencia de la memoria' (los relojes blandos)?",
+    "options": ["Pablo Picasso", "Salvador Dalí", "Frida Kahlo", "Claude Monet"],
+    "ans": "Salvador Dalí"
+  },
+  {
+    "q": "¿Cuántos huesos tiene un adulto humano en promedio?",
+    "options": ["206", "215", "198", "250"],
+    "ans": "206"
+  },
+  {
+    "q": "¿Cuál es la moneda oficial de Japón?",
+    "options": ["Yuan", "Won", "Yen", "Baht"],
+    "ans": "Yen"
+  },
+  {
+    "q": "¿Quién es considerado el inventor del teléfono?",
+    "options": ["Thomas Edison", "Nikola Tesla", "Alexander Graham Bell", "Guglielmo Marconi"],
+    "ans": "Alexander Graham Bell"
+  },
+  {
+    "q": "¿Cuál es el ingrediente principal del guacamole?",
+    "options": ["Tomate", "Aguacate", "Pimiento", "Cebolla"],
+    "ans": "Aguacate"
+  },
+  {
+    "q": "¿Qué planeta está más cerca del Sol?",
+    "options": ["Venus", "Marte", "Mercurio", "Tierra"],
+    "ans": "Mercurio"
+  },
+  {
+    "q": "¿Cuál es el desierto cálido más grande del mundo?",
+    "options": ["Desierto de Gobi", "Desierto de Atacama", "Desierto del Sahara", "Desierto de Kalahari"],
+    "ans": "Desierto del Sahara"
+  },
+  {
+    "q": "¿Quién pintó el techo de la Capilla Sixtina?",
+    "options": ["Sandro Botticelli", "Rafael", "Leonardo da Vinci", "Miguel Ángel"],
+    "ans": "Miguel Ángel"
+  },
+  {
+    "q": "¿Cuál es el mamífero más grande del mundo?",
+    "options": ["Elefante africano", "Rinoceronte blanco", "Ballena azul", "Jirafa"],
+    "ans": "Ballena azul"
+  },
+  {
+    "q": "¿Cuál es el primer elemento de la tabla periódica?",
+    "options": ["Helio", "Oxígeno", "Hidrógeno", "Carbono"],
+    "ans": "Hidrógeno"
+  },
+  {
+    "q": "¿Quién fue el primer ser humano en viajar al espacio?",
+    "options": ["Neil Armstrong", "Yuri Gagarin", "Buzz Aldrin", "John Glenn"],
+    "ans": "Yuri Gagarin"
+  },
+  {
+    "q": "¿Cuántos corazones tiene un pulpo?",
+    "options": ["Uno", "Dos", "Tres", "Cuatro"],
+    "ans": "Tres"
+  },
+  {
+    "q": "¿En qué año cayó el Muro de Berlín?",
+    "options": ["1987", "1989", "1991", "1993"],
+    "ans": "1989"
+  },
+  {
+    "q": "¿Quién descubrió la penicilina?",
+    "options": ["Louis Pasteur", "Marie Curie", "Alexander Fleming", "Rosalind Franklin"],
+    "ans": "Alexander Fleming"
+  },
+  {
+    "q": "¿Cuál es la estructura defensiva más larga del mundo?",
+    "options": ["Muro de Adriano", "Muralla China", "Línea Maginot", "Murallas de Constantinopla"],
+    "ans": "Muralla China"
+  },
+  {
+    "q": "¿Qué animal es el ave más rápida del mundo en picada?",
+    "options": ["Águila calva", "Halcón peregrino", "Avestruz", "Colibrí"],
+    "ans": "Halcón peregrino"
+  },
+  {
+    "q": "¿Cuál es el idioma oficial de Brasil?",
+    "options": ["Español", "Portugués", "Inglés", "Francés"],
+    "ans": "Portugués"
+  },
+  {
+    "q": "¿Cuántos colores tiene un arcoíris tradicionalmente?",
+    "options": ["Cinco", "Seis", "Siete", "Ocho"],
+    "ans": "Siete"
+  },
+  {
+    "q": "¿Cómo se llama el miedo extremo a las arañas?",
+    "options": ["Claustrofobia", "Aracnofobia", "Agorafobia", "Acrofobia"],
+    "ans": "Aracnofobia"
+  },
+  {
+    "q": "¿Qué continente tiene la mayor cantidad de países?",
+    "options": ["Asia", "África", "Europa", "América"],
+    "ans": "África"
+  },
+  {
+    "q": "¿Qué significan las siglas ADN?",
+    "options": ["Ácido desoxirribonucleico", "Ácido dinucleico", "Ácido ribonucleico", "Ácido dinitrógeno"],
+    "ans": "Ácido desoxirribonucleico"
+  },
+  {
+    "q": "¿Cuál es la fosa oceánica más profunda conocida?",
+    "options": ["Fosa de Tonga", "Fosa de Japón", "Fosa de las Marianas", "Fosa de Puerto Rico"],
+    "ans": "Fosa de las Marianas"
+  },
+  {
+    "q": "¿Cómo se llama un polígono de ocho lados?",
+    "options": ["Hexágono", "Heptágono", "Octágono", "Nonágono"],
+    "ans": "Octágono"
+  },
+  {
+    "q": "¿Quién es el cofundador principal de Microsoft junto a Paul Allen?",
+    "options": ["Steve Jobs", "Bill Gates", "Mark Zuckerberg", "Larry Page"],
+    "ans": "Bill Gates"
+  },
+  {
+    "q": "¿En qué ciudad se encuentra la estatua del Cristo Redentor?",
+    "options": ["Buenos Aires", "Lima", "Río de Janeiro", "Bogotá"],
+    "ans": "Río de Janeiro"
+  },
+  {
+    "q": "¿De qué país es originario el sushi?",
+    "options": ["China", "Corea del Sur", "Tailandia", "Japón"],
+    "ans": "Japón"
+  },
+  {
+    "q": "¿Qué gas compone la mayor parte de la atmósfera terrestre?",
+    "options": ["Oxígeno", "Dióxido de carbono", "Nitrógeno", "Hidrógeno"],
+    "ans": "Nitrógeno"
+  },
+  {
+    "q": "¿Cuál es el quinto planeta del sistema solar?",
+    "options": ["Marte", "Júpiter", "Saturno", "Urano"],
+    "ans": "Júpiter"
+  },
+  {
+    "q": "¿Quién es el autor de 'El Principito'?",
+    "options": ["Antoine de Saint-Exupéry", "Víctor Hugo", "Julio Verne", "Albert Camus"],
+    "ans": "Antoine de Saint-Exupéry"
+  },
+  {
+    "q": "¿Qué enfermedad es causada por la falta de vitamina C en el cuerpo humano?",
+    "options": ["Raquitismo", "Escorbuto", "Anemia", "Pelagra"],
+    "ans": "Escorbuto"
+  },
+  {
+    "q": "¿En qué país se inventó la pólvora?",
+    "options": ["India", "Egipto", "China", "Grecia"],
+    "ans": "China"
+  },
+  {
+    "q": "¿Cuál es el metal más abundante en la corteza terrestre?",
+    "options": ["Hierro", "Cobre", "Aluminio", "Oro"],
+    "ans": "Aluminio"
+  },
+  {
+    "q": "¿Qué instrumento musical de percusión y cuerda tiene teclas blancas y negras?",
+    "options": ["Guitarra", "Violín", "Flauta", "Piano"],
+    "ans": "Piano"
+  },
+  {
+    "q": "¿Cuál es la capital de Colombia?",
+    "options": ["Medellín", "Cali", "Bogotá", "Cartagena"],
+    "ans": "Bogotá"
+  },
+  {
+    "q": "¿Cuál es el hueso más pequeño del cuerpo humano?",
+    "options": ["Estribo", "Martillo", "Yunque", "Falange"],
+    "ans": "Estribo"
+  }
+]

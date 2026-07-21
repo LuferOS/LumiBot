@@ -15,11 +15,14 @@ system: `┏━━〔 𝐒𝐲𝐬𝐭𝐞𝐦 〕━━⬣
 ┃ ➪ .𝐫𝐞𝐩𝐨𝐫𝐭 • .𝐛𝐮𝐠 • .𝐬𝐮𝐠𝐞𝐫𝐞𝐧𝐜𝐢𝐚
 ┃ ✦ Envía un reporte de bug o sugerencia a los desarrolladores del bot.
 
-┃ ➪ .𝐬𝐞𝐭𝐛𝐚𝐧𝐧𝐞𝐫 • .𝐬𝐞𝐭𝐛𝐚𝐧𝐞𝐫
-┃ ✦ Cambia la imagen o gif del menú del bot.
+┃ ➪ .𝐫𝐞𝐩𝐨
+┃ ✦ Mira el código fuente del bot (Link Preview).
 
-┃ ➪ .𝐬𝐞𝐭𝐧𝐚𝐦𝐞 • .𝐬𝐞𝐭𝐛𝐨𝐭𝐧𝐚𝐦𝐞
-┃ ✦ Cambia el nombre del bot en el menú.
+┃ ➪ .𝐜𝐨𝐧𝐭𝐚𝐜𝐭𝐨
+┃ ✦ Obtén mi contacto directo (VCard).
+
+┃ ➪ .𝐛𝐨𝐭𝐨𝐧𝐞𝐬
+┃ ✦ Prueba los botones interactivos (Native Flow).
 
 ┃ ➪ .𝐬𝐞𝐭𝐩𝐫𝐞𝐟𝐢𝐱 • .𝐩𝐫𝐞𝐟𝐢𝐱
 ┃ ✦ Modifica prefijo.

@@ -75,13 +75,17 @@ async function resolveApkInfo(query) {
     }
   }
 
-  const searchA = await search(query)
-  if (!searchA || searchA.length === 0) return null
+  try {
+    const searchA = await search(query)
+    if (!searchA || searchA.length === 0) return null
 
-  const apt = await download(searchA[0].id)
-  if (!apt?.dllink) return null
+    const apt = await download(searchA[0].id)
+    if (!apt?.dllink) return null
 
-  return normalizeAptoideData(apt)
+    return normalizeAptoideData(apt)
+  } catch (e) {
+    return null
+  }
 }
 
 function normalizeAptoideData(apkInfo = {}) {

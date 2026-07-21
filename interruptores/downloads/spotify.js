@@ -1,5 +1,4 @@
 import fetch from 'node-fetch'
-import { proto, generateWAMessageFromContent } from 'baileys-next'
 import { lumiAnim } from '../../nucleo/utils.js'
 
 const CAUSAS_KEY = 'causa-60ca3fea34a7af43';
@@ -36,7 +35,37 @@ export default {
 
       await m.react('🕒')
 
-      // MODO BÚSQUEDA (Si no es un enlace, usa AlyaCore Search)
+      const downloadSpotify = async (targetUrl) => {
+          const fetchCausas = async () => {
+              const url = `https://rest.apicausas.xyz/api/v1/descargas/spotify?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`
+              const data = await fetchJsonRobust(url)
+              if (!data || !data.status) throw new Error('Causas fallo status')
+              return { provider: 'causas', data }
+          }
+          const fetchAlya = async () => {
+              const url = `https://api.alyacore.xyz/dl/spotify?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`
+              const data = await fetchJsonRobust(url)
+              if (!data || !data.status) throw new Error('Alya fallo status')
+              return { provider: 'alya', data }
+          }
+          
+          const winner = await Promise.any([fetchCausas(), fetchAlya()])
+          const data = winner.data
+
+          let audioUrl = data.url || data.download || data.audio || data.dl
+          if (data.data && data.data.url) audioUrl = data.data.url
+          if (data.data && data.data.download && data.data.download.url) audioUrl = data.data.download.url
+          if (data.data && data.data.dl) audioUrl = data.data.dl
+
+          if (!audioUrl) throw new Error('No audio URL found')
+          
+          return {
+              audioUrl,
+              title: data.data?.title || data.title || 'Spotify_LumiBot'
+          }
+      }
+
+      // MODO BÚSQUEDA (Descarga automáticamente el top 3)
       if (!text.includes('spotify.com')) {
           const searchData = await fetchJsonRobust(`https://api.alyacore.xyz/search/spotify?query=${encodeURIComponent(text)}&key=${ALYA_KEY}`);
 
@@ -46,80 +75,48 @@ export default {
           }
 
           const topResults = searchData.data.slice(0, 3);
-          const buttons = topResults.map((track, i) => {
-              return {
-                  name: "quick_reply",
-                  buttonParamsJson: JSON.stringify({
-                      display_text: `🎵 ${i + 1}: ${track.title.substring(0, 15)} - ${track.artist.substring(0, 10)}`,
-                      id: `${usedPrefix}${command} ${track.url}`
-                  })
+          
+          let animMsg = await lumiAnim(client, m, [`⏳ *Encontradas ${topResults.length} canciones...* 💅`, '📥 *Descargando y enviando el Top 3...* 💅'], 1500);
+
+          let sentCount = 0;
+          for (let track of topResults) {
+              try {
+                  const { audioUrl, title } = await downloadSpotify(track.url);
+                  const trackTitle = title !== 'Spotify_LumiBot' ? title : track.title;
+                  await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${trackTitle}.mp3` }, { quoted: m })
+                  sentCount++;
+              } catch (e) {
+                  console.log(`[LUMIBOT] Error descargando track de Spotify: ${track.title} - ${e.message}`);
               }
-          });
+          }
+          
+          if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+          
+          if (sentCount === 0) {
+              await m.react('✖️')
+              return m.reply(`🙄 *Hubo un error y no se pudo descargar ninguna de las canciones encontradas.* 💅`)
+          }
 
-          let fallbackText = `╭━━━━━━━━━━━━━━━╮\n┃ 🎧 *SPOTIFY SEARCH* \n┃━━━━━━━━━━━━━━━\n┃ 🔍 Resultados para: *${text}*\n`
-          topResults.forEach((track, i) => {
-              fallbackText += `┃ ${i + 1}. ${track.title} - ${track.artist}\n`
-          });
-          fallbackText += `╰━━━━━━━━━━━━━━━╯\n> 💡 *Usa los botones abajo para descargar, o envía:* ${usedPrefix}${command} [url]`
-
-          const msg = generateWAMessageFromContent(m.chat, {
-              viewOnceMessage: {
-                  message: {
-                      interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-                          body: proto.Message.InteractiveMessage.Body.create({ text: fallbackText }),
-                          footer: proto.Message.InteractiveMessage.Footer.create({ text: 'LumiBot 💅✨' }),
-                          header: proto.Message.InteractiveMessage.Header.create({ title: '', hasMediaAttachment: false }),
-                          nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-                              buttons: buttons
-                          })
-                      })
-                  }
-              }
-          }, { quoted: m })
-
-          await client.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
           await m.react('✔️')
           return
       }
 
-      // MODO DESCARGA (Si es un enlace, sigue usando la carrera Alya vs Causas)
+      // MODO DESCARGA DIRECTA (Si es un enlace)
       const targetUrl = args[0]
       let animMsg = await lumiAnim(client, m, ['⏳ *Conectando a los servidores...* 💅', '📥 *Descargando canción de Spotify...* 💅'], 1000);
 
-      const fetchCausas = async () => {
-          const url = `https://rest.apicausas.xyz/api/v1/descargas/spotify?apikey=${CAUSAS_KEY}&url=${encodeURIComponent(targetUrl)}`
-          const data = await fetchJsonRobust(url)
-          if (!data || !data.status) throw new Error('Causas fallo status')
-          return { provider: 'causas', data }
+      try {
+          const { audioUrl, title } = await downloadSpotify(targetUrl);
+          if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+          await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m })
+          await m.react('✔️')
+      } catch (e) {
+          if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
+          await m.react('✖️')
+          return m.reply(`🙄 *Las APIs fallaron o no devolvieron un enlace válido de audio* 💅`)
       }
-
-      const fetchAlya = async () => {
-          const url = `https://api.alyacore.xyz/dl/spotify?url=${encodeURIComponent(targetUrl)}&key=${ALYA_KEY}`
-          const data = await fetchJsonRobust(url)
-          if (!data || !data.status) throw new Error('Alya fallo status')
-          return { provider: 'alya', data }
-      }
-
-      const winner = await Promise.any([fetchCausas(), fetchAlya()])
-      const data = winner.data
-
-      let audioUrl = data.url || data.download || data.audio || data.dl
-      if (data.data && data.data.url) audioUrl = data.data.url
-      if (data.data && data.data.download && data.data.download.url) audioUrl = data.data.download.url
-      if (data.data && data.data.dl) audioUrl = data.data.dl
-
-      if (!audioUrl) {
-         await m.react('✖️')
-         return m.reply(`🙄 *Las APIs no devolvieron un enlace válido de audio* 💅`)
-      }
-      
-      const title = data.data?.title || data.title || 'Spotify_LumiBot'
-      if (animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
-      await client.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg', fileName: `${title}.mp3` }, { quoted: m })
-      await m.react('✔️')
 
     } catch (e) {
-      if (typeof animMsg !== 'undefined' && animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       console.error("[LUMIBOT DEBUG] Error en spotify.js:", e)
       await m.react('✖️')
       await m.reply(`🙄 *Todo explotó* 💅\n> Error: ${e.message}`)

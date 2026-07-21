@@ -26,14 +26,13 @@ export default {
       
       await client.sendMessage(m.chat, { 
         video: { url: video.no_watermark }, 
-        caption,
-        ...global.lumi
+        caption
       }, { quoted: m })
       
       await m.react('✅')
     } catch (e) {
       await m.react('❌')
-      await m.reply(`💀 *ERROR*\n\nNo se encontraron videos de terror: ${e.message}`, global.lumi)
+      await client.sendMessage(m.chat, { text: `💀 *ERROR*\n\nNo se pudo enviar el video de terror: ${e.message}` }, { quoted: m })
     }
   }
 }
