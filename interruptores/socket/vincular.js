@@ -3,7 +3,7 @@ export default {
   category: 'socket',
   run: async (client, m, args, usedPrefix, command) => {
     const db = global.db.data;
-    
+
     // Verificación de apertura de registros
     if (db.settings?.registrationEnabled === false) {
       return m.reply("╭⋯ ⚠️ *SISTEMA CERRADO* ⋯》\n┊ El sistema de subbots está temporalmente cerrado\n┊ por mantenimiento o falta de espacio.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》");
@@ -36,16 +36,16 @@ export default {
       const btnCode = {
         name: "quick_reply",
         buttonParamsJson: JSON.stringify({
-            display_text: `🔢 Generar Código`,
-            id: `.code`
+          display_text: `🔢 Generar Código`,
+          id: `.code`
         })
       };
 
       const btnQr = {
         name: "quick_reply",
         buttonParamsJson: JSON.stringify({
-            display_text: `📷 Mostrar QR`,
-            id: `.qr`
+          display_text: `📷 Mostrar QR`,
+          id: `.qr`
         })
       };
 
@@ -54,22 +54,22 @@ export default {
       const media = await prepareWAMessageMedia({ image: { url: imageUrl } }, { upload: client.waUploadToServer });
 
       const msg = generateWAMessageFromContent(m.chat, {
-          viewOnceMessage: {
-              message: {
-                  interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-                      body: proto.Message.InteractiveMessage.Body.create({ text: txt }),
-                      footer: proto.Message.InteractiveMessage.Footer.create({ text: 'LumiBot Security 💅✨' }),
-                      header: proto.Message.InteractiveMessage.Header.create({ 
-                          title: '', 
-                          hasMediaAttachment: true,
-                          imageMessage: media.imageMessage
-                      }),
-                      nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-                          buttons: [btnCode, btnQr]
-                      })
-                  })
-              }
+        viewOnceMessage: {
+          message: {
+            interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+              body: proto.Message.InteractiveMessage.Body.create({ text: txt }),
+              footer: proto.Message.InteractiveMessage.Footer.create({ text: 'LumiBot Security 💅✨' }),
+              header: proto.Message.InteractiveMessage.Header.create({
+                title: '',
+                hasMediaAttachment: true,
+                imageMessage: media.imageMessage
+              }),// MENSAJE INTERACTIVO
+              nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+                buttons: [btnCode, btnQr]
+              })
+            })
           }
+        }
       }, { quoted: m, userJid: client.user?.jid });
 
       await client.relayMessage(m.chat, msg.message, { messageId: msg.key.id });

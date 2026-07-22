@@ -67,7 +67,7 @@ export default {
         await m.react('❌')
         return client.reply(
           m.chat,
-          `💅 El enlace de *MediaFire* es inválido o ya no está disponible.\n\n🌱 Verifica el link e inténtalo de nuevo.`,
+          `💅 El enlace de *Mediafire* es inválido o ya no está disponible.\n\n🌱 Verifica el link e inténtalo de nuevo.`,
           m,
           global.lumi,
         )
@@ -96,7 +96,6 @@ ${scraped.size ? `🙄 *Peso:* ${scraped.size}\n` : ''}${scraped.uploaded ? `�
         { document: { url: scraped.downloadLink }, mimetype: tipo, fileName: title },
         { quoted: m }
       )
-      
       await m.react('✅')
     } catch (e) {
       await m.react('❌')
