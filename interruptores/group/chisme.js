@@ -8,7 +8,7 @@ export default {
       const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(() => null) : null;
       if (!groupMetadata) return m.reply('🙄 *Amiga, esto es por privado. Los chismes son para el grupo, no seas egoísta.* 💅');
     
-    const participants = groupMetadata.participants;
+    const participants = groupMetadata.participants.filter(p => !p.id.endsWith('@lid'));
     if (participants.length < 2) return m.reply('🙄 *Estás sol@ en el grupo, qué chisme te voy a contar? Tus propias penas?* 🤡');
     
     const randomUser = participants[Math.floor(Math.random() * participants.length)].id;

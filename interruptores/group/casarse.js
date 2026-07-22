@@ -16,11 +16,14 @@ export default {
         global.sqlDb.get(`SELECT * FROM marriages WHERE user1 = ? OR user2 = ? OR user1 = ? OR user2 = ?`, [m.sender, m.sender, target, target], (err, row) => {
             if (err) return m.reply("❌ Error consultando el registro civil.");
             
-            if (row) {
-                if ((row.user1 === m.sender && row.user2 === target) || (row.user1 === target && row.user2 === m.sender)) {
+            const senderMarriedJSON = global.db.data.users[m.sender]?.marry;
+            const targetMarriedJSON = global.db.data.users[target]?.marry;
+
+            if (row || senderMarriedJSON || targetMarriedJSON) {
+                if ((row && ((row.user1 === m.sender && row.user2 === target) || (row.user1 === target && row.user2 === m.sender))) || senderMarriedJSON === target) {
                     return m.reply("🙄 Ridículos, ya están casados. Dejen el show.");
                 }
-                const senderMarried = row.user1 === m.sender || row.user2 === m.sender;
+                const senderMarried = (row && (row.user1 === m.sender || row.user2 === m.sender)) || senderMarriedJSON;
                 if (senderMarried) {
                     return m.reply("🚨 ¡ESCÁNDALO! Estás intentando casarte pero ya tienes esposo/a. ¿Eres polígamo o qué? Primero divórciate. 💅");
                 } else {
@@ -38,6 +41,9 @@ export default {
                     if (err2) return m.reply("❌ Error en la boda.");
                     
                     delete global.proposals[m.sender];
+                    
+                    if (global.db.data.users[m.sender]) global.db.data.users[m.sender].marry = target;
+                    if (global.db.data.users[target]) global.db.data.users[target].marry = m.sender;
                     
                     const caption = `╭⋯ 💍 *NUEVO MATRIMONIO* ⋯》
 ┊ ⊳ ¡Felicidades! @${m.sender.split('@')[0]} y @${target.split('@')[0]} se acaban de casar oficialmente.
