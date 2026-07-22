@@ -90,9 +90,9 @@ export default {
 
                     const memoryGame = activeMemory.get(chatId);
 
-                    // Verifica si el texto enviado coincide exactamente con la secuencia
-                    // O si solo ignoramos texto normal y evaluamos si contiene los emojis, pero para memoria tiene que ser exacto.
-                    if (guess === memoryGame.sequence) {
+                    // Verifica si el texto coincide quitando espacios y el caracter invisible de emojis (\uFE0F)
+                    const normalizeEmojis = (str) => str.replace(/[\s\uFE0F]/g, '');
+                    if (normalizeEmojis(guess) === normalizeEmojis(memoryGame.sequence)) {
                         clearTimeout(memoryGame.timeout);
                         activeMemory.delete(chatId);
 
