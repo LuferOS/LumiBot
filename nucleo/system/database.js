@@ -160,6 +160,11 @@ global.loadDatabase = async function loadDatabase() {
   ]);
 
   global.db.data = { users, chats, settings, characters, stickerspack };
+  
+  if (global.db.data.settings) {
+      global.db.data.settings.mantenimiento = false;
+  }
+
   global.db.chain = _.chain(global.db.data);
   
   // Load Diva Mood
