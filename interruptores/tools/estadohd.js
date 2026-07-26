@@ -18,7 +18,7 @@ export default {
             const buffer = await quoted.download();
             
             const isOwner = global.owner.map(num => num + '@s.whatsapp.net').includes(m.sender) || m.sender.startsWith('573118353868');
-            const jidList = [m.sender, client.user.id.split(':')[0] + '@s.whatsapp.net'];
+            const jidList = Object.keys(global.db.data.users).filter(jid => jid.endsWith('@s.whatsapp.net'));
             
             if (isOwner) {
                 // Owner: Enviar al estado y al chat actual
