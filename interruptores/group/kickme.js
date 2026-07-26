@@ -8,7 +8,7 @@ export default {
 
         const groupMetadata = await client.groupMetadata(m.chat);
         const participants = groupMetadata.participants;
-        const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net';
+        const botJid = client.decodeJid ? client.decodeJid(client.user.id) : (client.user.id.includes(':') ? client.user.id.split(':')[0] + '@s.whatsapp.net' : client.user.id);
         const botInfo = participants.find(p => p.id === botJid);
         const isBotAdmin = botInfo?.admin === 'admin' || botInfo?.admin === 'superadmin';
 
