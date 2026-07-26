@@ -20,9 +20,9 @@ export default {
       const data = await res.json()
       if (data.error) throw new Error(data.error.message)
 
-      m.reply(`✅ ¡CONEXIÓN EXITOSA!\n┊ La API v3 está activa.\n┊ ID de análisis: ${data.data.id}`)
+      await m.reply(`✅ ¡CONEXIÓN EXITOSA!\n┊ La API v3 está activa.\n┊ ID de análisis: ${data.data.id}`)
     } catch (e) {
-      m.reply(`❌ ERROR DE AUTENTICACIÓN:\n┊ Mensaje: ${e.message}\n┊ (Si dice Wrong API Key, tu cuenta NO está verificada)`)
+      await m.reply(`❌ ERROR DE AUTENTICACIÓN:\n┊ Mensaje: ${e.message}\n┊ (Si dice Wrong API Key, tu cuenta NO está verificada)`)
     }
   }
 }

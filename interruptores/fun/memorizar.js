@@ -56,10 +56,10 @@ export default {
         });
 
         // Activamos el juego
-        const timeout = setTimeout(() => {
+        const timeout = setTimeout(async () => {
             if (activeMemory.has(chat)) {
                 activeMemory.delete(chat);
-                client.sendMessage(chat, { text: `⏰ *¡Tiempo!* Nadie pudo recordar la secuencia a tiempo.\n> La secuencia era: ${sequence}` });
+                await client.sendMessage(chat, { text: `⏰ *¡Tiempo!* Nadie pudo recordar la secuencia a tiempo.\n> La secuencia era: ${sequence}` });
             }
         }, answerTime); // Tienen tiempo limite para responder
 

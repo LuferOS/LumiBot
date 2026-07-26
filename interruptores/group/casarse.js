@@ -13,7 +13,7 @@ export default {
         if (!global.sqlDb) return m.reply("❌ Error 404: El registro civil está caído.");
 
         // Check if either is already married
-        global.sqlDb.get(`SELECT * FROM marriages WHERE user1 = ? OR user2 = ? OR user1 = ? OR user2 = ?`, [m.sender, m.sender, target, target], (err, row) => {
+        global.sqlDb.get(`SELECT * FROM marriages WHERE user1 = ? OR user2 = ? OR user1 = ? OR user2 = ?`, [m.sender, m.sender, target, target], async (err, row) => {
             if (err) return m.reply("❌ Error consultando el registro civil.");
             
             const senderMarriedJSON = global.db.data.users[m.sender]?.marry;
@@ -64,7 +64,7 @@ export default {
 ┊ 📝 @${target.split('@')[0]}, para aceptar, simplemente responde a este mensaje o escribe *.casarse @${m.sender.split('@')[0]}*.
 ╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`;
                 
-                client.sendMessage(m.chat, { text: caption, mentions: [m.sender, target] }, { quoted: m });
+                await client.sendMessage(m.chat, { text: caption, mentions: [m.sender, target] }, { quoted: m });
             }
         });
     }

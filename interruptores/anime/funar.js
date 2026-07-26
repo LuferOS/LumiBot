@@ -32,7 +32,7 @@ export default {
         throw new Error('No URL');
       }
     } catch (e) {
-      client.sendMessage(m.chat, { text: caption, mentions: [mentioned] }, { quoted: m });
+      await client.sendMessage(m.chat, { text: caption, mentions: [mentioned] }, { quoted: m });
     }
   }
 }

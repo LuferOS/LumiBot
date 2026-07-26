@@ -40,7 +40,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en topquiz:', e);
-      m.reply('🙄 *No pude cargar el ranking de cerebritos.*');
+      await m.reply('🙄 *No pude cargar el ranking de cerebritos.*');
     }
   }
 };

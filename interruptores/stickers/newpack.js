@@ -19,9 +19,9 @@ export default {
       const newPack = { id: Date.now().toString(), lastModified: Date.now().toString(), name, author: '💖 HATSUNE MIKU', desc: `Paquete de stickers creado por ${dev}`, stickers: [], spackpublic: 0 }
       packs.push(newPack)
       db.stickerspack[m.sender].packs = packs
-      m.reply(`✨ El paquete de stickers \`${name}\` ha sido creado exitosamente!\n> Puedes agregar stickers respondiendo a uno usando *${usedPrefix}addsticker ${name}*!`, m, global.lumi)
+      await m.reply(`✨ El paquete de stickers \`${name}\` ha sido creado exitosamente!\n> Puedes agregar stickers respondiendo a uno usando *${usedPrefix}addsticker ${name}*!`, m, global.lumi)
     } catch (e) {
-      m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   }
 }

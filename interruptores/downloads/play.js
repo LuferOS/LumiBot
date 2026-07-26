@@ -422,7 +422,7 @@ export async function processYouTubeButton(conn, m) {
         const params = JSON.parse(paramsJson)
         buttonId = params.id
       }
-    } catch (e) {}
+    } catch (e) { console.error('[LUMIBOT ERROR] En ' + __filename + ':', e.message || e); }
   }
   if (!buttonId) return false
   let option = null

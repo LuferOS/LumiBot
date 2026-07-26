@@ -47,7 +47,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en apostar:', e)
-      m.reply('🙄 *Hubo un error en el casino. El dinero ha sido reembolsado.*')
+      await m.reply('🙄 *Hubo un error en el casino. El dinero ha sido reembolsado.*')
     }
   }
 }

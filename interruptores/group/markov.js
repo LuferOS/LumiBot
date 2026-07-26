@@ -20,12 +20,12 @@ export default {
 
     if (args[0].toLowerCase() === 'on') {
       chat.markov = true;
-      m.reply(`╭⋯ 🧠 *CEREBRO MARKOVIANO: ACTIVADO* ⋯》\n┊ Desde este momento, empezaré a recolectar contexto y a aprender del grupo.\n┊ ¡Cuidado con lo que dicen, porque lo usaré en su contra! 😈\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+      await m.reply(`╭⋯ 🧠 *CEREBRO MARKOVIANO: ACTIVADO* ⋯》\n┊ Desde este momento, empezaré a recolectar contexto y a aprender del grupo.\n┊ ¡Cuidado con lo que dicen, porque lo usaré en su contra! 😈\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     } else if (args[0].toLowerCase() === 'off') {
       chat.markov = false;
-      m.reply(`╭⋯ 💤 *CEREBRO MARKOVIANO: DESACTIVADO* ⋯》\n┊ He apagado mi inteligencia pasiva en este grupo. Ya no responderé al azar.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+      await m.reply(`╭⋯ 💤 *CEREBRO MARKOVIANO: DESACTIVADO* ⋯》\n┊ He apagado mi inteligencia pasiva en este grupo. Ya no responderé al azar.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     } else {
-      m.reply(`🙄 *Bruh...* Solo entiendo "on" y "off".`);
+      await m.reply(`🙄 *Bruh...* Solo entiendo "on" y "off".`);
     }
   }
 };

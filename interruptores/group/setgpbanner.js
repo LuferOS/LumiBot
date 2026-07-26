@@ -12,7 +12,7 @@ export default {
     if (!img) return m.reply('💋 No se pudo descargar la imagen.')
     try {
       await client.updateProfilePicture(m.chat, img)
-      m.reply('💖 La imagen del grupo se actualizó con éxito.')
+      await m.reply('💖 La imagen del grupo se actualizó con éxito.')
     } catch (e) {
       return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }

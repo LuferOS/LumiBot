@@ -25,7 +25,7 @@ export default {
       })
       await client.sendMessage(m.chat, { text, mentions: [m.sender], ...global.lumi }, { quoted: m })
     } catch (e) {
-      m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   }
 }

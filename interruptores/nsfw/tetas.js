@@ -70,7 +70,7 @@ export default {
     } catch (error) {
       console.error('[AlyaBoobs] Error:', error)
       await m.react('❌')
-      m.reply(`❌ Error: ${error.message}`)
+      await m.reply(`❌ Error: ${error.message}`)
     }
   }
 }

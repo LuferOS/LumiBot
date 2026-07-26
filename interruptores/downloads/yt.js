@@ -27,8 +27,8 @@ export default {
 > 🙄 Subscriptores › ${v.subCountLabel} (${v.subCount})
 > 🌱 Videos totales › ${v.videoCount}`.trim()
         }}).filter((v) => v).join('\n\n╾۪〬─ ┄۫╌ ׄ┄┈۪ ─〬 ׅ┄╌ ۫┈ ─ׄ─۪〬 ┈ ┄۫╌ ┈┄۪ ─ׄ〬╼\n\n')
-    client.sendMessage(m.chat, { image: Ibuff, caption: teks2 }, { quoted: m }).catch((e) => {
-      m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+    client.sendMessage(m.chat, { image: Ibuff, caption: teks2 }, { quoted: m }).catch(async (e) => {
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     })
   },
 };

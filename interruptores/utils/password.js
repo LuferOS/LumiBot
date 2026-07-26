@@ -22,6 +22,6 @@ export default {
       `\`${password}\`\n\n` +
       `_Aviso: No guardamos registros de las claves generadas. Cópiela y destrúyala._`;
       
-    m.reply(txt);
+    await m.reply(txt);
   }
 };

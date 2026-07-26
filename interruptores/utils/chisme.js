@@ -40,7 +40,7 @@ export default {
             
         } catch (e) {
             console.error("[LUMIBOT CHISME] Error:", e);
-            m.reply("❌ Error en el sistema de chismes.");
+            await m.reply("❌ Error en el sistema de chismes.");
         }
     }
 }

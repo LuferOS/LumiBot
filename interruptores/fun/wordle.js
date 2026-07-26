@@ -160,7 +160,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en wordle.js:', e);
-      m.reply('🙄 *Las letras se desordenaron.* (Error del sistema)');
+      await m.reply('🙄 *Las letras se desordenaron.* (Error del sistema)');
     }
   }
 };

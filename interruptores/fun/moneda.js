@@ -44,7 +44,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en moneda.js:', e);
-      m.reply('🙄 *La moneda se cayó al piso.* (Error del sistema)');
+      await m.reply('🙄 *La moneda se cayó al piso.* (Error del sistema)');
     }
   }
 };

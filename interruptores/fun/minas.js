@@ -106,7 +106,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en minas.js:', e);
-      m.reply('🙄 *El campo minado explotó solo.* (Error del sistema)');
+      await m.reply('🙄 *El campo minado explotó solo.* (Error del sistema)');
     }
   }
 };

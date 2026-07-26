@@ -82,7 +82,7 @@ export default {
       await m.react('✔️');
     } catch (error) {
       await m.react('✖️');
-      client.reply(m.chat, `🙄 Error al convertir el sticker.\n${error.message}`, m);
+      await client.reply(m.chat, `🙄 Error al convertir el sticker.\n${error.message}`, m);
     }
   }
 };

@@ -101,7 +101,7 @@ export default {
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error en qs.js:", e);
       await m.react('✖️');
-      m.reply(`❌ Fallo en la conexión con el servidor de citas.\nDetalles: ${e.message}`);
+      await m.reply(`❌ Fallo en la conexión con el servidor de citas.\nDetalles: ${e.message}`);
     }
   }
 };

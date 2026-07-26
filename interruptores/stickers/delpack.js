@@ -20,9 +20,9 @@ export default {
       const deletedPack = packs[packIndex]
       packs.splice(packIndex, 1)
       db.stickerspack[m.sender].packs = packs
-      m.reply(`👑 El paquete de stickers \`${deletedPack.name}\` ha sido eliminado.`, m, global.lumi)
+      await m.reply(`👑 El paquete de stickers \`${deletedPack.name}\` ha sido eliminado.`, m, global.lumi)
     } catch (e) {
-      m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   }
 }

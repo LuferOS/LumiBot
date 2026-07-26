@@ -90,7 +90,7 @@ export default {
           inviteInfo = await client.groupGetInviteInfo(inviteUrl)
           info = await inviteGroupInfo(inviteInfo)
         } catch (e) {
-          m.reply('╭⋯ ❌ *ERROR DE ESCANEO* ⋯》\n┊ Objetivo no encontrado o enlace revocado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》')
+          await m.reply('╭⋯ ❌ *ERROR DE ESCANEO* ⋯》\n┊ Objetivo no encontrado o enlace revocado.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》')
           return
         }
       }
@@ -143,7 +143,7 @@ export default {
               }
             }}, { quoted: m })
           }
-          newsletterInfo.id ? client.sendMessage(m.chat, { text: `[ ID de Base de Datos: ${newsletterInfo.id} ]` }, { quoted: null }) : ''
+          newsletterInfo.id ? await client.sendMessage(m.chat, { text: `[ ID de Base de Datos: ${newsletterInfo.id} ]` }, { quoted: null }) : ''
         } catch (e) {
           console.error("[LUMIBOT DEBUG] Error en inspect.js:", e);
           await m.reply(`╭⋯ ❌ *FALLO CRÍTICO* ⋯》\n┊ El módulo de inspección colapsó.\n┊ Detalles: ${e.message}\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`)

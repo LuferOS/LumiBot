@@ -76,7 +76,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en carrera.js:', e);
-      m.reply('🙄 *Los caballos se escaparon.* (Error del sistema)');
+      await m.reply('🙄 *Los caballos se escaparon.* (Error del sistema)');
     }
   }
 };

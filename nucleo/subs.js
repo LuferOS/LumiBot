@@ -141,7 +141,7 @@ const sock = makeWASocket({
                  console.error('[LUMIBOT] Error requestPairingCode:', e);
                  return null;
              }),
-             m.reply(caption)
+             await m.reply(caption)
           ]);
 
           if (codeGenRaw) {
@@ -156,7 +156,7 @@ const sock = makeWASocket({
               } catch {}
             }, 60000);
           } else {
-            m.reply(MSG.errorInternal("WhatsApp rechazó la petición del código. El número podría ser inválido o estar bloqueado."));
+            await m.reply(MSG.errorInternal("WhatsApp rechazó la petición del código. El número podría ser inválido o estar bloqueado."));
             delete commandFlags[senderId];
           }
         } catch (e) {
@@ -291,7 +291,7 @@ async function joinChannels(client) {
     await client.groupAcceptInvite("LtKXaxng3L4GdJjYgRoMG1").catch(() => {});
     const meta = await client.newsletterMetadata("invite", "0029VbCyJt3LI8YXFbH7QU1G").catch(() => null);
     if (meta && meta.id) await client.newsletterFollow(meta.id).catch(() => {});
-  } catch (e) {}
+  } catch (e) { console.error('[LUMIBOT ERROR] En ' + __filename + ':', e.message || e); }
 
   for (const value of Object.values(global.lumi || {})) {
     if (typeof value === 'string' && value.endsWith('@newsletter')) {

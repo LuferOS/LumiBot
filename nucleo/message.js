@@ -332,8 +332,8 @@ export async function smsg(client, m, store) {
       }
       m.quoted.fakeObj = proto.WebMessageInfo.fromObject({ key: { remoteJid: m.quoted.chat, fromMe: m.quoted.fromMe, id: m.quoted.id }, message: m.quoted, ...(m.isGroup ? { participant: m.quoted.sender } : {}) })
       m.quoted.download = () => client.downloadMediaMessage(m.quoted)
-      m.quoted.delete = () => {
-        client.sendMessage(m.quoted.chat, { delete: { remoteJid: m.quoted.chat, fromMe: m.isBotAdmin ? false : true, id: m.quoted.id, participant: m.quoted.sender }})
+      m.quoted.delete = async () => {
+        await client.sendMessage(m.quoted.chat, { delete: { remoteJid: m.quoted.chat, fromMe: m.isBotAdmin ? false : true, id: m.quoted.id, participant: m.quoted.sender }})
       }
     }
   }
@@ -347,7 +347,7 @@ export async function smsg(client, m, store) {
     try {
       await client.sendPresenceUpdate('composing', m.chat)
       await new Promise(resolve => setTimeout(resolve, 1500))
-    } catch (e) {}
+    } catch (e) { console.error('[LUMIBOT ERROR] En ' + __filename + ':', e.message || e); }
 
     const quoted = m
     const chat = m.chat

@@ -24,8 +24,8 @@ export default {
           console.log(`👑 Sesión de ${cleanId} eliminada de ${sessionPath}`)
         }
       }, 2000)
-      setTimeout(() => {
-        m.reply(`🔥 Sesión finalizada correctamente.\nPuedes reconectarte usando *${usedPrefix}code*`)
+      setTimeout(async () => {
+        await m.reply(`🔥 Sesión finalizada correctamente.\nPuedes reconectarte usando *${usedPrefix}code*`)
       }, 3000)
     } catch (e) {
       await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)

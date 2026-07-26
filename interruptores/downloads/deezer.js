@@ -48,7 +48,7 @@ export default {
     } catch (e) {
       if (typeof animMsg !== 'undefined' && animMsg) await client.sendMessage(m.chat, { delete: animMsg.key }).catch(()=>{});
       await m.react('✖️')
-      m.reply(`🙄 *Hubo un error.* Intenta de nuevo. 💅\n> ${e.message}`)
+      await m.reply(`🙄 *Hubo un error.* Intenta de nuevo. 💅\n> ${e.message}`)
     }
   }
 }

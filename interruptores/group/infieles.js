@@ -5,7 +5,7 @@ export default {
         if (!m.isGroup) return m.reply("🙄 Esto es para grupos.");
         if (!global.sqlDb) return m.reply("❌ Error 404: El registro civil está caído.");
 
-        global.sqlDb.all(`SELECT jid, points FROM infiel_stats ORDER BY points DESC LIMIT 10`, (err, rows) => {
+        global.sqlDb.all(`SELECT jid, points FROM infiel_stats ORDER BY points DESC LIMIT 10`, async (err, rows) => {
             if (err) return m.reply("❌ Error consultando el archivo de la vergüenza.");
             
             if (!rows || rows.length === 0) {
@@ -24,7 +24,7 @@ export default {
 
             const mentions = rows.map(r => r.jid);
 
-            client.sendMessage(m.chat, { text, mentions }, { quoted: m });
+            await client.sendMessage(m.chat, { text, mentions }, { quoted: m });
         });
     }
 }

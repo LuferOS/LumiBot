@@ -10,7 +10,7 @@ export default {
 
     try {
       await client.groupUpdateDescription(m.chat, newDesc)
-      m.reply('✨ La descripción del grupo se modificó correctamente.')
+      await m.reply('✨ La descripción del grupo se modificó correctamente.')
     } catch (e) {
       return m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }

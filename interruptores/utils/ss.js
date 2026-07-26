@@ -6,7 +6,7 @@ export default {
     let url = args[0];
     if (!url.startsWith('http')) url = 'https://' + url;
     
-    m.reply("📸 Tomando captura web... (En mantenimiento temporal)");
+    await m.reply("📸 Tomando captura web... (En mantenimiento temporal)");
     // Aquí iría el API para ssweb. Placeholder por ahora.
   }
 };

@@ -57,7 +57,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en slots.js:', e);
-      m.reply('🙄 *El casino está cerrado por fallas técnicas.*');
+      await m.reply('🙄 *El casino está cerrado por fallas técnicas.*');
     }
   }
 };

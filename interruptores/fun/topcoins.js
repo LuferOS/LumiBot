@@ -42,7 +42,7 @@ export default {
             
         } catch (e) {
             console.error('[TOPCOINS] Error:', e);
-            client.reply(m.chat, 'Ocurrió un error al cargar el top de coins.', m);
+            await client.reply(m.chat, 'Ocurrió un error al cargar el top de coins.', m);
         }
     }
 };

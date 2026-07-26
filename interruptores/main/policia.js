@@ -29,7 +29,7 @@ export default {
 
         return new Promise((resolve) => {
             // Revisar si el sender está casado
-            global.sqlDb.get(`SELECT * FROM marriages WHERE user1 = ? OR user2 = ?`, [m.sender, m.sender], (err, row) => {
+            global.sqlDb.get(`SELECT * FROM marriages WHERE user1 = ? OR user2 = ?`, [m.sender, m.sender], async (err, row) => {
                 if (err || !row) return resolve(false); // No está casado, todo legal.
 
                 const spouse = row.user1 === m.sender ? row.user2 : row.user1;
@@ -50,7 +50,7 @@ export default {
 ┊ ¡Venga a recoger a su basura infiel, @${spouse.split('@')[0]}!
 ┊ Esto cuenta como +1 punto en la tabla de infieles. Qué asco de persona. 💅`;
 
-                    client.sendMessage(m.chat, { text: caption, mentions: [m.sender, target, spouse] }, { quoted: m });
+                    await client.sendMessage(m.chat, { text: caption, mentions: [m.sender, target, spouse] }, { quoted: m });
                     
                     // Retornar true para BLOQUEAR el comando original
                     return resolve(true); 

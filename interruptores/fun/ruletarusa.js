@@ -41,7 +41,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en ruletarusa.js:', e);
-      m.reply('🙄 *El revólver se atascó.*');
+      await m.reply('🙄 *El revólver se atascó.*');
     }
   }
 };

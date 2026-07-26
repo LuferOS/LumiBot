@@ -20,7 +20,7 @@ export default {
 
     } catch (e) {
       console.error("[LUMIBOT DESACTIVATE] Error:", e);
-      m.reply("❌ Error en el comando de desactivación.");
+      await m.reply("❌ Error en el comando de desactivación.");
     }
   }
 };

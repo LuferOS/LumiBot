@@ -19,7 +19,7 @@ export default {
             await client.groupParticipantsUpdate(m.chat, [target], "remove");
         } catch (e) {
             console.error("Error al expulsar:", e);
-            m.reply("❌ Ocurrió un error al intentar expulsarlo. Tal vez tiene antiban o hubo un fallo de red.");
+            await m.reply("❌ Ocurrió un error al intentar expulsarlo. Tal vez tiene antiban o hubo un fallo de red.");
         }
     }
 }

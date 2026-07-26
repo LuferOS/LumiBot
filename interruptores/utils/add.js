@@ -44,7 +44,7 @@ export default {
 
             // Si no está, intentamos agregarlo a la fuerza
             if (!isParticipant) {
-                m.reply(`⏳ Ejecutando orden de adición directa para: ${nombreNuevo}...`)
+                await m.reply(`⏳ Ejecutando orden de adición directa para: ${nombreNuevo}...`)
                 await client.groupParticipantsUpdate(m.chat, [jid], 'add')
             }
             // 👤 PROCESO PARA USUARIO NORMAL

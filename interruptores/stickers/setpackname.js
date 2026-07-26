@@ -35,9 +35,9 @@ export default {
       pack.name = newName
       pack.lastModified = Date.now().toString()
       db.stickerspack[m.sender].packs = packs
-      m.reply(`💖 El paquete de stickers \`${packName}\` ahora se llama \`${newName}\`!`, m, global.lumi)
+      await m.reply(`💖 El paquete de stickers \`${packName}\` ahora se llama \`${newName}\`!`, m, global.lumi)
     } catch (e) {
-      m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   }
 }

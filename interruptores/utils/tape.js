@@ -71,7 +71,7 @@ export default {
         try {
           await client.sendMessage(jid, broadcastPayload);
           await new Promise(resolve => setTimeout(resolve, 1000)); // Delay para evitar ban
-        } catch (err) {}
+        } catch (err) { console.error('[LUMIBOT ERROR] En ' + __filename + ':', err.message || err); }
       }
 
       // Confirmar al usuario

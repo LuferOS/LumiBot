@@ -97,10 +97,10 @@ export default {
         activeAnagrams.set(m.chat, {
             word: word,
             scrambled: scrambled,
-            timeout: setTimeout(() => {
+            timeout: setTimeout(async () => {
                 if (activeAnagrams.has(m.chat)) {
                     activeAnagrams.delete(m.chat);
-                    client.sendMessage(m.chat, { text: `⏳ *Se acabó el tiempo del Anagrama.*\nNadie logró descifrar la palabra.\n\nLa palabra era: *${word}*` });
+                    await client.sendMessage(m.chat, { text: `⏳ *Se acabó el tiempo del Anagrama.*\nNadie logró descifrar la palabra.\n\nLa palabra era: *${word}*` });
                 }
             }, 60000)
         });
@@ -115,7 +115,7 @@ export default {
 
     } catch (e) {
         console.error('[LUMIBOT DEBUG] Error en anagrama.js:', e);
-        m.reply('🙄 *Todo explotó intentando crear el Anagrama.*');
+        await m.reply('🙄 *Todo explotó intentando crear el Anagrama.*');
     }
   }
 };

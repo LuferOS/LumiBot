@@ -119,10 +119,10 @@ export default {
 
             // Reiniciar el timeout de inactividad
             clearTimeout(game.timeout);
-            game.timeout = setTimeout(() => {
+            game.timeout = setTimeout(async () => {
                 if (activeAhorcados.has(chat)) {
                     activeAhorcados.delete(chat);
-                    client.sendMessage(chat, { text: `⏳ *Juego de Ahorcado cancelado por inactividad.*\nLa palabra era: *${game.word}*` });
+                    await client.sendMessage(chat, { text: `⏳ *Juego de Ahorcado cancelado por inactividad.*\nLa palabra era: *${game.word}*` });
                 }
             }, 60000);
 
@@ -211,10 +211,10 @@ export default {
             word: randomWord,
             guessed: new Set(),
             errors: 0,
-            timeout: setTimeout(() => {
+            timeout: setTimeout(async () => {
                 if (activeAhorcados.has(m.chat)) {
                     activeAhorcados.delete(m.chat);
-                    client.sendMessage(m.chat, { text: `⏳ *Juego de Ahorcado cancelado por inactividad.*\nLa palabra era: *${randomWord}*` });
+                    await client.sendMessage(m.chat, { text: `⏳ *Juego de Ahorcado cancelado por inactividad.*\nLa palabra era: *${randomWord}*` });
                 }
             }, 60000)
         });
@@ -232,7 +232,7 @@ export default {
 
     } catch (e) {
         console.error('[LUMIBOT DEBUG] Error en ahorcados.js:', e);
-        m.reply('🙄 *Todo explotó intentando crear el Ahorcado.*');
+        await m.reply('🙄 *Todo explotó intentando crear el Ahorcado.*');
     }
   }
 };

@@ -37,7 +37,7 @@ export default {
       _return = e
       await m.react('✖️')
     } finally {
-      client.reply(m.chat, _syntax + format(_return), m)
+      await client.reply(m.chat, _syntax + format(_return), m)
       m.exp = old
     }
   }

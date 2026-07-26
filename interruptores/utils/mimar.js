@@ -56,7 +56,7 @@ export default {
 
         } catch (e) {
             console.error("[LUMIBOT MIMAR] Error:", e);
-            m.reply("❌ Ocurrió un error intentando darme el regalo.");
+            await m.reply("❌ Ocurrió un error intentando darme el regalo.");
         }
     }
 }

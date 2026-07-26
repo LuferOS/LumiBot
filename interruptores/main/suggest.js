@@ -63,7 +63,7 @@ export default {
       } catch {}
     }
     global.db.data.users[m.sender].sugCooldown = now + 24 * 60 * 60000
-    m.reply(`✅🎉 Gracias por tu *${esReporte ? 'reporte' : 'sugerencia'}*\n\n📨 Tu mensaje fue enviado correctamente a los moderadores\n\n⏰ Podrás enviar otro en 24 horas`)
+    await m.reply(`✅🎉 Gracias por tu *${esReporte ? 'reporte' : 'sugerencia'}*\n\n📨 Tu mensaje fue enviado correctamente a los moderadores\n\n⏰ Podrás enviar otro en 24 horas`)
   },
 }
 

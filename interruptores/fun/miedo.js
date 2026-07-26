@@ -50,7 +50,7 @@ export default {
 
     } catch (e) {
       console.error("[LUMIBOT MIEDO] Error:", e);
-      m.reply("❌ Ups, me dio miedo procesar el comando.");
+      await m.reply("❌ Ups, me dio miedo procesar el comando.");
     }
   }
 }

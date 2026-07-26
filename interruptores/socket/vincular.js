@@ -74,7 +74,7 @@ export default {
 
       await client.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     } catch (e) {
-      m.reply(txt + "\n\n> *Nota:* Ocurrió un error con los botones. Usa manualmente *.code* o *.qr* para continuar.");
+      await m.reply(txt + "\n\n> *Nota:* Ocurrió un error con los botones. Usa manualmente *.code* o *.qr* para continuar.");
     }
   }
 };

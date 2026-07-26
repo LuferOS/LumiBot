@@ -36,7 +36,7 @@ export default {
       await client.sendMessage(m.chat, { delete: key });
     } catch (e) {
       console.error("[LUMIBOT DEBUG] Error al eliminar mensaje:", e);
-      client.reply(m.chat, '╭⋯ ❌ *ERROR* ⋯》\n┊ No se pudo borrar el mensaje. Puede que sea muy antiguo.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m);
+      await client.reply(m.chat, '╭⋯ ❌ *ERROR* ⋯》\n┊ No se pudo borrar el mensaje. Puede que sea muy antiguo.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》', m);
     }
   }
 };

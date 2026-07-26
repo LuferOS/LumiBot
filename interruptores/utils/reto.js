@@ -358,7 +358,7 @@ export default {
         throw new Error('No URL');
       }
     } catch (e) {
-      m.reply(caption);
+      await m.reply(caption);
     }
   }
 }

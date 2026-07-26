@@ -5,7 +5,7 @@ export default {
   category: "utilidad",
   desc: "Muestra la cotización en vivo de criptomonedas base.",
   run: async (sock, m) => {
-    m.reply("Extrayendo cotizaciones de la cadena de bloques...");
+    await m.reply("Extrayendo cotizaciones de la cadena de bloques...");
     
     try {
       const { data } = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
@@ -19,9 +19,9 @@ export default {
         `*Ethereum (ETH):* $${eth} USD\n` +
         `*Solana (SOL):* $${sol} USD`;
         
-      m.reply(txt);
+      await m.reply(txt);
     } catch (e) {
-      m.reply("❌ Interferencia en la conexión con la API de precios.");
+      await m.reply("❌ Interferencia en la conexión con la API de precios.");
     }
   }
 };

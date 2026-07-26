@@ -46,9 +46,9 @@ export default {
       pack.stickers.push(base64Sticker)
       pack.lastModified = Date.now().toString()
       db.stickerspack[m.sender].packs = packs
-      m.reply(`🙄 Sticker agregado al pack \`${pack.name}\` correctamente!`, m, global.lumi)
+      await m.reply(`🙄 Sticker agregado al pack \`${pack.name}\` correctamente!`, m, global.lumi)
     } catch (e) {
-      m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   }
 }

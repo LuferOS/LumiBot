@@ -10,6 +10,6 @@ export default {
       if (code >= 33 && code <= 126) return String.fromCharCode(code + 0xFEE0);
       return c;
     }).join('');
-    m.reply(`✨ ${aesthetic} ✨`);
+    await m.reply(`✨ ${aesthetic} ✨`);
   }
 }

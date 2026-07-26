@@ -30,7 +30,7 @@ export default {
         throw new Error('No URL');
       }
     } catch (e) {
-      m.reply(caption, { mentions: [m.sender] });
+      await m.reply(caption, { mentions: [m.sender] });
     }
   }
 }

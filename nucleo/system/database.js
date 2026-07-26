@@ -144,7 +144,7 @@ global.loadDatabase = async function loadDatabase() {
               rows.forEach(row => {
                   try {
                       obj[row[keyCol] || row.id] = JSON.parse(row.data);
-                  } catch(e){}
+                  } catch (e) { console.error('[LUMIBOT ERROR] En ' + __filename + ':', e.message || e); }
               });
               resolve(obj);
           });

@@ -61,7 +61,7 @@ export default {
 
     } catch (error) {
       console.error("[LUMIBOT ERROR]", error);
-      m.reply("┊ ⊳ El núcleo de transmisión colapsó.");
+      await m.reply("┊ ⊳ El núcleo de transmisión colapsó.");
     }
   }
 }

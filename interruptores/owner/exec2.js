@@ -20,8 +20,8 @@ export default {
       await m.react('✖️')
     } finally {
       const { stdout, stderr } = o
-      if (stdout?.trim()) client.reply(m.chat, stdout, m)
-      if (stderr?.trim()) client.reply(m.chat, stderr, m)
+      if (stdout?.trim()) await client.reply(m.chat, stdout, m)
+      if (stderr?.trim()) await client.reply(m.chat, stderr, m)
     }
   }
 }

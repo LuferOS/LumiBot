@@ -204,7 +204,7 @@ export default {
         timeout: setTimeout(async () => {
           if (activeQuizzes.has(m.chat)) {
             activeQuizzes.delete(m.chat);
-            client.sendMessage(m.chat, { text: `⏳ *¡Se acabó el tiempo del modo ${mode}!*\n> Nadie respondió correctamente a tiempo.\n> La respuesta era: *${qObj.ans}*` });
+            await client.sendMessage(m.chat, { text: `⏳ *¡Se acabó el tiempo del modo ${mode}!*\n> Nadie respondió correctamente a tiempo.\n> La respuesta era: *${qObj.ans}*` });
           }
         }, timeoutMs)
       });
@@ -216,7 +216,7 @@ export default {
           if (q && q.timeout) clearTimeout(q.timeout);
           activeQuizzes.delete(m.chat);
       }
-      m.reply('🙄 *Todo explotó intentando crear el Quiz.*');
+      await m.reply('🙄 *Todo explotó intentando crear el Quiz.*');
     }
   }
 };

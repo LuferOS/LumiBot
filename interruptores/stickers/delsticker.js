@@ -43,9 +43,9 @@ export default {
       pack.stickers.splice(index, 1)
       pack.lastModified = Date.now().toString()
       db.stickerspack[m.sender].packs = packs
-      m.reply(`🙄 El sticker ha sido eliminado del paquete de stickers ${pack.name}!`, m, global.lumi)
+      await m.reply(`🙄 El sticker ha sido eliminado del paquete de stickers ${pack.name}!`, m, global.lumi)
     } catch (e) {
-      m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
+      await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   }
 }

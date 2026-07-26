@@ -50,7 +50,7 @@ export default {
 
     } catch (e) {
       console.error("[LUMIBOT FUNA] Error:", e);
-      m.reply("❌ Uy, hubo un error al procesar la funa.");
+      await m.reply("❌ Uy, hubo un error al procesar la funa.");
     }
   }
 }

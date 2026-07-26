@@ -61,7 +61,7 @@ export default {
 
     } catch (e) {
       console.error('[LUMIBOT DEBUG] Error en duelo.js:', e);
-      m.reply('🙄 *Alguien llamó a la policía.* (Error del sistema)');
+      await m.reply('🙄 *Alguien llamó a la policía.* (Error del sistema)');
     }
   }
 };

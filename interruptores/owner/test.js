@@ -153,7 +153,7 @@ export default {
 
     } catch (err) {
       console.error("[LUMIBOT DEBUG] Error en comando .test:", err);
-      m.reply(`╭⋯ ⚠️ *ERROR DE DIVA* ⋯》\n┊ El test ha colapsado críticamente.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
+      await m.reply(`╭⋯ ⚠️ *ERROR DE DIVA* ⋯》\n┊ El test ha colapsado críticamente.\n╰⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》`);
     }
   }
 }

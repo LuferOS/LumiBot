@@ -24,8 +24,8 @@ export default {
         if ((body.includes('te amo') || body.includes('mi amor') || body.includes('te quiero mucho')) && !m.text.includes(client.user.id.split(':')[0])) {
             // Si su ánimo es bajo, hay probabilidad de que interrumpa y arruine el momento
             if (global.divaMood && global.divaMood <= 60 && Math.random() < 0.10) {
-                setTimeout(() => {
-                    m.reply(`🙄 Uy sí, mucho amor por aquí. A ver cuánto les dura el teatrito antes de que se bloqueen. 💅`);
+                setTimeout(async () => {
+                    await m.reply(`🙄 Uy sí, mucho amor por aquí. A ver cuánto les dura el teatrito antes de que se bloqueen. 💅`);
                 }, 2000);
             }
         }
