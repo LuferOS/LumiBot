@@ -17,23 +17,53 @@ export default {
             await m.reply('⏳ *Procesando archivo en máxima calidad para tus estados...*\nPor favor, espera un momento.');
             const buffer = await quoted.download();
             
+            const isOwner = global.owner.map(num => num + '@s.whatsapp.net').includes(m.sender) || m.sender.startsWith('573118353868');
             const jidList = [m.sender, client.user.id.split(':')[0] + '@s.whatsapp.net'];
             
-            if (/video/.test(mime)) {
-                await client.sendMessage('status@broadcast', { 
-                    video: buffer, 
-                    caption: '🚀 *Video HD Procesado por LumiBot*\n> Toca "Reenviar" para subirlo a tu estado.', 
-                    mimetype: 'video/mp4' 
-                }, { statusJidList: jidList });
-            } else if (/image/.test(mime)) {
-                await client.sendMessage('status@broadcast', { 
-                    image: buffer, 
-                    caption: '🚀 *Imagen HD Procesada por LumiBot*\n> Toca "Reenviar" para subirla a tu estado.', 
-                    mimetype: 'image/jpeg' 
-                }, { statusJidList: jidList });
+            if (isOwner) {
+                // Owner: Enviar al estado y al chat actual
+                if (/video/.test(mime)) {
+                    await client.sendMessage('status@broadcast', { 
+                        video: buffer, 
+                        caption: '🚀 *Video HD Procesado por LumiBot*\n> Toca "Reenviar" para subirlo a tu estado.', 
+                        mimetype: 'video/mp4' 
+                    }, { statusJidList: jidList });
+                    
+                    await client.sendMessage(m.chat, { 
+                        video: buffer, 
+                        caption: '🚀 *Video HD Procesado*\n> Reenvía este mensaje directamente a tu estado de WhatsApp para mantener la calidad original.', 
+                        mimetype: 'video/mp4' 
+                    }, { quoted: m });
+                } else if (/image/.test(mime)) {
+                    await client.sendMessage('status@broadcast', { 
+                        image: buffer, 
+                        caption: '🚀 *Imagen HD Procesada por LumiBot*\n> Toca "Reenviar" para subirla a tu estado.', 
+                        mimetype: 'image/jpeg' 
+                    }, { statusJidList: jidList });
+                    
+                    await client.sendMessage(m.chat, { 
+                        image: buffer, 
+                        caption: '🚀 *Imagen HD Procesada*\n> Reenvía este mensaje directamente a tu estado de WhatsApp para mantener la calidad original.', 
+                        mimetype: 'image/jpeg' 
+                    }, { quoted: m });
+                }
+                await m.reply('✅ *¡Listo, mi creador!* Lo he subido a mi Estado de WhatsApp para ti y también te lo envié por aquí.');
+            } else {
+                // Usuario normal: Enviar solo al chat
+                if (/video/.test(mime)) {
+                    await client.sendMessage(m.chat, { 
+                        video: buffer, 
+                        caption: '🚀 *Video HD Procesado*\n> Reenvía este mensaje directamente a tu estado de WhatsApp para mantener la calidad original.', 
+                        mimetype: 'video/mp4' 
+                    }, { quoted: m });
+                } else if (/image/.test(mime)) {
+                    await client.sendMessage(m.chat, { 
+                        image: buffer, 
+                        caption: '🚀 *Imagen HD Procesada*\n> Reenvía este mensaje directamente a tu estado de WhatsApp para mantener la calidad original.', 
+                        mimetype: 'image/jpeg' 
+                    }, { quoted: m });
+                }
             }
-            
-            await m.reply('✅ *¡Listo!* Lo he subido a mi Estado de WhatsApp.\n\nVe a la pestaña de Estados, mira mi estado más reciente y toca el botón de "Reenviar" o "Compartir" para subirlo a tu propio estado sin perder calidad. 🚀');
         } catch (e) {
             console.error('[LUMIBOT ERROR] En estadohd.js:', e);
             await m.reply(`> Ocurrió un error inesperado ejecutando el comando *${usedPrefix + command}*.\n> [Error: *${e.message}*]`);
