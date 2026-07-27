@@ -27,7 +27,7 @@ export default {
                         video: buffer, 
                         caption: '🚀 *Video HD Procesado por LumiBot*\n> Toca "Reenviar" para subirlo a tu estado.', 
                         mimetype: 'video/mp4',
-                        contextInfo: { isForwarded: true, forwardingScore: 1 }
+                        contextInfo: { featureEligibilities: { canBeReshared: true } }
                     }, { statusJidList: jidList });
                     
                     await client.sendMessage(m.chat, { 
@@ -40,7 +40,7 @@ export default {
                         image: buffer, 
                         caption: '🚀 *Imagen HD Procesada por LumiBot*\n> Toca "Reenviar" para subirla a tu estado.', 
                         mimetype: 'image/jpeg',
-                        contextInfo: { isForwarded: true, forwardingScore: 1 }
+                        contextInfo: { featureEligibilities: { canBeReshared: true } }
                     }, { statusJidList: jidList });
                     
                     await client.sendMessage(m.chat, { 
